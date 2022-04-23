@@ -1,7 +1,8 @@
 #!/bin/bash
 declare -A dcfiles=(
     ["core"]="docker-compose-core.yml"
-    ["api"]="jobappman/docker-compose-api.yml"
+    ["api"]="jam-api/docker-compose-api.yml"
+    ["client"]="jam-client/docker-compose-client.yml"
 )
 
 

@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  web:
+  api:
     build: .
     container_name: jobappman-api
     command: sh -c 'python manage.py migrate;python manage.py runserver 0.0.0.0:8000'
