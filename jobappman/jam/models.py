@@ -1,7 +1,12 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 class Group(models.Model):
     name = models.CharField(max_length=30, null=False)
+    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user}.{self.name}"
 
 class Step(models.Model):
     STEP_TYPES = (
@@ -13,6 +18,10 @@ class Step(models.Model):
     date = models.DateField(null=True, blank=True)
     type = models.CharField(max_length=1, choices=STEP_TYPES, null=False)
     notes = models.TextField(null=True, blank=True)
+    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user}.{self.name}"
 
 class JobApplication(models.Model):
     company = models.CharField(max_length=40, null=False)
@@ -22,3 +31,4 @@ class JobApplication(models.Model):
     notes = models.TextField(null=True, blank=True)
     current_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
+    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)

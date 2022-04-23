@@ -42,8 +42,16 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'core',
     'jam',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
     'dj_rest_auth'
 ]
+
+# required by djrest_auth for registration
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

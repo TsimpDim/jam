@@ -5,13 +5,4 @@ declare -A dcfiles=(
 )
 
 
-if [ "$1" == "start" ]
-then
-    docker-compose -f ${dcfiles[$2]} up -d 
-elif [ "$1" == "stop" ]
-then
-    docker-compose -f ${dcfiles[$2]} down
-elif [ "$1" == "build" ]
-then
-    docker-compose -f ${dcfiles[$2]} build
-fi
+docker-compose -f ${dcfiles[$2]} $1
