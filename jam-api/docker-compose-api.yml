@@ -12,3 +12,12 @@ services:
       - DB_NAME=jobappman
       - DB_USER=root
       - DB_PASSWORD=root
+    networks:
+      jam:
+        aliases:
+          - 'api.jam.local'
+
+networks:
+  jam:
+    external:
+      name: jam

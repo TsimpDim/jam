@@ -10,6 +10,8 @@ services:
       - "3307:3306"
     volumes:
       - ./scripts/sql:/docker-entrypoint-initdb.d
+    networks:
+      - jam
 
   adminer:
     image: adminer
@@ -17,3 +19,7 @@ services:
     restart: always
     ports:
       - 8081:8080
+
+networks:
+  jam:
+    name: "jam"
