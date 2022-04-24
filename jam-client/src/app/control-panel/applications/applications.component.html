@@ -1,0 +1,71 @@
+<div class="main-container">
+    <app-header></app-header>
+  
+  
+    <div class="content-container">
+      <div class="content-area">
+        <h6 *ngIf="selectedApp == null">
+            Please select an application from the menu on the left.
+        </h6>
+
+        <div class="clr-column" *ngIf="selectedApp != null">
+            <h4>Selected Job Application</h4>
+            <div class="card">
+                <div class="card-header">
+                    {{selectedApp.company}} - {{selectedApp.location}} <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date}}</span>
+                </div>
+                <div class="card-block">
+                    <div class="card-title">
+                        {{selectedApp.role}}
+                    </div>
+                    <div class="card-text">
+                    {{selectedApp.notes}}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-sm btn-link">Edit</button>
+                </div>
+            </div>
+
+            <h4>Timeline</h4>
+            
+            <ul class="clr-timeline clr-timeline-vertical">
+                <li class="clr-timeline-step disabled">
+                <div class="clr-timeline-step-header">11:59 am</div>
+                <cds-icon shape="circle" aria-label="Not started"></cds-icon>
+                <div class="clr-timeline-step-body">
+                    <span class="clr-timeline-step-title">Add KMS</span>
+                    <span class="clr-timeline-step-description">Root CA certificate requested.</span>
+                </div>
+                </li>
+                <li class="clr-timeline-step">
+                    <div class="clr-timeline-step-header">11:59 am</div>
+                    <cds-icon shape="dot-circle" aria-current="true" aria-label="Current"></cds-icon>
+                    <div class="clr-timeline-step-body">
+                    <span class="clr-timeline-step-title">Add KMS</span>
+                    <span class="clr-timeline-step-description">
+                        Root CA certificate requested. Upload it to the KMS to complete the connection.
+                        <button class="btn btn-sm">Action</button>
+                    </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    
+    </div>
+      <nav class="sidenav">
+        <section class="sidenav-content">
+          <section class="nav-group">
+            <clr-tree>
+                <clr-tree-node *ngFor="let group of applications | keyvalue">{{group.key}}<span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span>
+                    <clr-tree-node *ngFor="let app of $any(group).value">
+                        <div (click)="selectApp(group.key,app.id)">{{app.company}} // {{app.role}}</div>
+                    </clr-tree-node>
+                </clr-tree-node>
+            </clr-tree>
+          </section>
+        </section>
+      </nav>
+    </div>
+  </div>

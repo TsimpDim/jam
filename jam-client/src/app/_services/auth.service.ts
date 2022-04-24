@@ -36,14 +36,14 @@ export class AuthService {
   }
 
   deleteSessionToken() {
-    localStorage.removeItem("session_id");
+    localStorage.removeItem("sessionid");
   }
 
   storeSessionToken(token: string) {
-    localStorage.setItem("session_id", token);
+    localStorage.setItem("sessionid", token);
   }
 
   getSessionToken() {
-    return localStorage.getItem("session_id");
+    return localStorage.getItem("sessionid");
   }
 }

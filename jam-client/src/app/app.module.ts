@@ -8,23 +8,24 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import '@cds/core/icon/register.js';
 import { ClarityIcons, sadFaceIcon, cogIcon } from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
-import { ControlPanelComponent } from './control-panel/control-panel.component';
 import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ApplicationsComponent } from './control-panel/applications/applications.component';
 
 ClarityIcons.addIcons(sadFaceIcon, cogIcon);
 
 @NgModule({
   declarations: [
     AppComponent,
-    ControlPanelComponent,
+    ApplicationsComponent,
     RoutesComponent,
     LoginComponent,
     RegisterComponent,
-    HeaderComponent
+    HeaderComponent,
+    ApplicationsComponent
   ],
   imports: [
     BrowserModule,
