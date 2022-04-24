@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
+
+
+interface IAuth {
+  key: string
+}
 
 @Component({
   selector: 'app-login',
@@ -14,7 +20,8 @@ export class LoginComponent implements OnInit{
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
     ) {
     this.form = this.formBuilder.group({
       username: new FormControl('', [Validators.required]),
@@ -31,9 +38,13 @@ export class LoginComponent implements OnInit{
 
       this.authService.login(this.form.value.username, this.form.value.password)
       .subscribe({
-        next: (resp) => {
+        next: (resp: any) => {
           this.loading = false;
           this.loggedIn = 'key' in resp;
+          if (this.loggedIn) {
+            this.authService.storeSessionToken(resp['key']);
+            this.router.navigate(['/control-panel']);
+          }
         },
         error: (err) => {
           this.loading = false;

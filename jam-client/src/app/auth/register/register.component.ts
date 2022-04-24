@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
     ) {
     this.form = this.formBuilder.group({
       username: new FormControl('', [Validators.required]),
@@ -34,11 +36,12 @@ export class RegisterComponent implements OnInit {
         this.form.value.username, this.form.value.password1, this.form.value.password2
       ).subscribe({
         next: (resp) => {
-          this.loading = false;
           this.registered = 'key' in resp;
+          if (this.registered) {
+            this.router.navigate(['/login']);
+          }
         },
         error: (err) => {
-          this.loading = false;
           this.registered = false;
         },
         complete: () => this.loading = false

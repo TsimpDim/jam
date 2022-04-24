@@ -24,6 +24,7 @@
     "@clr/ui": "^13.2.0",
     "@webcomponents/custom-elements": "^1.0.0",
     "@webcomponents/webcomponentsjs": "^2.6.0",
+    "angular-cookies": "^1.8.3",
     "nodemon": "^2.0.15",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

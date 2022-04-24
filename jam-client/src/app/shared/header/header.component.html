@@ -6,27 +6,34 @@
         </a>
     </div>
     <div class="header-actions">
-        <a href="javascript://" class="nav-link nav-icon" aria-label="settings">
-            <cds-icon shape="cog"></cds-icon>
-        </a>
+
+    <clr-dropdown>
+        <button clrDropdownTrigger class="dropdown-toggle" type="button">
+            <cds-icon size="md" shape="cog"></cds-icon>
+        </button> 
+        <clr-dropdown-menu clrPosition="bottom-right">
+            <h4 class="dropdown-header">Options</h4>
+            <button class="dropdown-item" (click)="logout()" *ngIf="isLoggedIn">Logout</button>
+        </clr-dropdown-menu>
+    </clr-dropdown>
     </div>
 </header>
 
 <nav class="subnav">
     <ul class="nav">
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isLoggedIn">
             <a class="nav-link" routerLinkActive="active" routerLink="/control-panel">Applications</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isLoggedIn">
             <a class="nav-link">Groups</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isLoggedIn">
             <a class="nav-link">Steps</a>
         </li>
-        <li class="nav-item" >
+        <li class="nav-item" *ngIf="!isLoggedIn">
             <a class="nav-link" routerLinkActive="active" routerLink="/auth/login">Login</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item"  *ngIf="!isLoggedIn">
             <a class="nav-link" routerLinkActive="active" routerLink="/auth/register">Register</a>
         </li>
     </ul>
