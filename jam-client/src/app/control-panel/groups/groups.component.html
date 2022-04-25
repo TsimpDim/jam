@@ -5,7 +5,7 @@
   <div class="content-container">
     <div class="content-area">
       <div class="clr-column">
-        <button class="button btn btn-primary">Create new</button>
+        <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
         <div class="card clickable" (click)="selectGroup(group.id)" *ngFor="let group of groups">
           <div class="card-header">
             {{group.name}}
@@ -18,8 +18,10 @@
         </div>
       </div>
 
-      <clr-modal [(clrModalOpen)]="openEditModal" *ngIf="selectedGroup != null">
-        <h3 class="modal-title">Edit Group</h3>
+      <clr-modal [(clrModalOpen)]="modalIsOpen">
+        <h3 class="modal-title" *ngIf="selectedGroup != null">Edit Group</h3>
+        <h3 class="modal-title" *ngIf="selectedGroup == null">Add Group</h3>
+      
         <div class="modal-body">
           <form class="clr-form clr-form-horizontal" [formGroup]="groupForm">
             <div class="clr-form-control">
@@ -50,10 +52,14 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" (click)="openEditModal = false">Cancel</button>
-          <button type="submit" class="btn btn-primary" (click)="updateGroup()">Submit</button>
+          <button type="button" class="btn btn-danger-outline"
+          (click)="deleteGroup(selectedGroup.id)"
+          *ngIf="selectedGroup != null"
+          >Delete</button>
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" (click)="submitForm()">Submit</button>
         </div>
-      </clr-modal>      
+      </clr-modal>
     </div>
   </div>
 </div>

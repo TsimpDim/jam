@@ -10,8 +10,8 @@ import { JamService } from 'src/app/_services/jam.service';
 export class GroupsComponent implements OnInit {
   public groups: any;
   public loading: Boolean = true;
-  public openEditModal: boolean = false;
-  public selectedGroup: any;
+  public modalIsOpen: boolean = false;
+  public selectedGroup: any = null;
   public groupForm: FormGroup;
 
   constructor(
@@ -43,14 +43,77 @@ export class GroupsComponent implements OnInit {
   }
 
   toggleEditModal() {
-    this.openEditModal = !this.openEditModal;
+    this.modalIsOpen = !this.modalIsOpen;
+  }
+
+  clearAndOpenModal() {
+    this.selectedGroup = null;
+    this.groupForm.get("name")?.setValue(null);
+    this.groupForm.get("description")?.setValue(null);
+    this.openModal();
+  }
+
+  openModal() {
+    this.modalIsOpen = true;
+  }
+
+  closeModal() {
+    this.modalIsOpen = false;
+    this.selectedGroup = null;
   }
 
   selectGroup(groupId: number) {
     this.selectedGroup = this.groups.find((g: any) => g.id == groupId);
     this.groupForm.get('name')?.setValue(this.selectedGroup.name);
     this.groupForm.get('description')?.setValue(this.selectedGroup.description);
-    this.toggleEditModal();
+    this.openModal();
+  }
+
+  submitForm() {
+    if (this.selectedGroup == null) {
+      this.createGroup();
+    } else {
+      this.updateGroup();
+    }
+  }
+
+  deleteGroup(groupId: number) {
+    this.jamService.deleteGroup(
+      groupId
+    ).subscribe({
+      next: () => {
+        this.loading = false;
+        this.selectedGroup = null;
+        this.getGroups();
+        this.closeModal();
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  createGroup() {
+    this.jamService.createGroup(
+      this.groupForm.value.name,
+      this.groupForm.value.description
+    ).subscribe({
+      next: () => {
+        this.loading = false;
+        this.selectedGroup = null;
+        this.getGroups();
+        this.closeModal();
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
   }
 
   updateGroup() {
@@ -63,6 +126,7 @@ export class GroupsComponent implements OnInit {
         this.loading = false;
         this.selectedGroup = null;
         this.getGroups();
+        this.closeModal();
       },
       error: () => {
         this.loading = true;

@@ -39,4 +39,19 @@ export class JamService {
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
+
+  createGroup(groupName: string, groupDesc: string) {
+    return this.http.post(
+      environment.apiUrl + '/jam/group/',
+      { "name": groupName, "description": groupDesc },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  deleteGroup(groupId: number) {
+    return this.http.delete(
+      environment.apiUrl + '/jam/group/' + groupId + '/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
 }
