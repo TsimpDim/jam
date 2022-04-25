@@ -52,7 +52,10 @@
             </ul>
         </div>
     </div>
+
+
     <clr-vertical-nav [clrVerticalNavCollapsible]="true">
+        <a clrVerticalNavLink (click)="openCreationModal()">Add New Application</a>
         <clr-vertical-nav-group *ngFor="let group of applications | keyvalue">
             {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span>
             <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
@@ -60,4 +63,92 @@
             </clr-vertical-nav-group-children>
         </clr-vertical-nav-group>
     </clr-vertical-nav>
+
+
+    <clr-modal [(clrModalOpen)]="creationModalIsOpen">
+        <h3 class="modal-title" >Add Job Application</h3>
+      
+        <div class="modal-body">
+          <form class="clr-form clr-form-horizontal" [formGroup]="jobAppForm">
+            <div class="clr-form-control">
+                <label for="company" class="clr-control-label">Company</label>
+                <div class="clr-control-container">
+                    <div class="clr-input-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="company"
+                        formControlName="company"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="role" class="clr-control-label">Role</label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="role"
+                        formControlName="role"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="location" class="clr-control-label">Location</label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="location"
+                        formControlName="location"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="notes" class="clr-control-label">Notes</label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <textarea
+                        class="clr-textarea"
+                        name="notes"
+                        formControlName="notes"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="date" class="clr-control-label">Date</label>
+                <clr-date-container>
+                    <input clrDate type="date" name="date" formControlName="date"/>
+                </clr-date-container>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="group" class="clr-control-label">Group</label>
+                <select clrSelect name="group" formControlName="group">
+                    <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+                </select>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="currentStep" class="clr-control-label">Initial Step</label>
+                <select clrSelect name="currentStep" formControlName="currentStep">
+                    <option *ngFor="let step of initialSteps" [value]="step.id">{{step.name}}</option>
+                </select>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="closeCreationModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" (click)="submitCreationForm()">Submit</button>
+        </div>
+    </clr-modal>
 </div>

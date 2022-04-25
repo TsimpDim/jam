@@ -39,10 +39,27 @@ class StepViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Step.objects.filter(user_id=self.request.user)
 
+    @action(detail=False, url_path="initial")
+    def group(self, request):
+        return Response(
+            StepSerializer(
+                Step.objects.filter(type='S'), many=True
+            ).data
+        )
+
 class JobApplicationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        data['user'] = self.request.user.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
         return JobApplication.objects.filter(user_id=self.request.user)

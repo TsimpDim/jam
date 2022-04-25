@@ -16,11 +16,35 @@ export class JamService {
   getJobApplications(groupped: Boolean = false) {
     let endpoint = '/jam/jobapps/';
     if (groupped) {
-      endpoint += "group";
+      endpoint += "group/";
     }
 
     return this.http.get(
       environment.apiUrl + endpoint,
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  createJobApplication(
+    company: string,
+    role: string,
+    location: string,
+    notes: string,
+    date: string,
+    group: number,
+    currentStep: number
+  ) {
+    return this.http.post(
+      environment.apiUrl + '/jam/jobapps/',
+      { 
+        "company": company,
+        "role": role,
+        "location": location,
+        "notes": notes,
+        "date": date,
+        "group": group,
+        "current_step": currentStep
+      },
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
@@ -32,9 +56,13 @@ export class JamService {
     );
   }
 
-  getSteps() {
+  getSteps(initial: boolean = false) {
+    let endpoint = '/jam/steps/';
+    if (initial) {
+      endpoint += 'initial/'
+    }
     return this.http.get(
-      environment.apiUrl + '/jam/steps/',
+      environment.apiUrl + endpoint,
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
