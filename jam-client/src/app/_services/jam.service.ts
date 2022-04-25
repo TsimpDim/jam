@@ -14,7 +14,7 @@ export class JamService {
   ) { }
 
   getJobApplications(groupped: Boolean = false) {
-    let endpoint = '/jam/jobapp/';
+    let endpoint = '/jam/jobapps/';
     if (groupped) {
       endpoint += "group";
     }
@@ -27,14 +27,44 @@ export class JamService {
 
   getGroups() {
     return this.http.get(
-      environment.apiUrl + '/jam/group/',
+      environment.apiUrl + '/jam/groups/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  getSteps() {
+    return this.http.get(
+      environment.apiUrl + '/jam/steps/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  updateStep(stepId: number, stepName: string, stepNotes: string) {
+    return this.http.patch(
+      environment.apiUrl + '/jam/steps/' + stepId +'/',
+      { "name": stepName, "notes": stepNotes },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  createStep(stepName: string, stepNotes: string, stepType: string) {
+    return this.http.post(
+      environment.apiUrl + '/jam/steps/',
+      { "name": stepName, "notes": stepNotes, "type": stepType },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+  
+  deleteStep(stepId: number) {
+    return this.http.delete(
+      environment.apiUrl + '/jam/steps/' + stepId + '/',
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
 
   updateGroup(groupId: number, groupName: string, groupDesc: string) {
     return this.http.patch(
-      environment.apiUrl + '/jam/group/' + groupId +'/',
+      environment.apiUrl + '/jam/groups/' + groupId +'/',
       { "name": groupName, "description": groupDesc },
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
@@ -42,7 +72,7 @@ export class JamService {
 
   createGroup(groupName: string, groupDesc: string) {
     return this.http.post(
-      environment.apiUrl + '/jam/group/',
+      environment.apiUrl + '/jam/groups/',
       { "name": groupName, "description": groupDesc },
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
@@ -50,7 +80,7 @@ export class JamService {
 
   deleteGroup(groupId: number) {
     return this.http.delete(
-      environment.apiUrl + '/jam/group/' + groupId + '/',
+      environment.apiUrl + '/jam/groups/' + groupId + '/',
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }

@@ -42,10 +42,6 @@ export class GroupsComponent implements OnInit {
     })
   }
 
-  toggleEditModal() {
-    this.modalIsOpen = !this.modalIsOpen;
-  }
-
   clearAndOpenModal() {
     this.selectedGroup = null;
     this.groupForm.get("name")?.setValue(null);
@@ -135,6 +131,5 @@ export class GroupsComponent implements OnInit {
         this.loading = false;
       }
     })
-
   }
 }

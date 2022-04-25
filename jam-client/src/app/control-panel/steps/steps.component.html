@@ -1,0 +1,86 @@
+<div class="main-container">
+    <app-header></app-header>
+  
+  
+  <div class="content-container">
+    <div class="content-area">
+      <div class="clr-column">
+        <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
+        <div class="card clickable" (click)="selectStep(step.id)" *ngFor="let step of steps">
+          <div class="card-header">
+            <span *ngIf="step.type == 'S'" class="badge badge-success"></span>
+            <span *ngIf="step.type == 'E'" class="badge badge-danger"></span>
+            <span *ngIf="step.type == 'D'" class="badge"></span>
+            {{step.name}}
+          </div>
+          <div class="card-block" *ngIf="step.notes">
+            <div class="card-text" >
+              {{step.notes}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <clr-modal [(clrModalOpen)]="modalIsOpen">
+        <h3 class="modal-title" *ngIf="selectedStep != null">Edit Step</h3>
+        <h3 class="modal-title" *ngIf="selectedStep == null">Add Step</h3>
+      
+        <div class="modal-body">
+          <form class="clr-form clr-form-horizontal" [formGroup]="stepForm">
+            <div class="clr-form-control">
+              <label for="name" class="clr-control-label">Name</label>
+              <div class="clr-control-container">
+                <div class="clr-input-wrapper">
+                  <input clrInput
+                  type="text"
+                  name="name"
+                  formControlName="name"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="clr-form-control">
+              <label for="notes" class="clr-control-label">Notes</label>
+              <div class="clr-control-container">
+                <div class="clr-textarea-wrapper">
+                  <textarea
+                  class="clr-textarea"
+                  name="notes"
+                  formControlName="notes"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="clr-form-control">
+              <label for="type" class="clr-control-label">Type</label>
+              <div class="clr-control-container">
+                <select clrSelect name="type" formControlName="type" *ngIf="selectedStep == null">
+                  <option value="S">Starting Step</option>
+                  <option value="D">Default Step</option>
+                  <option value="E">Ending Step</option>
+                </select>
+                
+                <input
+                clrInput
+                type="text"
+                disabled
+                *ngIf="selectedStep != null"
+                value="{{selectedStep.type}}">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger-outline"
+          (click)="deleteStep(selectedStep.id)"
+          *ngIf="selectedStep != null"
+          >Delete</button>
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" (click)="submitForm()">Submit</button>
+        </div>
+      </clr-modal>
+    </div>
+  </div>
+</div>

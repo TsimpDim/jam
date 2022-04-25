@@ -15,6 +15,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ApplicationsComponent } from './control-panel/applications/applications.component';
 import { GroupsComponent } from './control-panel/groups/groups.component';
+import { StepsComponent } from './control-panel/steps/steps.component';
 
 ClarityIcons.addIcons(sadFaceIcon, cogIcon);
 
@@ -27,7 +28,8 @@ ClarityIcons.addIcons(sadFaceIcon, cogIcon);
     RegisterComponent,
     HeaderComponent,
     ApplicationsComponent,
-    GroupsComponent
+    GroupsComponent,
+    StepsComponent
   ],
   imports: [
     BrowserModule,

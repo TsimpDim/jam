@@ -16,7 +16,6 @@ class Step(models.Model):
         ('D', 'Default')
     )
     name = models.CharField(max_length=30, null=False)
-    date = models.DateField(null=True, blank=True)
     type = models.CharField(max_length=1, choices=STEP_TYPES, null=False)
     notes = models.TextField(null=True, blank=True)
     user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
