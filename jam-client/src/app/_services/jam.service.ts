@@ -112,4 +112,11 @@ export class JamService {
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
+
+  getTimeline(jobAppId: number) {
+    return this.http.get(
+      environment.apiUrl + '/jam/timeline/' + jobAppId + '/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
 }

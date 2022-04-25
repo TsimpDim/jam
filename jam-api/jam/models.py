@@ -31,4 +31,13 @@ class JobApplication(models.Model):
     notes = models.TextField(null=True, blank=True)
     current_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
-    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+
+class Timeline(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
+    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    step = models.ForeignKey(Step, on_delete=models.DO_NOTHING)
+    application = models.ForeignKey(JobApplication, on_delete=models.DO_NOTHING)
+    date = models.DateField(auto_now=True)
+    notes = models.TextField(null=True, blank=True)
+    completed = models.BooleanField(default=False)

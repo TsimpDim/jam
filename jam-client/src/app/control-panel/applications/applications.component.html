@@ -30,23 +30,14 @@
             <h4>Timeline</h4>
             
             <ul class="clr-timeline clr-timeline-vertical">
-                <li class="clr-timeline-step disabled">
-                <div class="clr-timeline-step-header">11:59 am</div>
-                <cds-icon shape="circle" aria-label="Not started"></cds-icon>
-                <div class="clr-timeline-step-body">
-                    <span class="clr-timeline-step-title">Add KMS</span>
-                    <span class="clr-timeline-step-description">Root CA certificate requested.</span>
-                </div>
-                </li>
-                <li class="clr-timeline-step">
-                    <div class="clr-timeline-step-header">11:59 am</div>
-                    <cds-icon shape="dot-circle" aria-current="true" aria-label="Current"></cds-icon>
+                <li class="clr-timeline-step" *ngFor="let tl of selectedAppTimeline">
+                    <div class="clr-timeline-step-header">{{tl.step.name}}</div>
+                    <cds-icon shape="circle" style="color:green" *ngIf="tl.step.type == 'S'"></cds-icon>
+                    <cds-icon shape="circle" *ngIf="tl.step.type == 'D'"></cds-icon>
+                    <cds-icon shape="circle" style="color:red" *ngIf="tl.step.type == 'E'"></cds-icon>
                     <div class="clr-timeline-step-body">
-                    <span class="clr-timeline-step-title">Add KMS</span>
-                    <span class="clr-timeline-step-description">
-                        Root CA certificate requested. Upload it to the KMS to complete the connection.
-                        <button class="btn btn-sm">Action</button>
-                    </span>
+                        <span class="clr-timeline-step-title">{{tl.date}}</span>
+                        <span class="clr-timeline-step-description">{{tl.notes}}</span>
                     </div>
                 </li>
             </ul>

@@ -1,9 +1,10 @@
-from .serializers import GroupSerializer, JobApplicationSerializer, StepSerializer
-from .models import Group, JobApplication, Step
+from .serializers import GroupSerializer, JobApplicationSerializer, StepSerializer, TimelineSerializer
+from .models import Group, JobApplication, Step, Timeline
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 class GroupsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -76,4 +77,15 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
 
         return Response(
             groupped_job_apps
+        )
+
+class TimelineView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, job_application_id, format=None):
+        jap = Timeline.objects.filter(application=job_application_id)
+        return Response(
+            TimelineSerializer(
+                jap, many=True
+            ).data
         )

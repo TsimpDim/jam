@@ -16,6 +16,7 @@ export class ApplicationsComponent implements OnInit {
   public jobAppForm: FormGroup;
   public groups: any;
   public initialSteps: any;
+  public selectedAppTimeline: any;
 
   constructor(
     private jamService: JamService,
@@ -56,7 +57,7 @@ export class ApplicationsComponent implements OnInit {
     let appsOfGroup = this.applications[groupName];
     let selectedJobApp = appsOfGroup.find((app: any) => app.id == jobAppId);
     this.selectedApp = selectedJobApp;
-    console.log(this.selectedApp);
+    this.getTimeline();
   }
 
   openCreationModal() {
@@ -90,6 +91,20 @@ export class ApplicationsComponent implements OnInit {
         this.initialSteps = data;
       },
       error: (error) => {
+        this.loading = true;
+      },
+      complete: () => this.loading = true
+    })
+  }
+
+  getTimeline() {
+    this.jamService.getTimeline(this.selectedApp.id)
+    .subscribe({
+      next: (data: any) => {
+        this.loading = false;
+        this.selectedAppTimeline = data;
+      },
+      error: () => {
         this.loading = true;
       },
       complete: () => this.loading = true
