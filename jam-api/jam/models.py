@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 class Group(models.Model):
     name = models.CharField(max_length=30, null=False)
     user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user}.{self.name}"

@@ -4,10 +4,12 @@ import { AppComponent } from '../app.component';
 import { LoginComponent } from '../auth/login/login.component';
 import { RegisterComponent } from '../auth/register/register.component';
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
+import { GroupsComponent } from '../control-panel/groups/groups.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent},
   { path: 'control-panel/applications', component: ApplicationsComponent},
+  { path: 'control-panel/groups', component: GroupsComponent},
   { path: 'auth/login', component: LoginComponent},
   { path: 'auth/register', component: RegisterComponent},
   { path: '**', component: ApplicationsComponent },  // Wildcard route for a 404 page

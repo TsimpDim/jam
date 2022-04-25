@@ -9,7 +9,7 @@
         </h6>
 
         <div class="clr-column" *ngIf="selectedApp != null">
-            <h4>Selected Job Application</h4>
+            <h4>Job Application</h4>
             <div class="card">
                 <div class="card-header">
                     {{selectedApp.company}} - {{selectedApp.location}} <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date}}</span>
@@ -51,21 +51,13 @@
                 </li>
             </ul>
         </div>
-
-    
     </div>
-      <nav class="sidenav">
-        <section class="sidenav-content">
-          <section class="nav-group">
-            <clr-tree>
-                <clr-tree-node *ngFor="let group of applications | keyvalue">{{group.key}}<span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span>
-                    <clr-tree-node *ngFor="let app of $any(group).value">
-                        <div (click)="selectApp(group.key,app.id)">{{app.company}} // {{app.role}}</div>
-                    </clr-tree-node>
-                </clr-tree-node>
-            </clr-tree>
-          </section>
-        </section>
-      </nav>
-    </div>
-  </div>
+    <clr-vertical-nav [clrVerticalNavCollapsible]="true">
+        <clr-vertical-nav-group *ngFor="let group of applications | keyvalue">
+            {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span>
+            <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
+                <a clrVerticalNavLink (click)="selectApp(group.key,app.id)">{{app.company}} // {{app.role}}</a>
+            </clr-vertical-nav-group-children>
+        </clr-vertical-nav-group>
+    </clr-vertical-nav>
+</div>

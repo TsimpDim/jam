@@ -21,8 +21,22 @@ export class JamService {
 
     return this.http.get(
       environment.apiUrl + endpoint,
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()}}
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
 
+  getGroups() {
+    return this.http.get(
+      environment.apiUrl + '/jam/group/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  updateGroup(groupId: number, groupName: string, groupDesc: string) {
+    return this.http.patch(
+      environment.apiUrl + '/jam/group/' + groupId +'/',
+      { "name": groupName, "description": groupDesc },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
 }

@@ -1,0 +1,59 @@
+<div class="main-container">
+    <app-header></app-header>
+  
+  
+  <div class="content-container">
+    <div class="content-area">
+      <div class="clr-column">
+        <button class="button btn btn-primary">Create new</button>
+        <div class="card clickable" (click)="selectGroup(group.id)" *ngFor="let group of groups">
+          <div class="card-header">
+            {{group.name}}
+          </div>
+          <div class="card-block">
+            <div class="card-text">
+              {{group.description}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <clr-modal [(clrModalOpen)]="openEditModal" *ngIf="selectedGroup != null">
+        <h3 class="modal-title">Edit Group</h3>
+        <div class="modal-body">
+          <form class="clr-form clr-form-horizontal" [formGroup]="groupForm">
+            <div class="clr-form-control">
+              <label for="name" class="clr-control-label">Name</label>
+              <div class="clr-control-container">
+                <div class="clr-input-wrapper">
+                  <input clrInput
+                  type="text"
+                  name="name"
+                  formControlName="name"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="clr-form-control">
+              <label for="description" class="clr-control-label">Description</label>
+              <div class="clr-control-container">
+                <div class="clr-textarea-wrapper">
+                  <textarea
+                  class="clr-textarea"
+                  name="description"
+                  formControlName="description"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="openEditModal = false">Cancel</button>
+          <button type="submit" class="btn btn-primary" (click)="updateGroup()">Submit</button>
+        </div>
+      </clr-modal>      
+    </div>
+  </div>
+</div>
