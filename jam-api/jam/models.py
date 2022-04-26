@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -38,6 +39,14 @@ class Timeline(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
     step = models.ForeignKey(Step, on_delete=models.DO_NOTHING)
     application = models.ForeignKey(JobApplication, on_delete=models.DO_NOTHING)
-    date = models.DateField(auto_now=True)
+    date = models.DateField()
     notes = models.TextField(null=True, blank=True)
     completed = models.BooleanField(default=False)
+
+    # This is done so that if we give a date, it is set
+    # and if we don't, then it is set automatically
+    def save(self, *args, **kwargs):
+        if self.date is None:
+            self.date = datetime.datetime.now()
+
+        super().save(*args, **kwargs)

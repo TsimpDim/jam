@@ -11,6 +11,6 @@ The first time it takes some time for the DB to initialize, so after you see
 You should run the command again, so that the 2nd time the API manages to connect to the DB.
 
 Now you can access:
-- Adminer at `localhost:8081` (db/root/root)
+- Adminer at `localhost:8081` (jam-db/root/root)
 - The JAA at `localhost:8001`
 - The DB at `localhost:3307` (root/root)

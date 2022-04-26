@@ -1,3 +1,4 @@
+from tokenize import group
 from .serializers import GroupSerializer, JobApplicationSerializer, StepSerializer, TimelineSerializer
 from .models import Group, JobApplication, Step, Timeline
 from rest_framework import viewsets, status
@@ -40,8 +41,8 @@ class StepViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Step.objects.filter(user_id=self.request.user)
 
-    @action(detail=False, url_path="initial")
-    def group(self, request):
+    @action(detail=False, url_path="initial", name="initial-steps", methods=['GET'], permission_classes=[IsAuthenticated])
+    def initial_steps(self, request):
         return Response(
             StepSerializer(
                 Step.objects.filter(type='S'), many=True
@@ -65,7 +66,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return JobApplication.objects.filter(user_id=self.request.user)
 
-    @action(detail=False, url_path="group")
+    @action(detail=False, methods=['GET'], url_path="group", name="per-group", permission_classes=[IsAuthenticated])
     def group(self, request):
         groupped_job_apps = {}
         groups = Group.objects.filter(user_id=self.request.user)
@@ -89,3 +90,22 @@ class TimelineView(APIView):
                 jap, many=True
             ).data
         )
+
+    def post(self, request, job_application_id, format=None):
+        group_id = request.data['group']
+        step_id = request.data['step']
+        notes = request.data['notes']
+        date = request.data['date']
+        user = self.request.user
+
+        t = Timeline(
+            application=JobApplication.objects.get(id = job_application_id),
+            group=Group.objects.get(id = group_id),
+            step=Step.objects.get(id = step_id),
+            notes=notes,
+            date=date,
+            user=user
+        )
+        t.save()
+
+        return Response(status=status.HTTP_201_CREATED)

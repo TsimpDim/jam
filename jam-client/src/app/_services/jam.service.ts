@@ -119,4 +119,23 @@ export class JamService {
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
+
+  addStepToTimeline(
+    jobAppId: number,
+    jobAppGroup: number,
+    nextStep: number,
+    timelineNotes: string,
+    date: string
+  ) {
+    return this.http.post(
+      environment.apiUrl + '/jam/timeline/' + jobAppId + '/',
+      {
+        "group": jobAppGroup,
+        "step": nextStep,
+        "notes": timelineNotes,
+        "date": date
+      },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
 }

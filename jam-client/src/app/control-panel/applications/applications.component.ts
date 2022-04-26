@@ -17,6 +17,10 @@ export class ApplicationsComponent implements OnInit {
   public groups: any;
   public initialSteps: any;
   public selectedAppTimeline: any;
+  public addStepModalIsOpen: boolean = false;
+  public addStepForm: FormGroup;
+  public steps: any;
+  public nonStartingSteps: any;
 
   constructor(
     private jamService: JamService,
@@ -30,19 +34,25 @@ export class ApplicationsComponent implements OnInit {
       'notes': new FormControl('', []),
       'group': new FormControl('', [Validators.required]),
       'currentStep': new FormControl('', [Validators.required])
-    })
+    });
+
+    this.addStepForm = this.formBuilder.group({
+      'step': new FormControl('', [Validators.required]),
+      'notes': new FormControl('', []),
+      'date': new FormControl('', [])
+    });
   }
 
   ngOnInit(): void {
     this.getApplications();
     this.getGroups();
-    this.getInitialSteps();
+    this.getSteps();
   }
 
   getApplications() {
     this.jamService.getJobApplications(true)
     .subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.loading = false;
         this.applications = data;
       },
@@ -69,6 +79,14 @@ export class ApplicationsComponent implements OnInit {
     this.selectedApp = null;
   }
 
+  openAddStepModal() {
+    this.addStepModalIsOpen = true;
+  }
+
+  closeAddStepModal() {
+    this.addStepModalIsOpen = false;
+  }
+
   getGroups() {
     this.jamService.getGroups()
     .subscribe({
@@ -83,12 +101,14 @@ export class ApplicationsComponent implements OnInit {
     })
   }
 
-  getInitialSteps() {
-    this.jamService.getSteps(true)
+  getSteps() {
+    this.jamService.getSteps()
     .subscribe({
       next: (data) => {
         this.loading = false;
-        this.initialSteps = data;
+        this.steps = data;
+        this.initialSteps = this.steps.filter((s: any) => s.type === 'S');
+        this.nonStartingSteps = this.steps.filter((s: any) => s.type === 'D' || s.type == 'E');
       },
       error: (error) => {
         this.loading = true;
@@ -116,16 +136,41 @@ export class ApplicationsComponent implements OnInit {
     this.closeCreationModal();
   }
 
+  submitStepAdditionForm() {
+    this.addStepToTimeline();
+    this.closeAddStepModal();
+  }
+
+  addStepToTimeline() {
+    let date = this.getProperDateFromField(this.addStepForm.value.date);
+
+    this.jamService.addStepToTimeline(
+      this.selectedApp.id,
+      this.selectedApp.group,
+      this.addStepForm.value.step,
+      this.addStepForm.value.notes,
+      date
+    ).subscribe({
+      next: (data: any) => {
+        this.loading = false;
+        this.getTimeline();
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => this.loading = true
+    })
+  }
+
   createJobApplication() {
-    let inputDate = new Date(this.jobAppForm.value.date);
-    let formattedDate = formatDate(inputDate, 'yyyy-MM-dd', 'en_US')
+    let date = this.getProperDateFromField(this.jobAppForm.value.date);
 
     this.jamService.createJobApplication(
       this.jobAppForm.value.company,
       this.jobAppForm.value.role,
       this.jobAppForm.value.location,
       this.jobAppForm.value.notes,
-      formattedDate,
+      date,
       this.jobAppForm.value.group,
       this.jobAppForm.value.currentStep
     ).subscribe({
@@ -138,5 +183,10 @@ export class ApplicationsComponent implements OnInit {
       },
       complete: () => this.loading = true
     })
+  }
+
+  getProperDateFromField(field: string) {
+    let inputDate = new Date(field);
+    return formatDate(inputDate, 'yyyy-MM-dd', 'en_US')
   }
 }
