@@ -32,9 +32,7 @@
             <ul class="clr-timeline clr-timeline-vertical">
                 <li class="clr-timeline-step" *ngFor="let tl of selectedAppTimeline">
                     <div class="clr-timeline-step-header">{{tl.date}}</div>
-                    <cds-icon shape="circle" style="color:green" *ngIf="tl.step.type == 'S'"></cds-icon>
-                    <cds-icon shape="circle" *ngIf="tl.step.type == 'D'"></cds-icon>
-                    <cds-icon shape="circle" style="color:red" *ngIf="tl.step.type == 'E'"></cds-icon>
+                    <cds-icon shape="circle" [style.color]="tl.step.color"></cds-icon>
                     <div class="clr-timeline-step-body">
                         <span class="clr-timeline-step-title">{{tl.step.name}}</span>
                         <span class="clr-timeline-step-description">{{tl.notes}}</span>

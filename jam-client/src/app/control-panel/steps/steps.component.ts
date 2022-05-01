@@ -22,6 +22,7 @@ export class StepsComponent implements OnInit {
     this.stepForm = this.formBuilder.group({
       "name": new FormControl('', [Validators.required]),
       "type": new FormControl('', []),
+      "color": new FormControl('', [Validators.maxLength(7), Validators.minLength(7)]),
       "notes": new FormControl('', []),
     })
   }
@@ -49,6 +50,8 @@ export class StepsComponent implements OnInit {
     this.stepForm.get("name")?.setValue(null);
     this.stepForm.get("notes")?.setValue(null);
     this.stepForm.get("type")?.setValue(null);
+    this.stepForm.get("color")?.setValue(null);
+
     this.openModal();
   }
 
@@ -74,6 +77,8 @@ export class StepsComponent implements OnInit {
     this.stepForm.get('name')?.setValue(this.selectedStep.name);
     this.stepForm.get('notes')?.setValue(this.selectedStep.notes);
     this.stepForm.get('type')?.setValue(this.selectedStep.type);
+    this.stepForm.get('color')?.setValue(this.selectedStep.color);
+
     this.openModal();
   }
 
@@ -100,7 +105,8 @@ export class StepsComponent implements OnInit {
     this.jamService.createStep(
       this.stepForm.value.name,
       this.stepForm.value.notes,
-      this.stepForm.value.type
+      this.stepForm.value.type,
+      this.stepForm.value.color
     ).subscribe({
       next: () => {
         this.loading = false;
@@ -121,7 +127,8 @@ export class StepsComponent implements OnInit {
     this.jamService.updateStep(
       this.selectedStep.id,
       this.stepForm.value.name,
-      this.stepForm.value.notes
+      this.stepForm.value.notes,
+      this.stepForm.value.color
     ).subscribe({
       next: () => {
         this.loading = false;

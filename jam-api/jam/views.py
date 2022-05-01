@@ -1,4 +1,3 @@
-from tokenize import group
 from .serializers import GroupSerializer, JobApplicationSerializer, StepSerializer, TimelineSerializer
 from .models import Group, JobApplication, Step, Timeline
 from rest_framework import viewsets, status
@@ -98,14 +97,24 @@ class TimelineView(APIView):
         date = request.data['date']
         user = self.request.user
 
-        t = Timeline(
-            application=JobApplication.objects.get(id = job_application_id),
-            group=Group.objects.get(id = group_id),
-            step=Step.objects.get(id = step_id),
-            notes=notes,
-            date=date,
-            user=user
-        )
-        t.save()
+        step = Step.objects.get(id = step_id)
+        application = JobApplication.objects.get(id = job_application_id)
 
-        return Response(status=status.HTTP_201_CREATED)
+        if not application.completed:
+            t = Timeline(
+                application= application,
+                group= Group.objects.get(id = group_id),
+                step= step,
+                notes= notes,
+                date= date,
+                user= user
+            )
+            t.save()
+
+            if step.type == "E":
+                application.completed = True
+                application.save()
+        
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

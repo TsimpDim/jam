@@ -67,18 +67,18 @@ export class JamService {
     );
   }
 
-  updateStep(stepId: number, stepName: string, stepNotes: string) {
+  updateStep(stepId: number, stepName: string, stepNotes: string, color: string) {
     return this.http.patch(
       environment.apiUrl + '/jam/steps/' + stepId +'/',
-      { "name": stepName, "notes": stepNotes },
+      { "name": stepName, "notes": stepNotes, "color": color },
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
 
-  createStep(stepName: string, stepNotes: string, stepType: string) {
+  createStep(stepName: string, stepNotes: string, stepType: string, color: string) {
     return this.http.post(
       environment.apiUrl + '/jam/steps/',
-      { "name": stepName, "notes": stepNotes, "type": stepType },
+      { "name": stepName, "notes": stepNotes, "type": stepType, "color": color },
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }

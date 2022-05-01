@@ -8,9 +8,7 @@
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
         <div class="card clickable" (click)="selectStep(step.id)" *ngFor="let step of steps">
           <div class="card-header">
-            <span *ngIf="step.type == 'S'" class="badge badge-success"></span>
-            <span *ngIf="step.type == 'E'" class="badge badge-danger"></span>
-            <span *ngIf="step.type == 'D'" class="badge"></span>
+            <span class="badge" [style.background-color]="step.color"></span>
             {{step.name}}
           </div>
           <div class="card-block" *ngIf="step.notes">
@@ -53,6 +51,19 @@
               </div>
             </div>
 
+            <div class="clr-form-control">
+              <label for="color" class="clr-control-label">Hex Color</label>
+              <div class="clr-control-container">
+                <div class="clr-input-wrapper">
+                  <input clrInput
+                  type="text"
+                  name="color"
+                  formControlName="color"
+                  />
+                </div>
+              </div>
+            </div>
+          
             <div class="clr-form-control">
               <label for="type" class="clr-control-label">Type</label>
               <div class="clr-control-container">
