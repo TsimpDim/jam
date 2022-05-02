@@ -47,11 +47,7 @@ export class StepsComponent implements OnInit {
 
   clearAndOpenModal() {
     this.selectedStep = null;
-    this.stepForm.get("name")?.setValue(null);
-    this.stepForm.get("notes")?.setValue(null);
-    this.stepForm.get("type")?.setValue(null);
-    this.stepForm.get("color")?.setValue(null);
-
+    this.stepForm.reset();
     this.openModal();
   }
 
@@ -74,11 +70,12 @@ export class StepsComponent implements OnInit {
 
   selectStep(stepId: number) {
     this.selectedStep = this.steps.find((s: any) => s.id == stepId);
-    this.stepForm.get('name')?.setValue(this.selectedStep.name);
-    this.stepForm.get('notes')?.setValue(this.selectedStep.notes);
-    this.stepForm.get('type')?.setValue(this.selectedStep.type);
-    this.stepForm.get('color')?.setValue(this.selectedStep.color);
-
+    this.stepForm.reset({
+      'name': this.selectedStep.name,
+      'notes': this.selectedStep.notes,
+      'type': this.selectedStep.type,
+      'color': this.selectedStep.color
+    });
     this.openModal();
   }
 

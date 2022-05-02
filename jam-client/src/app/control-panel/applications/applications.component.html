@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-sm btn-link">Edit</button>
+                    <button class="btn btn-sm btn-link" (click)="openJobAppModal()">Edit</button>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
 
 
     <clr-vertical-nav [clrVerticalNavCollapsible]="true">
-        <a clrVerticalNavLink (click)="openCreationModal()">Add New Application</a>
+        <a clrVerticalNavLink (click)="openAndClearJobAppModal()">Add New Application</a>
         <clr-vertical-nav-group *ngFor="let group of applications | keyvalue">
             {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span>
             <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
@@ -127,7 +127,7 @@
                 </select>
             </div>
 
-            <div class="clr-form-control">
+            <div class="clr-form-control" *ngIf="selectedApp === null">
                 <label for="currentStep" class="clr-control-label">Initial Step</label>
                 <select clrSelect name="currentStep" formControlName="currentStep">
                     <option *ngFor="let step of initialSteps" [value]="step.id">{{step.name}}</option>
@@ -136,10 +136,15 @@
           </form>
         </div>
 
-
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" (click)="closeCreationModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" (click)="submitCreationForm()">Submit</button>
+            <button type="button" class="btn btn-danger-outline"
+            (click)="deleteJobApp(selectedApp.id)"
+            *ngIf="selectedApp !== null"
+            >
+            Delete
+            </button>
+            <button type="button" class="btn btn-outline" (click)="closeJobAppModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="submitJobAppForm()">Submit</button>
         </div>
     </clr-modal>
 
@@ -179,8 +184,8 @@
 
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" (click)="closeCreationModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" (click)="submitStepAdditionForm()">Submit</button>
+            <button type="button" class="btn btn-outline" (click)="closeAddStepModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="submitStepAdditionForm()">Submit</button>
         </div>
     </clr-modal>
 </div>

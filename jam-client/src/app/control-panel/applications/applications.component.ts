@@ -67,14 +67,31 @@ export class ApplicationsComponent implements OnInit {
     let appsOfGroup = this.applications[groupName];
     let selectedJobApp = appsOfGroup.find((app: any) => app.id == jobAppId);
     this.selectedApp = selectedJobApp;
+
+    this.jobAppForm.reset({
+      'company': this.selectedApp.company,
+      'role': this.selectedApp.role,
+      'date': this.getProperDisplayDate(this.selectedApp.date),
+      'location': this.selectedApp.location,
+      'notes': this.selectedApp.notes,
+      'group': this.selectedApp.group,
+      'currentStep': this.selectedApp.current_step
+    });
+
     this.getTimeline();
   }
 
-  openCreationModal() {
+  openAndClearJobAppModal() {
+    this.creationModalIsOpen = true;
+    this.jobAppForm.reset();
+    this.selectedApp = null;
+  }
+
+  openJobAppModal() {
     this.creationModalIsOpen = true;
   }
 
-  closeCreationModal() {
+  closeJobAppModal() {
     this.creationModalIsOpen = false;
     this.selectedApp = null;
   }
@@ -131,9 +148,13 @@ export class ApplicationsComponent implements OnInit {
     })
   }
 
-  submitCreationForm() {
-    this.createJobApplication();
-    this.closeCreationModal();
+  submitJobAppForm() {
+    if (this.selectedApp === null) {
+      this.createJobApplication();
+    } else {
+      this.updateJobApplication();
+    }
+    this.closeJobAppModal();
   }
 
   submitStepAdditionForm() {
@@ -185,8 +206,56 @@ export class ApplicationsComponent implements OnInit {
     })
   }
 
+  updateJobApplication() {
+    let date = this.getProperDateFromField(this.jobAppForm.value.date);
+
+    this.jamService.updateJobApplication(
+      this.selectedApp.id,
+      this.jobAppForm.value.company,
+      this.jobAppForm.value.role,
+      this.jobAppForm.value.location,
+      this.jobAppForm.value.notes,
+      date,
+      this.jobAppForm.value.group
+    ).subscribe({
+      next: (data: any) => {
+        this.loading = false;
+        this.getApplications();
+        this.selectedApp = null;
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => this.loading = true
+    })
+  }
+
+  deleteJobApp(jobAppId: number) {
+    this.jamService.deleteJobApplication(
+      jobAppId
+    ).subscribe({
+      next: () => {
+        this.loading = false;
+        this.selectedApp = null;
+        this.getApplications();
+        this.closeJobAppModal();
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
   getProperDateFromField(field: string) {
     let inputDate = new Date(field);
     return formatDate(inputDate, 'yyyy-MM-dd', 'en_US')
+  }
+
+  getProperDisplayDate(date: string) {
+    let inputDate = new Date(date);
+    return formatDate(inputDate, 'MM/dd/yyyy', 'en_US')
   }
 }

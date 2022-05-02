@@ -49,6 +49,36 @@ export class JamService {
     );
   }
 
+  updateJobApplication(
+    jobAppId: number,
+    company: string,
+    role: string,
+    location: string,
+    notes: string,
+    date: string,
+    group: number
+  ) {
+    return this.http.patch(
+      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
+      { 
+        "company": company,
+        "role": role,
+        "location": location,
+        "notes": notes,
+        "date": date,
+        "group": group
+      },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  deleteJobApplication(jobAppId: number) {
+    return this.http.delete(
+      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
   getGroups() {
     return this.http.get(
       environment.apiUrl + '/jam/groups/',

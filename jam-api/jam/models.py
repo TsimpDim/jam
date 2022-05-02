@@ -1,10 +1,10 @@
 from datetime import datetime
 from django.db import models
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 class Group(models.Model):
     name = models.CharField(max_length=30, null=False)
-    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -19,7 +19,7 @@ class Step(models.Model):
     name = models.CharField(max_length=30, null=False)
     type = models.CharField(max_length=1, choices=STEP_TYPES, null=False)
     notes = models.TextField(null=True, blank=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     color = models.CharField(max_length=7, default='#8c8c8c')
 
     def __str__(self):
@@ -33,14 +33,14 @@ class JobApplication(models.Model):
     notes = models.TextField(null=True, blank=True)
     current_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
 
 class Timeline(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
-    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     step = models.ForeignKey(Step, on_delete=models.DO_NOTHING)
-    application = models.ForeignKey(JobApplication, on_delete=models.DO_NOTHING)
+    application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
     date = models.DateField()
     notes = models.TextField(null=True, blank=True)
     completed = models.BooleanField(default=False)
