@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
         next: (resp) => {
           this.registered = 'key' in resp;
           if (this.registered) {
-            this.router.navigate(['/auth/login']);
+            this.router.navigate(['auth/login']);
           }
         },
         error: (err) => {

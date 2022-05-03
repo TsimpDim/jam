@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit{
           this.loggedIn = 'key' in resp;
           if (this.loggedIn) {
             this.authService.storeSessionToken(resp['key']);
-            this.router.navigate(['/control-panel']);
+            this.router.navigate(['control-panel/applications']);
           }
         },
         error: (err) => {
