@@ -9,7 +9,7 @@ def create_first_hist(sender, instance, created, **kwargs):
         t = Timeline(
             user = instance.user,
             group = instance.group,
-            step = instance.current_step,
+            step = instance.initial_step,
             application = instance
         )
         t.save()

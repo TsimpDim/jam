@@ -5,5 +5,8 @@ declare -A dcfiles=(
     ["client"]="jam-client/docker-compose-client.yml"
 )
 
-
-docker-compose -f ${dcfiles[$2]} $1
+if [[ $1 == "start" ]]; then
+    docker-compose -f ${dcfiles[$2]} up -d
+else
+    docker-compose -f ${dcfiles[$2]} $1
+fi

@@ -128,8 +128,8 @@
             </div>
 
             <div class="clr-form-control" *ngIf="selectedApp === null">
-                <label for="currentStep" class="clr-control-label">Initial Step</label>
-                <select clrSelect name="currentStep" formControlName="currentStep">
+                <label for="initialStep" class="clr-control-label">Initial Step</label>
+                <select clrSelect name="initialStep" formControlName="initialStep">
                     <option *ngFor="let step of initialSteps" [value]="step.id">{{step.name}}</option>
                 </select>
             </div>

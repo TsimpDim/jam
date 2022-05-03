@@ -31,7 +31,7 @@ class JobApplication(models.Model):
     date = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
-    current_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
+    initial_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)

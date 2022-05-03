@@ -33,7 +33,7 @@ export class ApplicationsComponent implements OnInit {
       'location': new FormControl('', []),
       'notes': new FormControl('', []),
       'group': new FormControl('', [Validators.required]),
-      'currentStep': new FormControl('', [Validators.required])
+      'initialStep': new FormControl('', [Validators.required])
     });
 
     this.addStepForm = this.formBuilder.group({
@@ -75,7 +75,7 @@ export class ApplicationsComponent implements OnInit {
       'location': this.selectedApp.location,
       'notes': this.selectedApp.notes,
       'group': this.selectedApp.group,
-      'currentStep': this.selectedApp.current_step
+      'initialStep': this.selectedApp.initial_step
     });
 
     this.getTimeline();
@@ -193,7 +193,7 @@ export class ApplicationsComponent implements OnInit {
       this.jobAppForm.value.notes,
       date,
       this.jobAppForm.value.group,
-      this.jobAppForm.value.currentStep
+      this.jobAppForm.value.initialStep
     ).subscribe({
       next: (data: any) => {
         this.loading = false;

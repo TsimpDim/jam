@@ -32,7 +32,7 @@ export class JamService {
     notes: string,
     date: string,
     group: number,
-    currentStep: number
+    initialStep: number
   ) {
     return this.http.post(
       environment.apiUrl + '/jam/jobapps/',
@@ -43,7 +43,7 @@ export class JamService {
         "notes": notes,
         "date": date,
         "group": group,
-        "current_step": currentStep
+        "initial_step": initialStep
       },
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
