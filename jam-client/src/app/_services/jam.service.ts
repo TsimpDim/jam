@@ -25,6 +25,15 @@ export class JamService {
     );
   }
 
+
+  getJobApplication(jobAppId: number) {
+    return this.http.get(
+      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+
   createJobApplication(
     company: string,
     role: string,

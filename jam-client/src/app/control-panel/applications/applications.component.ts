@@ -148,6 +148,20 @@ export class ApplicationsComponent implements OnInit {
       complete: () => this.loading = true
     })
   }
+  
+  refreshSelectedJobApp() {
+    this.jamService.getJobApplication(this.selectedApp.id)
+    .subscribe({
+      next: (data: any) => {
+        this.loading = false;
+        this.selectedApp = data;
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => this.loading = true
+    })
+  }
 
   getTimeline() {
     this.jamService.getTimeline(this.selectedApp.id)
@@ -195,6 +209,7 @@ export class ApplicationsComponent implements OnInit {
       next: (data: any) => {
         this.loading = false;
         this.getTimeline();
+        this.refreshSelectedJobApp();
       },
       error: () => {
         this.loading = true;
@@ -295,6 +310,7 @@ export class ApplicationsComponent implements OnInit {
         this.loading = false;
         this.selectedTimelineStep = null;
         this.getTimeline();
+        this.refreshSelectedJobApp();
         this.closeTimelineStepModal();
       },
       error: () => {

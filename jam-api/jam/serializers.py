@@ -8,6 +8,15 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class JobApplicationSerializer(serializers.ModelSerializer):
+
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        if obj.is_completed():
+            return "FINISHED"
+        else:
+            return "IN_PROGRESS"
+
     class Meta:
         model = JobApplication
         fields = '__all__'
