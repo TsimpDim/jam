@@ -1,4 +1,5 @@
 import { formatDate } from '@angular/common';
+import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JamService } from 'src/app/_services/jam.service';
@@ -17,10 +18,12 @@ export class ApplicationsComponent implements OnInit {
   public groups: any;
   public initialSteps: any;
   public selectedAppTimeline: any;
-  public addStepModalIsOpen: boolean = false;
-  public addStepForm: FormGroup;
+  public timelineStepModalIsOpen: boolean = false;
+  public timelineStepForm: FormGroup;
   public steps: any;
   public nonStartingSteps: any;
+  public editTimelineModalIsOpen: boolean = false;
+  public selectedTimelineStep: any = null;
 
   constructor(
     private jamService: JamService,
@@ -36,7 +39,7 @@ export class ApplicationsComponent implements OnInit {
       'initialStep': new FormControl('', [Validators.required])
     });
 
-    this.addStepForm = this.formBuilder.group({
+    this.timelineStepForm = this.formBuilder.group({
       'step': new FormControl('', [Validators.required]),
       'notes': new FormControl('', []),
       'date': new FormControl('', [])
@@ -96,12 +99,24 @@ export class ApplicationsComponent implements OnInit {
     this.selectedApp = null;
   }
 
-  openAddStepModal() {
-    this.addStepModalIsOpen = true;
+  openTimelineStepModal() {
+    this.timelineStepModalIsOpen = true;
+    this.timelineStepForm.reset();
+    this.selectedTimelineStep = null;
   }
 
-  closeAddStepModal() {
-    this.addStepModalIsOpen = false;
+  closeTimelineStepModal() {
+    this.timelineStepModalIsOpen = false;
+  }
+
+  openEditTimelineModal(timelineStepId: any) {
+    this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId)
+    this.timelineStepModalIsOpen = true;
+    let date = this.getProperDisplayDate(this.selectedTimelineStep.date);
+    this.timelineStepForm.reset({
+      'date': date,
+      'notes': this.selectedTimelineStep.notes
+    });
   }
 
   getGroups() {
@@ -157,19 +172,42 @@ export class ApplicationsComponent implements OnInit {
     this.closeJobAppModal();
   }
 
-  submitStepAdditionForm() {
-    this.addStepToTimeline();
-    this.closeAddStepModal();
+  submitTimelineStepForm() {
+    if (this.selectedTimelineStep === null) {
+      this.addStepToTimeline();
+    } else {
+      this.updateTimelineStep();
+    }
+
+    this.closeTimelineStepModal();
   }
 
   addStepToTimeline() {
-    let date = this.getProperDateFromField(this.addStepForm.value.date);
+    let date = this.getProperDateFromField(this.timelineStepForm.value.date);
 
     this.jamService.addStepToTimeline(
       this.selectedApp.id,
       this.selectedApp.group,
-      this.addStepForm.value.step,
-      this.addStepForm.value.notes,
+      this.timelineStepForm.value.step,
+      this.timelineStepForm.value.notes,
+      date
+    ).subscribe({
+      next: (data: any) => {
+        this.loading = false;
+        this.getTimeline();
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => this.loading = true
+    })
+  }
+  
+  updateTimelineStep() {
+    let date = this.getProperDateFromField(this.timelineStepForm.value.date);
+    this.jamService.updateTimelineStep(
+      this.selectedTimelineStep.id,
+      this.timelineStepForm.value.notes,
       date
     ).subscribe({
       next: (data: any) => {
@@ -239,6 +277,25 @@ export class ApplicationsComponent implements OnInit {
         this.selectedApp = null;
         this.getApplications();
         this.closeJobAppModal();
+      },
+      error: () => {
+        this.loading = true;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
+  deleteTimelineStep() {
+    this.jamService.deleteTimelineStep(
+      this.selectedTimelineStep.id
+    ).subscribe({
+      next: () => {
+        this.loading = false;
+        this.selectedTimelineStep = null;
+        this.getTimeline();
+        this.closeTimelineStepModal();
       },
       error: () => {
         this.loading = true;

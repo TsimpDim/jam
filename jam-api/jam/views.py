@@ -79,10 +79,15 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
             groupped_job_apps
         )
 
-class TimelineView(APIView):
+class TimelineViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
+    serializer_class = TimelineSerializer
 
-    def get(self, request, job_application_id, format=None):
+    def get_queryset(self):
+        return Timeline.objects.filter(user_id=self.request.user)
+
+    @action(detail=False, methods=['GET'], url_path="jobapp/(?P<job_application_id>\d+)", name="per-jobapp", permission_classes=[IsAuthenticated])
+    def get_per_jobapp(self, request, job_application_id, format=None):
         jap = Timeline.objects.filter(application=job_application_id)
         return Response(
             TimelineSerializer(
@@ -90,30 +95,27 @@ class TimelineView(APIView):
             ).data
         )
 
-    def post(self, request, job_application_id, format=None):
+    def create(self, request):
         group_id = request.data['group']
         step_id = request.data['step']
         notes = request.data['notes']
         date = request.data['date']
         user = self.request.user
+        job_application_id = request.data['jobapp']
 
         step = Step.objects.get(id = step_id)
         application = JobApplication.objects.get(id = job_application_id)
 
-        if not application.completed:
+        if not application.is_completed():
             t = Timeline(
-                application= application,
-                group= Group.objects.get(id = group_id),
-                step= step,
-                notes= notes,
-                date= date,
-                user= user
+                application = application,
+                group = Group.objects.get(id = group_id),
+                step = step,
+                notes = notes,
+                date = date,
+                user = user
             )
             t.save()
-
-            if step.type == "E":
-                application.completed = True
-                application.save()
         
             return Response(status=status.HTTP_201_CREATED)
         else:

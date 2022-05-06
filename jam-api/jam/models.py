@@ -34,7 +34,12 @@ class JobApplication(models.Model):
     initial_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    completed = models.BooleanField(default=False)
+
+    def is_completed(self):
+        tl = self.timeline_set.last()
+        if tl.step.type == 'E':
+            return True
+        return False
 
 class Timeline(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
@@ -43,7 +48,6 @@ class Timeline(models.Model):
     application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
     date = models.DateField()
     notes = models.TextField(null=True, blank=True)
-    completed = models.BooleanField(default=False)
 
     # This is done so that if we give a date, it is set
     # and if we don't, then it is set automatically

@@ -145,7 +145,7 @@ export class JamService {
 
   getTimeline(jobAppId: number) {
     return this.http.get(
-      environment.apiUrl + '/jam/timeline/' + jobAppId + '/',
+      environment.apiUrl + '/jam/timeline/jobapp/' + jobAppId + '/',
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }
@@ -158,13 +158,36 @@ export class JamService {
     date: string
   ) {
     return this.http.post(
-      environment.apiUrl + '/jam/timeline/' + jobAppId + '/',
+      environment.apiUrl + '/jam/timeline/',
       {
         "group": jobAppGroup,
         "step": nextStep,
         "notes": timelineNotes,
+        "jobapp": jobAppId,
         "date": date
       },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  updateTimelineStep(
+    timelineStepId: number,
+    notes: string,
+    date: string,
+  ) {
+    return this.http.patch(
+      environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
+      { 
+        "notes": notes,
+        "date": date,
+      },
+      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    );
+  }
+
+  deleteTimelineStep(timelineStepId: number) {
+    return this.http.delete(
+      environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
       { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
     );
   }

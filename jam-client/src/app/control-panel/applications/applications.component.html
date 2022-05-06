@@ -33,14 +33,14 @@
                 <li class="clr-timeline-step" *ngFor="let tl of selectedAppTimeline">
                     <div class="clr-timeline-step-header">{{tl.date}}</div>
                     <cds-icon shape="circle" [style.color]="tl.step.color"></cds-icon>
-                    <div class="clr-timeline-step-body">
-                        <span class="clr-timeline-step-title">{{tl.step.name}}</span>
-                        <span class="clr-timeline-step-description">{{tl.notes}}</span>
+                    <div class="clr-timeline-step-body"  (click)="openEditTimelineModal(tl.id)">
+                        <div class="clr-timeline-step-title">{{tl.step.name}}</div>
+                        <div class="clr-timeline-step-description">{{tl.notes}}</div>
                     </div>
                 </li>
             </ul>
 
-            <button class="btn btn-success" style="margin-top: 2em;" (click)="openAddStepModal()">Add step</button>
+            <button class="btn btn-success" style="margin-top: 2em;" (click)="openTimelineStepModal()">Add step</button>
         </div>
     </div>
 
@@ -54,6 +54,7 @@
             </clr-vertical-nav-group-children>
         </clr-vertical-nav-group>
     </clr-vertical-nav>
+
 
 
     <clr-modal [(clrModalOpen)]="creationModalIsOpen">
@@ -148,16 +149,24 @@
         </div>
     </clr-modal>
 
-    <clr-modal [(clrModalOpen)]="addStepModalIsOpen">
-        <h3 class="modal-title">Add Step</h3>
+    <clr-modal [(clrModalOpen)]="timelineStepModalIsOpen">
+        <h3 class="modal-title" *ngIf="selectedTimelineStep == null">Add Step</h3>
+        <h3 class="modal-title" *ngIf="selectedTimelineStep != null">Edit Step</h3>
       
         <div class="modal-body">
-          <form class="clr-form clr-form-horizontal" [formGroup]="addStepForm">
+          <form class="clr-form clr-form-horizontal" [formGroup]="timelineStepForm">
             <div class="clr-form-control">
                 <label for="step" class="clr-control-label">Step</label>
-                <select clrSelect name="step" formControlName="step">
+                <select clrSelect name="step" formControlName="step" *ngIf="selectedTimelineStep == null">
                     <option *ngFor="let step of nonStartingSteps" [value]="step.id">{{step.name}}</option>
                 </select>
+
+                <input
+                clrInput
+                type="text"
+                disabled
+                *ngIf="selectedTimelineStep !== null"
+                value="{{selectedTimelineStep.step.name}}">
             </div>
 
             <div class="clr-form-control">
@@ -184,8 +193,14 @@
 
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline" (click)="closeAddStepModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" (click)="submitStepAdditionForm()">Submit</button>
+            <button type="button" class="btn btn-danger-outline"
+            (click)="deleteTimelineStep()"
+            *ngIf="selectedTimelineStep !== null"
+            >
+            Delete
+            </button>
+            <button type="button" class="btn btn-outline" (click)="closeTimelineStepModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="submitTimelineStepForm()">Submit</button>
         </div>
     </clr-modal>
 </div>
