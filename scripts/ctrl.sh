@@ -6,7 +6,15 @@ declare -A dcfiles=(
 )
 
 if [[ $1 == "start" ]]; then
-    docker-compose -f ${dcfiles[$2]} up -d
+    cmd="up -d"
 else
-    docker-compose -f ${dcfiles[$2]} $1
+    cmd=$1
+fi
+
+if [[ $2 == "all" ]]; then
+    for key in "${!dcfiles[@]}"; do
+        docker-compose -f ${dcfiles[$key]} $cmd
+    done
+else
+    docker-compose -f ${dcfiles[$2]} $cmd
 fi

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment'
 import { AuthService } from './auth.service';
 
@@ -19,17 +20,15 @@ export class JamService {
       endpoint += "group/";
     }
 
-    return this.http.get(
-      environment.apiUrl + endpoint,
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('GET',
+      environment.apiUrl + endpoint
     );
   }
 
 
   getJobApplication(jobAppId: number) {
-    return this.http.get(
-      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('GET',
+      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/'
     );
   }
 
@@ -43,7 +42,7 @@ export class JamService {
     group: number,
     initialStep: number
   ) {
-    return this.http.post(
+    return this.runHttpCall('POST',
       environment.apiUrl + '/jam/jobapps/',
       { 
         "company": company,
@@ -53,8 +52,7 @@ export class JamService {
         "date": date,
         "group": group,
         "initial_step": initialStep
-      },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      }
     );
   }
 
@@ -67,7 +65,7 @@ export class JamService {
     date: string,
     group: number
   ) {
-    return this.http.patch(
+    return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
       { 
         "company": company,
@@ -76,22 +74,19 @@ export class JamService {
         "notes": notes,
         "date": date,
         "group": group
-      },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      }
     );
   }
 
   deleteJobApplication(jobAppId: number) {
-    return this.http.delete(
-      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('DELETE',
+      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/'
     );
   }
 
   getGroups() {
-    return this.http.get(
-      environment.apiUrl + '/jam/groups/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('GET',
+      environment.apiUrl + '/jam/groups/'
     );
   }
 
@@ -100,62 +95,55 @@ export class JamService {
     if (initial) {
       endpoint += 'initial/'
     }
-    return this.http.get(
-      environment.apiUrl + endpoint,
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+
+    return this.runHttpCall('GET',
+      environment.apiUrl + endpoint
     );
   }
 
   updateStep(stepId: number, stepName: string, stepNotes: string, color: string) {
-    return this.http.patch(
+    return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/steps/' + stepId +'/',
-      { "name": stepName, "notes": stepNotes, "color": color },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      { "name": stepName, "notes": stepNotes, "color": color }
     );
   }
 
   createStep(stepName: string, stepNotes: string, stepType: string, color: string) {
-    return this.http.post(
+    return this.runHttpCall('POST',
       environment.apiUrl + '/jam/steps/',
-      { "name": stepName, "notes": stepNotes, "type": stepType, "color": color },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      { "name": stepName, "notes": stepNotes, "type": stepType, "color": color }
     );
   }
   
   deleteStep(stepId: number) {
-    return this.http.delete(
-      environment.apiUrl + '/jam/steps/' + stepId + '/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('DELETE',
+      environment.apiUrl + '/jam/steps/' + stepId + '/'
     );
   }
 
   updateGroup(groupId: number, groupName: string, groupDesc: string) {
-    return this.http.patch(
+    return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/groups/' + groupId +'/',
-      { "name": groupName, "description": groupDesc },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      { "name": groupName, "description": groupDesc }
     );
   }
 
   createGroup(groupName: string, groupDesc: string) {
-    return this.http.post(
+    return this.runHttpCall('POST',
       environment.apiUrl + '/jam/groups/',
-      { "name": groupName, "description": groupDesc },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      { "name": groupName, "description": groupDesc }
     );
   }
 
   deleteGroup(groupId: number) {
-    return this.http.delete(
-      environment.apiUrl + '/jam/groups/' + groupId + '/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('DELETE',
+      environment.apiUrl + '/jam/groups/' + groupId + '/'
     );
   }
 
   getTimeline(jobAppId: number) {
-    return this.http.get(
-      environment.apiUrl + '/jam/timeline/jobapp/' + jobAppId + '/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+    return this.runHttpCall('GET',
+      environment.apiUrl + '/jam/timeline/jobapp/' + jobAppId + '/'
     );
   }
 
@@ -166,7 +154,7 @@ export class JamService {
     timelineNotes: string,
     date: string
   ) {
-    return this.http.post(
+    return this.runHttpCall('POST',
       environment.apiUrl + '/jam/timeline/',
       {
         "group": jobAppGroup,
@@ -174,8 +162,7 @@ export class JamService {
         "notes": timelineNotes,
         "jobapp": jobAppId,
         "date": date
-      },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      }
     );
   }
 
@@ -184,20 +171,35 @@ export class JamService {
     notes: string,
     date: string,
   ) {
-    return this.http.patch(
+    return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
-      { 
+      {
         "notes": notes,
         "date": date,
-      },
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
+      }
     );
   }
 
   deleteTimelineStep(timelineStepId: number) {
-    return this.http.delete(
-      environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
-      { headers: {"Authorization": "Token " + this.authService.getSessionToken()} }
-    );
+    return this.runHttpCall('DELETE',
+      environment.apiUrl + '/jam/timeline/' + timelineStepId + '/'
+    )
   }
+
+  runHttpCall(method: string, url: string, payload: any = null) {
+    let authHeader = { headers: {"Authorization": "Token " + this.authService.getSessionToken()} };
+
+    switch (method) {
+      case 'GET':
+        return this.http.get(url, authHeader);
+      case 'POST':
+        return this.http.post(url, payload, authHeader);
+      case 'PATCH':
+        return this.http.patch(url, payload, authHeader);
+      case 'DELETE':
+        return this.http.delete(url, authHeader);
+      default:
+        return new Observable();
+    }
+  }  
 }

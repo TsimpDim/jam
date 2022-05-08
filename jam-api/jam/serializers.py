@@ -10,6 +10,10 @@ class GroupSerializer(serializers.ModelSerializer):
 class JobApplicationSerializer(serializers.ModelSerializer):
 
     status = serializers.SerializerMethodField()
+    group_name = serializers.SerializerMethodField()
+
+    def get_group_name(self, obj):
+        return obj.group.name
 
     def get_status(self, obj):
         if obj.is_completed():

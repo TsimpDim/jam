@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApplicationsComponent } from './control-panel/applications/applications.component';
 import { GroupsComponent } from './control-panel/groups/groups.component';
 import { StepsComponent } from './control-panel/steps/steps.component';
+import { JobModalComponent } from './control-panel/job-modal/job-modal.component';
 
 ClarityIcons.addIcons(sadFaceIcon, cogIcon);
 
@@ -29,7 +30,8 @@ ClarityIcons.addIcons(sadFaceIcon, cogIcon);
     HeaderComponent,
     ApplicationsComponent,
     GroupsComponent,
-    StepsComponent
+    StepsComponent,
+    JobModalComponent
   ],
   imports: [
     BrowserModule,

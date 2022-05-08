@@ -1,0 +1,93 @@
+<clr-modal [(clrModalOpen)]="isOpen" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="application === null">Add Job Application</h3>
+    <h3 class="modal-title" *ngIf="application !== null">Edit Job Application</h3>
+
+    <div class="modal-body">
+        <form class="clr-form clr-form-horizontal" [formGroup]="jobAppForm">
+            <div class="clr-form-control">
+                <label for="company" class="clr-control-label">Company</label>
+                <div class="clr-control-container">
+                    <div class="clr-input-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="company"
+                        formControlName="company"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="role" class="clr-control-label">Role</label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="role"
+                        formControlName="role"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="location" class="clr-control-label">Location</label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="location"
+                        formControlName="location"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="notes" class="clr-control-label">Notes</label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <textarea
+                        class="clr-textarea"
+                        name="notes"
+                        formControlName="notes"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="date" class="clr-control-label">Date</label>
+                <clr-date-container>
+                    <input clrDate type="date" name="date" formControlName="date"/>
+                </clr-date-container>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="group" class="clr-control-label">Group</label>
+                <select clrSelect name="group" formControlName="group">
+                    <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+                </select>
+            </div>
+
+            <div class="clr-form-control" *ngIf="application === null">
+                <label for="initialStep" class="clr-control-label">Initial Step</label>
+                <select clrSelect name="initialStep" formControlName="initialStep">
+                    <option *ngFor="let step of initialSteps" [value]="step.id">{{step.name}}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger-outline"
+        (click)="deleteJobApp(application.id)"
+        *ngIf="application !== null"
+        >
+        Delete
+        </button>
+        <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" (click)="submitJobAppForm()">Submit</button>
+    </div>
+</clr-modal>

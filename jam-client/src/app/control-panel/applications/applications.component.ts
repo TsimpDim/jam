@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
-import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { objectsIcon } from '@cds/core/icon';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
@@ -13,10 +13,7 @@ export class ApplicationsComponent implements OnInit {
   public applications: any;
   public loading: boolean = true;
   public selectedApp: any = null;
-  public creationModalIsOpen: boolean = false;
-  public jobAppForm: FormGroup;
-  public groups: any;
-  public initialSteps: any;
+  public jobAppModalIsOpen: boolean = false;
   public selectedAppTimeline: any;
   public timelineStepModalIsOpen: boolean = false;
   public timelineStepForm: FormGroup;
@@ -29,16 +26,6 @@ export class ApplicationsComponent implements OnInit {
     private jamService: JamService,
     private formBuilder: FormBuilder
   ) {
-    this.jobAppForm = this.formBuilder.group({
-      'company': new FormControl('', [Validators.required]),
-      'role': new FormControl('', [Validators.required]),
-      'date': new FormControl('', [Validators.required]),
-      'location': new FormControl('', []),
-      'notes': new FormControl('', []),
-      'group': new FormControl('', [Validators.required]),
-      'initialStep': new FormControl('', [Validators.required])
-    });
-
     this.timelineStepForm = this.formBuilder.group({
       'step': new FormControl('', [Validators.required]),
       'notes': new FormControl('', []),
@@ -48,7 +35,6 @@ export class ApplicationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getApplications();
-    this.getGroups();
     this.getSteps();
   }
 
@@ -58,6 +44,10 @@ export class ApplicationsComponent implements OnInit {
       next: (data: any) => {
         this.loading = false;
         this.applications = data;
+
+        if (this.selectedApp !== null) {
+          this.selectApp(this.selectedApp.group_name, this.selectedApp.id);
+        }
       },
       error: (error) => {
         this.loading = true;
@@ -69,33 +59,27 @@ export class ApplicationsComponent implements OnInit {
   selectApp(groupName:any, jobAppId: any) {
     let appsOfGroup = this.applications[groupName];
     let selectedJobApp = appsOfGroup.find((app: any) => app.id == jobAppId);
-    this.selectedApp = selectedJobApp;
 
-    this.jobAppForm.reset({
-      'company': this.selectedApp.company,
-      'role': this.selectedApp.role,
-      'date': this.getProperDisplayDate(this.selectedApp.date),
-      'location': this.selectedApp.location,
-      'notes': this.selectedApp.notes,
-      'group': this.selectedApp.group,
-      'initialStep': this.selectedApp.initial_step
-    });
+    if (selectedJobApp !== undefined) {
+      this.selectedApp = selectedJobApp;
 
-    this.getTimeline();
+      this.getTimeline();
+    } else {
+      this.selectedApp = null;
+    }
   }
 
   openAndClearJobAppModal() {
-    this.creationModalIsOpen = true;
-    this.jobAppForm.reset();
+    this.jobAppModalIsOpen = true;
     this.selectedApp = null;
   }
 
   openJobAppModal() {
-    this.creationModalIsOpen = true;
+    this.jobAppModalIsOpen = true;
   }
 
-  closeJobAppModal() {
-    this.creationModalIsOpen = false;
+  closeAndClearJobAppModal() {
+    this.jobAppModalIsOpen = false
     this.selectedApp = null;
   }
 
@@ -119,27 +103,12 @@ export class ApplicationsComponent implements OnInit {
     });
   }
 
-  getGroups() {
-    this.jamService.getGroups()
-    .subscribe({
-      next: (data) => {
-        this.loading = false;
-        this.groups = data;
-      },
-      error: (error) => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
-    })
-  }
-
   getSteps() {
     this.jamService.getSteps()
     .subscribe({
       next: (data) => {
         this.loading = false;
         this.steps = data;
-        this.initialSteps = this.steps.filter((s: any) => s.type === 'S');
         this.nonStartingSteps = this.steps.filter((s: any) => s.type === 'D' || s.type == 'E');
       },
       error: (error) => {
@@ -175,15 +144,6 @@ export class ApplicationsComponent implements OnInit {
       },
       complete: () => this.loading = true
     })
-  }
-
-  submitJobAppForm() {
-    if (this.selectedApp === null) {
-      this.createJobApplication();
-    } else {
-      this.updateJobApplication();
-    }
-    this.closeJobAppModal();
   }
 
   submitTimelineStepForm() {
@@ -233,72 +193,6 @@ export class ApplicationsComponent implements OnInit {
         this.loading = true;
       },
       complete: () => this.loading = true
-    })
-  }
-
-  createJobApplication() {
-    let date = this.getProperDateFromField(this.jobAppForm.value.date);
-
-    this.jamService.createJobApplication(
-      this.jobAppForm.value.company,
-      this.jobAppForm.value.role,
-      this.jobAppForm.value.location,
-      this.jobAppForm.value.notes,
-      date,
-      this.jobAppForm.value.group,
-      this.jobAppForm.value.initialStep
-    ).subscribe({
-      next: (data: any) => {
-        this.loading = false;
-        this.getApplications();
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
-    })
-  }
-
-  updateJobApplication() {
-    let date = this.getProperDateFromField(this.jobAppForm.value.date);
-
-    this.jamService.updateJobApplication(
-      this.selectedApp.id,
-      this.jobAppForm.value.company,
-      this.jobAppForm.value.role,
-      this.jobAppForm.value.location,
-      this.jobAppForm.value.notes,
-      date,
-      this.jobAppForm.value.group
-    ).subscribe({
-      next: (data: any) => {
-        this.loading = false;
-        this.getApplications();
-        this.selectedApp = null;
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
-    })
-  }
-
-  deleteJobApp(jobAppId: number) {
-    this.jamService.deleteJobApplication(
-      jobAppId
-    ).subscribe({
-      next: () => {
-        this.loading = false;
-        this.selectedApp = null;
-        this.getApplications();
-        this.closeJobAppModal();
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => {
-        this.loading = false;
-      }
     })
   }
 
