@@ -16,22 +16,14 @@ export class ApplicationsComponent implements OnInit {
   public jobAppModalIsOpen: boolean = false;
   public selectedAppTimeline: any;
   public timelineStepModalIsOpen: boolean = false;
-  public timelineStepForm: FormGroup;
   public steps: any;
   public nonStartingSteps: any;
   public editTimelineModalIsOpen: boolean = false;
   public selectedTimelineStep: any = null;
 
-  constructor(
-    private jamService: JamService,
-    private formBuilder: FormBuilder
-  ) {
-    this.timelineStepForm = this.formBuilder.group({
-      'step': new FormControl('', [Validators.required]),
-      'notes': new FormControl('', []),
-      'date': new FormControl('', [])
-    });
-  }
+  constructor (
+    private jamService: JamService
+  ) {}
 
   ngOnInit(): void {
     this.getApplications();
@@ -85,7 +77,7 @@ export class ApplicationsComponent implements OnInit {
 
   openTimelineStepModal() {
     this.timelineStepModalIsOpen = true;
-    this.timelineStepForm.reset();
+    // this.timelineStepForm.reset();
     this.selectedTimelineStep = null;
   }
 
@@ -96,11 +88,6 @@ export class ApplicationsComponent implements OnInit {
   openEditTimelineModal(timelineStepId: any) {
     this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId)
     this.timelineStepModalIsOpen = true;
-    let date = this.getProperDisplayDate(this.selectedTimelineStep.date);
-    this.timelineStepForm.reset({
-      'date': date,
-      'notes': this.selectedTimelineStep.notes
-    });
   }
 
   getSteps() {
@@ -143,76 +130,6 @@ export class ApplicationsComponent implements OnInit {
         this.loading = true;
       },
       complete: () => this.loading = true
-    })
-  }
-
-  submitTimelineStepForm() {
-    if (this.selectedTimelineStep === null) {
-      this.addStepToTimeline();
-    } else {
-      this.updateTimelineStep();
-    }
-
-    this.closeTimelineStepModal();
-  }
-
-  addStepToTimeline() {
-    let date = this.getProperDateFromField(this.timelineStepForm.value.date);
-
-    this.jamService.addStepToTimeline(
-      this.selectedApp.id,
-      this.selectedApp.group,
-      this.timelineStepForm.value.step,
-      this.timelineStepForm.value.notes,
-      date
-    ).subscribe({
-      next: (data: any) => {
-        this.loading = false;
-        this.getTimeline();
-        this.refreshSelectedJobApp();
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
-    })
-  }
-  
-  updateTimelineStep() {
-    let date = this.getProperDateFromField(this.timelineStepForm.value.date);
-    this.jamService.updateTimelineStep(
-      this.selectedTimelineStep.id,
-      this.timelineStepForm.value.notes,
-      date
-    ).subscribe({
-      next: (data: any) => {
-        this.loading = false;
-        this.getTimeline();
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
-    })
-  }
-
-  deleteTimelineStep() {
-    this.jamService.deleteTimelineStep(
-      this.selectedTimelineStep.id
-    ).subscribe({
-      next: () => {
-        this.loading = false;
-        this.selectedTimelineStep = null;
-        this.getTimeline();
-        this.refreshSelectedJobApp();
-        this.closeTimelineStepModal();
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => {
-        this.loading = false;
-      }
     })
   }
 

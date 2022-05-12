@@ -46,6 +46,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.reset(application);
     }
   }
+
   closeModal() {
     this.jobAppForm.reset();
     this.onClose.emit();

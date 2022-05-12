@@ -66,59 +66,14 @@
     >
     </app-job-modal>
 
+    <app-timeline-modal
+        [isOpen]="timelineStepModalIsOpen"
+        [timelineStep]="selectedTimelineStep"
+        [application]="selectedApp"
+        (onClose)="timelineStepModalIsOpen = false"
+        (onApplicationNeedsUpdate)="refreshSelectedJobApp()"
+        (onTimelineNeedsUpdate)="getTimeline()"
+    >     
+    </app-timeline-modal>
 
-    <clr-modal [(clrModalOpen)]="timelineStepModalIsOpen">
-        <h3 class="modal-title" *ngIf="selectedTimelineStep == null">Add Step</h3>
-        <h3 class="modal-title" *ngIf="selectedTimelineStep != null">Edit Step</h3>
-      
-        <div class="modal-body">
-          <form class="clr-form clr-form-horizontal" [formGroup]="timelineStepForm">
-            <div class="clr-form-control">
-                <label for="step" class="clr-control-label">Step</label>
-                <select clrSelect name="step" formControlName="step" *ngIf="selectedTimelineStep == null">
-                    <option *ngFor="let step of nonStartingSteps" [value]="step.id">{{step.name}}</option>
-                </select>
-
-                <input
-                clrInput
-                type="text"
-                disabled
-                *ngIf="selectedTimelineStep !== null"
-                value="{{selectedTimelineStep.step.name}}">
-            </div>
-
-            <div class="clr-form-control">
-                <label for="notes" class="clr-control-label">Notes</label>
-                <div class="clr-control-container">
-                    <div class="clr-textarea-wrapper">
-                        <textarea
-                        class="clr-textarea"
-                        name="notes"
-                        formControlName="notes"
-                        ></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="clr-form-control">
-                <label for="date" class="clr-control-label">Date</label>
-                <clr-date-container>
-                    <input clrDate type="date" name="date" formControlName="date"/>
-                </clr-date-container>
-            </div>
-          </form>
-        </div>
-
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger-outline"
-            (click)="deleteTimelineStep()"
-            *ngIf="selectedTimelineStep !== null"
-            >
-            Delete
-            </button>
-            <button type="button" class="btn btn-outline" (click)="closeTimelineStepModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary" (click)="submitTimelineStepForm()">Submit</button>
-        </div>
-    </clr-modal>
 </div>
