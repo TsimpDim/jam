@@ -1,0 +1,16 @@
+.jam::after {
+    content: "JAM!";
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1.5em;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}

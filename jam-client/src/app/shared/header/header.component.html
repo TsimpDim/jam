@@ -1,8 +1,7 @@
 <header class="header header-3">
     <div class="branding">
-        <a class="nav-link">
-            <cds-icon shape="sad-face"></cds-icon>
-            <span class="title">JAM</span>
+        <a class="nav-link" routerLink="/">
+            <div class="title jam"></div>
         </a>
     </div>
     <div class="header-actions">
@@ -19,7 +18,7 @@
     </div>
 </header>
 
-<nav class="subnav">
+<nav class="subnav" *ngIf="showSubMenu">
     <ul class="nav">
         <li class="nav-item" *ngIf="isLoggedIn">
             <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/applications">Applications</a>

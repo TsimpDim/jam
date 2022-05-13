@@ -77,7 +77,6 @@ export class ApplicationsComponent implements OnInit {
 
   openTimelineStepModal() {
     this.timelineStepModalIsOpen = true;
-    // this.timelineStepForm.reset();
     this.selectedTimelineStep = null;
   }
 

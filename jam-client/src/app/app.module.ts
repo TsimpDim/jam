@@ -18,6 +18,7 @@ import { GroupsComponent } from './control-panel/groups/groups.component';
 import { StepsComponent } from './control-panel/steps/steps.component';
 import { JobModalComponent } from './control-panel/job-modal/job-modal.component';
 import { TimelineModalComponent } from './control-panel/timeline-modal/timeline-modal.component';
+import { HomeComponent } from './home/home.component';
 
 ClarityIcons.addIcons(sadFaceIcon, cogIcon);
 
@@ -33,7 +34,8 @@ ClarityIcons.addIcons(sadFaceIcon, cogIcon);
     GroupsComponent,
     StepsComponent,
     JobModalComponent,
-    TimelineModalComponent
+    TimelineModalComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

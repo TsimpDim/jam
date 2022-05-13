@@ -1,0 +1,25 @@
+#intro-title {
+    display: flex;
+    flex-direction: row;
+}
+
+#intro-title h1 {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+#intro-title img {
+    margin-top: 15em;
+    margin-right: 10em;
+    height: 50vh;
+    width: 50vw;
+}
+
+.intro-text {
+    width: 30vw;
+    margin-top: 10em;
+}
+
+.intro-text p {
+    font-size: 1.2em
+}
