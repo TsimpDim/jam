@@ -20,16 +20,19 @@
                             applications, so that you can easily keep tab on everything that is
                             important to your career and future. Through the dashboard you can
                             also have access to valuable insights and metrics that will provide you
-                            with a 360° view of the job market. Everything revolves around Steps, Groups,
+                            with a 360° view of the job market.
+                        </p>
+                        <p>
+                            Everything revolves around Steps, Groups,
                             and Applications - manage them all from a central location and take your job-hunting to the next level.
                         </p>
 
-                        <div *ngIf="!isLoggedIn">
+                        <div *ngIf="!isLoggedIn" style="margin-top: 1em;">
                             <h4>Start below</h4>
                             <a class="btn btn-primary" routerLink="/auth/login">Login</a>
                             <a class="btn btn-primary" routerLink="/auth/register">Register</a>
                         </div>
-                        <div *ngIf="isLoggedIn">
+                        <div *ngIf="isLoggedIn" style="margin-top: 1em;">
                             <a class="btn btn-primary" routerLink="/control-panel/applications">View Applications</a>
                         </div>
                     </div>

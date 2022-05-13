@@ -2,28 +2,29 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Group(models.Model):
     name = models.CharField(max_length=30, null=False)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user}.{self.name}"
 
+
 class Step(models.Model):
-    STEP_TYPES = (
-        ('S', 'Start'),
-        ('E', 'End'),
-        ('D', 'Default')
-    )
+    STEP_TYPES = (("S", "Start"), ("E", "End"), ("D", "Default"))
+
+    DEFAULT_COLOR = "#8c8c8c"
     name = models.CharField(max_length=30, null=False)
     type = models.CharField(max_length=1, choices=STEP_TYPES, null=False)
     notes = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    color = models.CharField(max_length=7, default='#8c8c8c')
+    color = models.CharField(max_length=7, default=DEFAULT_COLOR)
 
     def __str__(self):
         return f"{self.user}.{self.name}"
+
 
 class JobApplication(models.Model):
     company = models.CharField(max_length=40, null=False)
@@ -37,9 +38,10 @@ class JobApplication(models.Model):
 
     def is_completed(self):
         tl = self.timeline_set.last()
-        if tl.step.type == 'E':
+        if tl.step.type == "E":
             return True
         return False
+
 
 class Timeline(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)

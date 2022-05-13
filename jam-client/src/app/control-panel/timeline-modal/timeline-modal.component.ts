@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Utils } from 'src/app/shared/shared.utils';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class TimelineModalComponent implements OnInit {
   
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private utils: Utils
   ) {
     this.timelineStepForm = this.formBuilder.group({
       'step': new FormControl('', [Validators.required]),
@@ -38,7 +40,7 @@ export class TimelineModalComponent implements OnInit {
       changes['timelineStep'].currentValue !== null
     ) {
       let timelineStep = this.timelineStep;
-      timelineStep.date = this.getProperDisplayDate(timelineStep.date);
+      timelineStep.date = this.utils.getProperDisplayDate(timelineStep.date);
 
       this.timelineStepForm.reset(timelineStep);
     }
@@ -64,7 +66,7 @@ export class TimelineModalComponent implements OnInit {
   }
 
   addStepToTimeline() {
-    let date = this.getProperDateFromField(this.timelineStepForm.value.date);
+    let date = this.utils.getProperDateFromField(this.timelineStepForm.value.date);
 
     this.jamService.addStepToTimeline(
       this.application.id,
@@ -86,7 +88,8 @@ export class TimelineModalComponent implements OnInit {
   }
   
   updateTimelineStep() {
-    let date = this.getProperDateFromField(this.timelineStepForm.value.date);
+    let date = this.utils.getProperDateFromField(this.timelineStepForm.value.date);
+
     this.jamService.updateTimelineStep(
       this.timelineStep.id,
       this.timelineStepForm.value.notes,
@@ -135,15 +138,5 @@ export class TimelineModalComponent implements OnInit {
       },
       complete: () => this.loading = true
     })
-  }
-
-  getProperDateFromField(field: string) {
-    let inputDate = new Date(field);
-    return formatDate(inputDate, 'yyyy-MM-dd', 'en_US')
-  }
-
-  getProperDisplayDate(date: string) {
-    let inputDate = new Date(date);
-    return formatDate(inputDate, 'MM/dd/yyyy', 'en_US')
   }
 }

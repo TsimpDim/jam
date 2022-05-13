@@ -131,14 +131,4 @@ export class ApplicationsComponent implements OnInit {
       complete: () => this.loading = true
     })
   }
-
-  getProperDateFromField(field: string) {
-    let inputDate = new Date(field);
-    return formatDate(inputDate, 'yyyy-MM-dd', 'en_US')
-  }
-
-  getProperDisplayDate(date: string) {
-    let inputDate = new Date(date);
-    return formatDate(inputDate, 'MM/dd/yyyy', 'en_US')
-  }
 }

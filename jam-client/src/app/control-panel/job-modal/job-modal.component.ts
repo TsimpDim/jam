@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Utils } from 'src/app/shared/shared.utils';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class JobModalComponent implements OnInit, OnChanges {
 
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private utils: Utils
   ) {
     this.jobAppForm = this.formBuilder.group({
       'company': new FormControl('', [Validators.required]),
@@ -41,7 +43,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       changes['application'].currentValue !== null
     ) {
       let application = this.application;
-      application.date = this.getProperDisplayDate(application.date);
+      application.date = this.utils.getProperDisplayDate(application.date);
 
       this.jobAppForm.reset(application);
     }
@@ -96,7 +98,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   createJobApplication() {
-    let date = this.getProperDateFromField(this.jobAppForm.value.date);
+    let date = this.utils.getProperDateFromField(this.jobAppForm.value.date);
 
     this.jamService.createJobApplication(
       this.jobAppForm.value.company,
@@ -119,7 +121,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   updateJobApplication() {
-    let date = this.getProperDateFromField(this.jobAppForm.value.date);
+    let date = this.utils.getProperDateFromField(this.jobAppForm.value.date);
 
     this.jamService.updateJobApplication(
       this.application.id,
@@ -159,15 +161,5 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.loading = false;
       }
     })
-  }
-
-  getProperDateFromField(field: string) {
-    let inputDate = new Date(field);
-    return formatDate(inputDate, 'yyyy-MM-dd', 'en_US');
-  }
-
-  getProperDisplayDate(date: string) {
-    let inputDate = new Date(date);
-    return formatDate(inputDate, 'MM/dd/yyyy', 'en_US');
   }
 }

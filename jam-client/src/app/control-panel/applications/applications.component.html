@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-header">
                     {{selectedApp.company}} - {{selectedApp.location}}
-                    <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date}}</span>
+                    <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date | date}}</span>
                     <span class="badge badge-light-blue" style="font-size: .7em;float:right">{{selectedApp.status}}</span>
                 </div>
                 <div class="card-block">
@@ -33,7 +33,7 @@
             
             <ul class="clr-timeline clr-timeline-vertical">
                 <li class="clr-timeline-step" *ngFor="let tl of selectedAppTimeline">
-                    <div class="clr-timeline-step-header">{{tl.date}}</div>
+                    <div class="clr-timeline-step-header">{{tl.date | date}}</div>
                     <cds-icon shape="circle" [style.color]="tl.step.color"></cds-icon>
                     <div class="clr-timeline-step-body"  (click)="openEditTimelineModal(tl.id)">
                         <div class="clr-timeline-step-title">{{tl.step.name}}</div>
@@ -42,7 +42,12 @@
                 </li>
             </ul>
 
-            <button class="btn btn-success" style="margin-top: 2em;" (click)="openTimelineStepModal()">Add step</button>
+            <button
+            class="btn btn-success"
+            style="margin-top: 2em;"
+            [disabled]="selectedApp.status == 'FINISHED'"
+            (click)="openTimelineStepModal()"
+            >Add step</button>
         </div>
     </div>
 
