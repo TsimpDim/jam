@@ -11,7 +11,7 @@ interface IAuth {
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss', '../../shared/shared.scss']
 })
 export class LoginComponent implements OnInit{
   public form: FormGroup;

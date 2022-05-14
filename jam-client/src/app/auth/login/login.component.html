@@ -9,17 +9,28 @@
         <div class="login-group">
           <clr-input-container>
             <label>Username</label>
-            <input clrInput  name="username" type="text" placeholder="JohnDoe" formControlName="username"/>
+            <input
+            clrInput
+            name="username"
+            type="text"
+            placeholder="JohnDoe"
+            formControlName="username"
+            />
             <clr-control-error>Make sure your username is filled in properly</clr-control-error>
           </clr-input-container>
 
           <clr-password-container>
             <label>Password</label>
-            <input clrPassword placeholder="Password" name="password" formControlName="password"/>
+            <input
+            clrPassword
+            placeholder="Password"
+            name="password"
+            formControlName="password"
+            />
             <clr-control-error>Make sure your password is filled in properly</clr-control-error>
           </clr-password-container>
 
-          <div class="alert alert-success" role="alert" *ngIf="loggedIn">
+          <!-- <div class="alert alert-success" role="alert" *ngIf="loggedIn">
             <div class="alert-items">
               <div class="alert-item static">
                 <div class="alert-icon-wrapper">
@@ -30,9 +41,9 @@
                 </span>
               </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="alert alert-danger" role="alert" *ngIf="loggedIn == false">
+        <!-- <div class="alert alert-danger" role="alert" *ngIf="loggedIn == false">
             <div class="alert-items">
               <div class="alert-item static">
                 <div class="alert-icon-wrapper">
@@ -43,18 +54,19 @@
                 </span>
               </div>
             </div>
-        </div>
+        </div> -->
 
-
-        <button
-        class="btn btn-primary"
-        type="submit"
-        (click)="login()"
-        [class.disabled]="loading"
-        >  
-        <clr-spinner *ngIf="loading" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+        <div class="row">
+          <clr-spinner *ngIf="loading" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+          <button
+          class="btn btn-primary"
+          type="submit"
+          (click)="login()"
+          [disabled]="loading"
+          >  
             LOG IN
-        </button>
+          </button>
+        </div>
       </div>
     </form>
   </div>

@@ -25,7 +25,7 @@
                 <clr-control-error>Make sure your password is filled in properly</clr-control-error>
                 <div *ngIf="form.errors?.['notSame']">Make sure your passwords match</div>
             </clr-password-container>
-
+<!-- 
             <div class="alert alert-success" role="alert" *ngIf="registered">
                 <div class="alert-items">
                   <div class="alert-item static">
@@ -50,16 +50,16 @@
                     </span>
                   </div>
                 </div>
-            </div>
+            </div> -->
 
+            <clr-spinner *ngIf="loading" [clrInline]="true" [clrInverse]="true"></clr-spinner>
             <button
             class="btn btn-primary"
             type="submit"
             (click)="register()"
             [class.disabled]="loading"
             >  
-            <clr-spinner *ngIf="loading" [clrInline]="true" [clrInverse]="true"></clr-spinner>
-                REGISTER
+              REGISTER
             </button>
         </div>
       </form>
