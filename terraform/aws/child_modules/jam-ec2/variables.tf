@@ -12,7 +12,7 @@ variable "region" {
   description = "Specifies the AWS Region in which you want to deploy."
 }
 
-variable "jam-ami" {
+variable "ami" {
   type        = string
   nullable    = false
   description = "Specifies which EC2 AMI to use for the deployment."
@@ -48,7 +48,7 @@ variable "secret-key" {
   description = "Django secret key."
 }
 
-variable "jam-instance-type" {
+variable "instance-type" {
   type        = string
   nullable    = false
   description = "JAM instance type."

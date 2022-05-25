@@ -24,22 +24,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if not os.getenv("DEBUG") else False
+DEBUG = False if not os.getenv("DEBUG") else True
 
-ALLOWED_HOSTS = ["localhost", "api.jam.local", "jam-api.tsdim.net"]
+ALLOWED_HOSTS = ["localhost", "api.jam.local", ".tsdim.net"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:81",
+    "http://127.0.0.1:8000",
     "http://client.jam.local:81",
     "http://jam.tsdim.net",
+    "https://jam.tsdim.net",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -48,7 +51,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
     "core",
     "jam",
     "django.contrib.sites",
@@ -63,9 +65,9 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
