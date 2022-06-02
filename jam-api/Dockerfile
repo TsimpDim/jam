@@ -8,3 +8,5 @@ COPY requirements.txt /jobappman/
 WORKDIR /jobappman
 
 RUN pip install -r requirements.txt
+
+RUN python manage.py migrate
