@@ -13,6 +13,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
 
     status = serializers.SerializerMethodField()
     group_name = serializers.SerializerMethodField()
+    last_step_color = serializers.SerializerMethodField()
 
     def get_group_name(self, obj):
         return obj.group.name
@@ -22,6 +23,9 @@ class JobApplicationSerializer(serializers.ModelSerializer):
             return "FINISHED"
         else:
             return "IN_PROGRESS"
+    
+    def get_last_step_color(self, obj):
+        return Timeline.objects.filter(application_id=obj.id).last().step.color
 
     class Meta:
         model = JobApplication

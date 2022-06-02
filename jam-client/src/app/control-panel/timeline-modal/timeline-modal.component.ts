@@ -16,11 +16,12 @@ export class TimelineModalComponent implements OnInit {
   @Output() onClose = new EventEmitter();
   @Output() onTimelineNeedsUpdate = new EventEmitter();
   @Output() onApplicationNeedsUpdate = new EventEmitter();
+  @Output() onAllApplicationsNeedUpdate = new EventEmitter();
 
   public timelineStepForm: FormGroup;
   public loading: boolean = true;
   public nonInitialSteps: any = null;
-  
+
   constructor(
     private jamService: JamService,
     private formBuilder: FormBuilder,
@@ -47,7 +48,7 @@ export class TimelineModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getNonInitialSteps(); 
+    this.getNonInitialSteps();
   }
 
   closeModal() {
@@ -79,6 +80,7 @@ export class TimelineModalComponent implements OnInit {
         this.loading = false;
         this.onTimelineNeedsUpdate.emit();
         this.onApplicationNeedsUpdate.emit();
+        this.onAllApplicationsNeedUpdate.emit()
       },
       error: () => {
         this.loading = true;
@@ -86,7 +88,7 @@ export class TimelineModalComponent implements OnInit {
       complete: () => this.loading = true
     })
   }
-  
+
   updateTimelineStep() {
     let date = this.utils.getProperDateFromField(this.timelineStepForm.value.date);
 
@@ -114,6 +116,7 @@ export class TimelineModalComponent implements OnInit {
         this.loading = false;
         this.timelineStep = null;
         this.onApplicationNeedsUpdate.emit();
+        this.onAllApplicationsNeedUpdate.emit();
         this.onTimelineNeedsUpdate.emit();
         this.closeModal();
       },
