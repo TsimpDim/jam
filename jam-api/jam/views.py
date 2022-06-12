@@ -1,3 +1,4 @@
+from datetime import datetime
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -115,27 +116,39 @@ class TimelineViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
     )
     def get_per_jobapp(self, request, job_application_id, format=None):
-        jap = Timeline.objects.filter(application=job_application_id)
+        jap = Timeline.objects.filter(application=job_application_id).order_by('date')
         return Response(TimelineSerializer(jap, many=True).data)
 
     def create(self, request):
         group_id = request.data["group"]
         step_id = request.data["step"]
         notes = request.data["notes"]
-        date = request.data["date"]
+        date_str = request.data["date"]
         user = self.request.user
         job_application_id = request.data["jobapp"]
-
+        
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
         step = Step.objects.get(id=step_id)
         application = JobApplication.objects.get(id=job_application_id)
+        group = Group.objects.get(id=group_id)
+        first_step = Timeline.objects.filter(application=application, group=group).first()
+        last_step = Timeline.objects.filter(application=application, group=group).last()
 
-        if not application.is_completed():
+        # We do not allow a user to add a step
+        # that occurred before the starting step.
+        # But they can otherwise add a DEFAULT step and they will
+        # be shown sorted by date. Non-default steps must be at the
+        # start or end of a timeline
+        if not application.is_completed() and first_step.date <= date: 
+            if step.type != 'D' and last_step.date > date:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
             t = Timeline(
                 application=application,
-                group=Group.objects.get(id=group_id),
+                group=group,
                 step=step,
                 notes=notes,
-                date=date,
+                date=date_str,
                 user=user,
             )
             t.save()
