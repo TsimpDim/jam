@@ -113,5 +113,8 @@
       }
     }
   },
-  "defaultProject": "jam-client"
+  "defaultProject": "jam-client",
+  "cli": {
+    "analytics": false
+  }
 }

@@ -1,0 +1,17 @@
+<clr-vertical-nav [clrVerticalNavCollapsible]="true" style="height: 100%">
+    <a clrVerticalNavLink (click)="onOpenAndClearJobAppModal.emit()">Add New Application</a>
+    <clr-vertical-nav-group
+        *ngFor="let group of applications | keyvalue"
+        (clrVerticalNavGroupExpandedChange)="persistNavState($event, group.key)"
+        [clrVerticalNavGroupExpanded]="getNavState(group.key)"
+    >
+
+        {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span>
+        <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
+            <a clrVerticalNavLink (click)="onSelectApp.emit({'groupName':group.key, 'jobAppId':app.id})">
+              <span class="badge" [style.background-color]="app.last_step_color"></span>
+              {{app.company}} // {{app.role}}
+            </a>
+        </clr-vertical-nav-group-children>
+    </clr-vertical-nav-group>
+</clr-vertical-nav>

@@ -38,7 +38,7 @@ export class ApplicationsComponent implements OnInit {
         this.applications = data;
 
         if (this.selectedApp !== null) {
-          this.selectApp(this.selectedApp.group_name, this.selectedApp.id);
+          this.selectApp({'groupName':this.selectedApp.group_name, 'jobAppId': this.selectedApp.id});
         }
       },
       error: (error) => {
@@ -48,9 +48,9 @@ export class ApplicationsComponent implements OnInit {
     })
   }
 
-  selectApp(groupName:any, jobAppId: any) {
-    let appsOfGroup = this.applications[groupName];
-    let selectedJobApp = appsOfGroup.find((app: any) => app.id == jobAppId);
+  selectApp(event: any) {
+    let appsOfGroup = this.applications[event.groupName];
+    let selectedJobApp = appsOfGroup.find((app: any) => app.id == event.jobAppId);
 
     if (selectedJobApp !== undefined) {
       this.selectedApp = selectedJobApp;
@@ -59,34 +59,6 @@ export class ApplicationsComponent implements OnInit {
     } else {
       this.selectedApp = null;
     }
-  }
-
-  openAndClearJobAppModal() {
-    this.jobAppModalIsOpen = true;
-    this.selectedApp = null;
-  }
-
-  openJobAppModal() {
-    this.jobAppModalIsOpen = true;
-  }
-
-  closeAndClearJobAppModal() {
-    this.jobAppModalIsOpen = false
-    this.selectedApp = null;
-  }
-
-  openTimelineStepModal() {
-    this.timelineStepModalIsOpen = true;
-    this.selectedTimelineStep = null;
-  }
-
-  closeTimelineStepModal() {
-    this.timelineStepModalIsOpen = false;
-  }
-
-  openEditTimelineModal(timelineStepId: any) {
-    this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId)
-    this.timelineStepModalIsOpen = true;
   }
 
   getSteps() {
@@ -130,5 +102,33 @@ export class ApplicationsComponent implements OnInit {
       },
       complete: () => this.loading = true
     })
+  }
+
+  openAndClearJobAppModal() {
+    this.selectedApp = null;
+    this.jobAppModalIsOpen = true;
+  }
+
+  openJobAppModal() {
+    this.jobAppModalIsOpen = true;
+  }
+
+  closeAndClearJobAppModal() {
+    this.jobAppModalIsOpen = false
+    this.selectedApp = null;
+  }
+
+  openTimelineStepModal() {
+    this.timelineStepModalIsOpen = true;
+    this.selectedTimelineStep = null;
+  }
+
+  closeTimelineStepModal() {
+    this.timelineStepModalIsOpen = false;
+  }
+
+  openEditTimelineModal(timelineStepId: any) {
+    this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId)
+    this.timelineStepModalIsOpen = true;
   }
 }
