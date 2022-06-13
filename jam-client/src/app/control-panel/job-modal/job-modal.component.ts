@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Utils } from 'src/app/shared/shared.utils';
@@ -22,8 +21,7 @@ export class JobModalComponent implements OnInit, OnChanges {
 
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder,
-    private utils: Utils
+    private formBuilder: FormBuilder
   ) {
     this.jobAppForm = this.formBuilder.group({
       'company': new FormControl('', [Validators.required]),
@@ -43,14 +41,11 @@ export class JobModalComponent implements OnInit, OnChanges {
       changes['application'].currentValue !== null
     ) {
       let application = this.application;
-      application.date = this.utils.getProperDisplayDate(application.date);
-
       this.jobAppForm.reset(application);
     }
   }
 
   closeModal() {
-    this.jobAppForm.reset();
     this.onClose.emit();
   }
 
@@ -98,14 +93,12 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   createJobApplication() {
-    let date = this.utils.getProperDateFromField(this.jobAppForm.value.date);
-
     this.jamService.createJobApplication(
       this.jobAppForm.value.company,
       this.jobAppForm.value.role,
       this.jobAppForm.value.location,
       this.jobAppForm.value.notes,
-      date,
+      this.jobAppForm.value.date,
       this.jobAppForm.value.group,
       this.jobAppForm.value.initialStep
     ).subscribe({
@@ -121,15 +114,13 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   updateJobApplication() {
-    let date = this.utils.getProperDateFromField(this.jobAppForm.value.date);
-
     this.jamService.updateJobApplication(
       this.application.id,
       this.jobAppForm.value.company,
       this.jobAppForm.value.role,
       this.jobAppForm.value.location,
       this.jobAppForm.value.notes,
-      date,
+      this.jobAppForm.value.date,
       this.jobAppForm.value.group
     ).subscribe({
       next: (data: any) => {

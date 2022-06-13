@@ -24,8 +24,7 @@ export class TimelineModalComponent implements OnInit {
 
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder,
-    private utils: Utils
+    private formBuilder: FormBuilder
   ) {
     this.timelineStepForm = this.formBuilder.group({
       'step': new FormControl('', [Validators.required]),
@@ -41,8 +40,6 @@ export class TimelineModalComponent implements OnInit {
       changes['timelineStep'].currentValue !== null
     ) {
       let timelineStep = this.timelineStep;
-      timelineStep.date = this.utils.getProperDisplayDate(timelineStep.date);
-
       this.timelineStepForm.reset(timelineStep);
     }
   }
@@ -52,7 +49,6 @@ export class TimelineModalComponent implements OnInit {
   }
 
   closeModal() {
-    this.timelineStepForm.reset();
     this.onClose.emit();
   }
 
@@ -67,14 +63,12 @@ export class TimelineModalComponent implements OnInit {
   }
 
   addStepToTimeline() {
-    let date = this.utils.getProperDateFromField(this.timelineStepForm.value.date);
-
     this.jamService.addStepToTimeline(
       this.application.id,
       this.application.group,
       this.timelineStepForm.value.step,
       this.timelineStepForm.value.notes,
-      date
+      this.timelineStepForm.value.date
     ).subscribe({
       next: (data: any) => {
         this.loading = false;
@@ -90,12 +84,10 @@ export class TimelineModalComponent implements OnInit {
   }
 
   updateTimelineStep() {
-    let date = this.utils.getProperDateFromField(this.timelineStepForm.value.date);
-
     this.jamService.updateTimelineStep(
       this.timelineStep.id,
       this.timelineStepForm.value.notes,
-      date
+      this.timelineStepForm.value.date
     ).subscribe({
       next: (data: any) => {
         this.loading = false;

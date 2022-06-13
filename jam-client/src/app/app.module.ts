@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClarityModule } from '@clr/angular';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import localeEnCa from '@angular/common/locales/en-CA';
 
 import '@cds/core/icon/register.js';
-import { ClarityIcons, sadFaceIcon, cogIcon } from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -20,8 +20,9 @@ import { JobModalComponent } from './control-panel/job-modal/job-modal.component
 import { TimelineModalComponent } from './control-panel/timeline-modal/timeline-modal.component';
 import { HomeComponent } from './home/home.component';
 import { JobNavComponent } from './control-panel/job-nav/job-nav.component';
+import { registerLocaleData } from '@angular/common';
 
-ClarityIcons.addIcons(sadFaceIcon, cogIcon);
+registerLocaleData(localeEnCa);
 
 @NgModule({
   declarations: [
@@ -48,7 +49,9 @@ ClarityIcons.addIcons(sadFaceIcon, cogIcon);
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'en-ca' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
