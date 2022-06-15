@@ -38,9 +38,7 @@ class JobApplication(models.Model):
 
     def is_completed(self):
         tl = self.timeline_set.last()
-        if tl.step.type == "E":
-            return True
-        return False
+        return tl and tl.step.type == "E"
 
 
 class Timeline(models.Model):
@@ -52,7 +50,7 @@ class Timeline(models.Model):
     notes = models.TextField(null=True, blank=True)
 
     # This is done so that if we give a date, it is set
-    # and if we don't, then it is set automatically
+    # and if we don't, then it is set automatically (for the signal to work)
     def save(self, *args, **kwargs):
         if self.date is None:
             self.date = datetime.now()

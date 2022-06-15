@@ -12,6 +12,7 @@ def create_first_hist(sender, instance, created, **kwargs):
             group=instance.group,
             step=instance.initial_step,
             application=instance,
+            date=instance.date
         )
         t.save()
 

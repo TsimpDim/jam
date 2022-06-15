@@ -72,6 +72,11 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         data["user"] = self.request.user.id
+
+        # set default date to NOW if not given
+        if "date" not in data:
+            data["date"] = datetime.now().date()
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -123,11 +128,16 @@ class TimelineViewSet(viewsets.ModelViewSet):
         group_id = request.data["group"]
         step_id = request.data["step"]
         notes = request.data["notes"]
-        date_str = request.data["date"]
         user = self.request.user
         job_application_id = request.data["jobapp"]
         
-        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        # set default date to NOW if not given
+        if "date" in request.data:
+            date_str = request.data["date"]
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        else:
+            date = datetime.now().date()
+
         step = Step.objects.get(id=step_id)
         application = JobApplication.objects.get(id=job_application_id)
         group = Group.objects.get(id=group_id)
@@ -148,7 +158,7 @@ class TimelineViewSet(viewsets.ModelViewSet):
                 group=group,
                 step=step,
                 notes=notes,
-                date=date_str,
+                date=date,
                 user=user,
             )
             t.save()

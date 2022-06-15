@@ -25,7 +25,8 @@ class JobApplicationSerializer(serializers.ModelSerializer):
             return "IN_PROGRESS"
     
     def get_last_step_color(self, obj):
-        return Timeline.objects.filter(application_id=obj.id).last().step.color
+        last_tl = Timeline.objects.filter(application_id=obj.id).last()
+        return last_tl and last_tl.step.color
 
     class Meta:
         model = JobApplication

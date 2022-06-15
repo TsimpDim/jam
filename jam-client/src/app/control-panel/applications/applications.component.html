@@ -19,7 +19,7 @@
                 <h4>Job Application</h4>
                 <div class="card">
                     <div class="card-header">
-                        {{selectedApp.company}} - {{selectedApp.location}}
+                        {{selectedApp.company}} <span *ngIf="selectedApp.location !== ''">- {{selectedApp.location}}</span>
                         <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date | date}}</span>
                         <span class="badge badge-light-blue" style="font-size: .7em;float:right">{{selectedApp.status}}</span>
                     </div>

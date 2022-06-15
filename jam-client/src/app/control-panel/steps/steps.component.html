@@ -26,7 +26,7 @@
         <div class="modal-body">
           <form class="clr-form clr-form-horizontal" [formGroup]="stepForm">
             <div class="clr-form-control">
-              <label for="name" class="clr-control-label">Name</label>
+              <label for="name" class="clr-control-label">Name *</label>
               <div class="clr-control-container">
                 <div class="clr-input-wrapper">
                   <input clrInput
@@ -65,7 +65,7 @@
             </div>
           
             <div class="clr-form-control">
-              <label for="type" class="clr-control-label">Type</label>
+              <label for="type" class="clr-control-label">Type *</label>
               <div class="clr-control-container">
                 <select clrSelect name="type" formControlName="type" *ngIf="selectedStep == null">
                   <option value="S">Starting Step</option>

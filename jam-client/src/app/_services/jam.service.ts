@@ -49,7 +49,7 @@ export class JamService {
         "role": role,
         "location": location,
         "notes": notes,
-        "date": date,
+        "date": date ? date : undefined,
         "group": group,
         "initial_step": initialStep
       }
@@ -72,7 +72,7 @@ export class JamService {
         "role": role,
         "location": location,
         "notes": notes,
-        "date": date,
+        "date": date ? date : undefined,
         "group": group
       }
     );
@@ -161,7 +161,7 @@ export class JamService {
         "step": nextStep,
         "notes": timelineNotes,
         "jobapp": jobAppId,
-        "date": date
+        "date": date ? date : undefined
       }
     );
   }
@@ -175,7 +175,7 @@ export class JamService {
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
       {
         "notes": notes,
-        "date": date,
+        "date": date ? date : undefined,
       }
     );
   }
