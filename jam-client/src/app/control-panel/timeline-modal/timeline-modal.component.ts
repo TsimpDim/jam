@@ -36,12 +36,25 @@ export class TimelineModalComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (
       'timelineStep' in changes &&
-      changes['timelineStep'].currentValue !== undefined &&
-      changes['timelineStep'].currentValue !== null
+      (changes['timelineStep'].currentValue !== undefined &&
+      changes['timelineStep'].currentValue !== null)
     ) {
       let timelineStep = this.timelineStep;
       this.timelineStepForm.reset(timelineStep);
-    }
+    } else if (
+      'timelineStep' in changes &&
+      (changes['timelineStep'].currentValue == undefined ||
+      changes['timelineStep'].currentValue == null)
+      ) {
+        this.timelineStepForm.reset();
+
+        // set default value
+        if (this.nonInitialSteps !== null) {
+          this.timelineStepForm.patchValue({
+            'step': this.nonInitialSteps[0].id
+          })
+        }
+      }
   }
 
   ngOnInit(): void {
@@ -127,6 +140,11 @@ export class TimelineModalComponent implements OnInit {
       next: (data: any) => {
         this.loading = false;
         this.nonInitialSteps = data.filter((s: any) => s.type !== 'S');
+
+        // set default value
+        this.timelineStepForm.patchValue({
+          'step': this.nonInitialSteps[0].id
+        })
       },
       error: (error) => {
         this.loading = true;

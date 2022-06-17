@@ -20,57 +20,70 @@
       </div>
 
       <clr-modal [(clrModalOpen)]="modalIsOpen">
-        <h3 class="modal-title" *ngIf="selectedStep != null">Edit Step</h3>
-        <h3 class="modal-title" *ngIf="selectedStep == null">Add Step</h3>
+        <h3 class="modal-title" *ngIf="selectedStep !== null">Edit Step</h3>
+        <h3 class="modal-title" *ngIf="selectedStep === null">Add Step</h3>
       
         <div class="modal-body">
           <form class="clr-form clr-form-horizontal" [formGroup]="stepForm">
             <div class="clr-form-control">
-              <label for="name" class="clr-control-label">Name *</label>
+              <label for="name" class="clr-control-label">
+                <cds-icon shape="blocks-group"></cds-icon>
+                Name *</label>
               <div class="clr-control-container">
                 <div class="clr-input-wrapper">
                   <input clrInput
                   type="text"
                   name="name"
                   formControlName="name"
+                  [placeholder]="selectedStep === null ? 'Take Home Assignment' : ''"
                   />
                 </div>
               </div>
             </div>
 
             <div class="clr-form-control">
-              <label for="notes" class="clr-control-label">Notes</label>
+              <label for="notes" class="clr-control-label">
+                <cds-icon shape="note"></cds-icon>
+                Notes</label>
               <div class="clr-control-container">
                 <div class="clr-textarea-wrapper">
                   <textarea
                   class="clr-textarea"
                   name="notes"
                   formControlName="notes"
+                  [placeholder]="selectedStep === null ? 'A coding task given a candidate to complete on their own time' : ''"
                   ></textarea>
                 </div>
               </div>
             </div>
 
             <div class="clr-form-control">
-              <label for="color" class="clr-control-label">Hex Color</label>
+              <label for="color" class="clr-control-label">
+                <cds-icon shape="color-palette"></cds-icon>
+                Hex Color
+              </label>
               <div class="clr-control-container">
                 <div class="clr-input-wrapper">
                   <input clrInput
                   type="text"
                   name="color"
                   formControlName="color"
+                  [placeholder]="selectedStep === null ? '#8c8c8c' : ''"
                   />
                 </div>
               </div>
             </div>
           
             <div class="clr-form-control">
-              <label for="type" class="clr-control-label">Type *</label>
+              <label for="type" class="clr-control-label">
+                <cds-icon shape="flag"></cds-icon>
+                Type *
+              </label>
               <div class="clr-control-container">
-                <select clrSelect name="type" formControlName="type" *ngIf="selectedStep == null">
-                  <option value="S">Starting Step</option>
-                  <option value="D">Default Step</option>
-                  <option value="E">Ending Step</option>
+                <select clrSelect name="type" formControlName="type" *ngIf="selectedStep === null">
+                  <option value="S">{{getStepTypeDisplayText('S')}}</option>
+                  <option value="D">{{getStepTypeDisplayText('D')}}</option>
+                  <option value="E">{{getStepTypeDisplayText('E')}}</option>
                 </select>
                 
                 <input
@@ -78,7 +91,7 @@
                 type="text"
                 disabled
                 *ngIf="selectedStep !== null"
-                value="{{selectedStep.type}}">
+                value="{{getStepTypeDisplayText()}}">
               </div>
             </div>
           </form>

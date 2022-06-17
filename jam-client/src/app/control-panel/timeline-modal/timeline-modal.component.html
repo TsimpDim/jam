@@ -1,12 +1,15 @@
 <clr-modal [(clrModalOpen)]="isOpen" [clrModalClosable]="false">
-    <h3 class="modal-title" *ngIf="timelineStep == null">Add Step</h3>
-    <h3 class="modal-title" *ngIf="timelineStep != null">Edit Step</h3>
+    <h3 class="modal-title" *ngIf="timelineStep === null">Add Step</h3>
+    <h3 class="modal-title" *ngIf="timelineStep !== null">Edit Step</h3>
   
     <div class="modal-body">
       <form class="clr-form clr-form-horizontal" [formGroup]="timelineStepForm">
         <div class="clr-form-control">
-            <label for="step" class="clr-control-label">Step</label>
-            <select clrSelect name="step" formControlName="step" *ngIf="timelineStep == null">
+            <label for="step" class="clr-control-label">
+                <cds-icon shape="node"></cds-icon>
+                Step *
+            </label>
+            <select clrSelect name="step" formControlName="step" *ngIf="timelineStep === null">
                 <option *ngFor="let step of nonInitialSteps" [value]="step.id">{{step.name}}</option>
             </select>
 
@@ -20,20 +23,25 @@
         </div>
 
         <div class="clr-form-control">
-            <label for="notes" class="clr-control-label">Notes</label>
+            <label for="notes" class="clr-control-label">
+                <cds-icon shape="note"></cds-icon>
+                Notes</label>
             <div class="clr-control-container">
                 <div class="clr-textarea-wrapper">
                     <textarea
                     class="clr-textarea"
                     name="notes"
                     formControlName="notes"
+                    [placeholder]="timelineStep === null ? 'Had xyz interview with Mr. ABC, was asked about DEF. Went well.' : ''"
                     ></textarea>
                 </div>
             </div>
         </div>
 
         <div class="clr-form-control">
-            <label for="date" class="clr-control-label">Date</label>
+            <label for="date" class="clr-control-label">
+                <cds-icon shape="calendar"></cds-icon>
+                Date</label>
             <clr-date-container>
                 <input clrDate type="date" name="date" formControlName="date"/>
             </clr-date-container>

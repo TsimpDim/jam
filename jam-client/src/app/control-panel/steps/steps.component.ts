@@ -14,6 +14,11 @@ export class StepsComponent implements OnInit {
   public modalIsOpen: boolean = false;
   public loading: boolean = false;
   public steps: any;
+  public STEP_TYPES = {
+    'S': 'Starting Step',
+    'D': 'Default Step',
+    'E': 'Ending Step'
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,6 +34,14 @@ export class StepsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSteps();
+  }
+
+  getStepTypeDisplayText(type?: String) {
+    if (type === undefined) {
+      return this.STEP_TYPES[this.selectedStep.type as keyof typeof this.STEP_TYPES];
+    } else {
+      return this.STEP_TYPES[type as keyof typeof this.STEP_TYPES];
+    }
   }
 
   getSteps() {

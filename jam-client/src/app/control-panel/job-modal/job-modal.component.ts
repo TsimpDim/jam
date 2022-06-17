@@ -35,13 +35,30 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // if 'application' has changed, re-fill all the fields
     if (
       'application' in changes &&
-      changes['application'].currentValue !== undefined &&
-      changes['application'].currentValue !== null
+      (changes['application'].currentValue !== undefined &&
+      changes['application'].currentValue !== null)
     ) {
       let application = this.application;
       this.jobAppForm.reset(application);
+    // if it has changed but has been nulled, make sure
+    // to show default values in jobapp creation modal
+    } else if (
+      'application' in changes &&
+      (changes['application'].currentValue == undefined ||
+      changes['application'].currentValue !== null)
+    ) {
+      this.jobAppForm.reset();
+
+      if (this.groups !== null && this.initialSteps !== null) {
+        // set default values in form
+        this.jobAppForm.patchValue({
+          'group': this.groups[0].id,
+          'initialStep': this.initialSteps[0].id
+        })
+      }
     }
   }
 
@@ -60,6 +77,11 @@ export class JobModalComponent implements OnInit, OnChanges {
       next: (data) => {
         this.loading = false;
         this.groups = data;
+
+        // set default value in form
+        this.jobAppForm.patchValue({
+          'group': this.groups[0].id
+        })
       },
       error: (error) => {
         this.loading = true;
@@ -74,6 +96,11 @@ export class JobModalComponent implements OnInit, OnChanges {
       next: (data: any) => {
         this.loading = false;
         this.initialSteps = data.filter((s: any) => s.type === 'S');
+
+        // set default value in form
+        this.jobAppForm.patchValue({
+          'initialStep': this.initialSteps[0].id
+        })
       },
       error: (error) => {
         this.loading = true;

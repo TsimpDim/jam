@@ -3,10 +3,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClarityModule } from '@clr/angular';
 import { AppComponent } from './app.component';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import localeEnCa from '@angular/common/locales/en-CA';
 
 import '@cds/core/icon/register.js';
+import { ClarityIcons,
+   cogIcon,
+   idBadgeIcon,
+   organizationIcon,
+   noteIcon,
+   calendarIcon,
+   mapMarkerIcon,
+   blockIcon,
+   flagIcon, 
+   nodeIcon, 
+   blocksGroupIcon,
+   colorPaletteIcon} from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -22,6 +34,21 @@ import { HomeComponent } from './home/home.component';
 import { JobNavComponent } from './control-panel/job-nav/job-nav.component';
 import { registerLocaleData } from '@angular/common';
 
+ClarityIcons.addIcons(
+  idBadgeIcon,
+  cogIcon,
+  organizationIcon,
+  noteIcon,
+  calendarIcon,
+  mapMarkerIcon,
+  blockIcon,
+  flagIcon,
+  nodeIcon,
+  blocksGroupIcon,
+  colorPaletteIcon
+);
+
+// Canada locale, so that yyyy-mm-dd format is used by Clarity
 registerLocaleData(localeEnCa);
 
 @NgModule({

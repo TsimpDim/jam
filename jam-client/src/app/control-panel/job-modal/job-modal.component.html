@@ -5,75 +5,100 @@
     <div class="modal-body">
         <form class="clr-form clr-form-horizontal" [formGroup]="jobAppForm">
             <div class="clr-form-control">
-                <label for="company" class="clr-control-label">Company *</label>
+                <label for="company" class="clr-control-label">
+                    <cds-icon shape="organization"></cds-icon>
+                    Company *
+                </label>
                 <div class="clr-control-container">
                     <div class="clr-input-wrapper">
                         <input clrInput
                         type="text"
                         name="company"
                         formControlName="company"
+                        placeholder="Hooly"
                         />
                     </div>
                 </div>
             </div>
 
+
             <div class="clr-form-control">
-                <label for="role" class="clr-control-label">Role *</label>
+                <label for="role" class="clr-control-label">
+                    <cds-icon shape="id-badge"></cds-icon>
+                    Role *
+                </label>
                 <div class="clr-control-container">
                     <div class="clr-textarea-wrapper">
                         <input clrInput
                         type="text"
                         name="role"
                         formControlName="role"
+                        placeholder="Software Engineer"
                         />
                     </div>
                 </div>
             </div>
 
             <div class="clr-form-control">
-                <label for="location" class="clr-control-label">Location</label>
+                <label for="location" class="clr-control-label">
+                    <cds-icon shape="map-marker"></cds-icon>
+                    Location
+                </label>
                 <div class="clr-control-container">
                     <div class="clr-textarea-wrapper">
                         <input clrInput
                         type="text"
                         name="location"
                         formControlName="location"
+                        [placeholder]="application === null ? 'San Francisco' : ''"
                         />
                     </div>
                 </div>
             </div>
 
             <div class="clr-form-control">
-                <label for="notes" class="clr-control-label">Notes</label>
+                <label for="notes" class="clr-control-label">
+                    <cds-icon shape="note"></cds-icon>
+                    Notes
+                </label>
                 <div class="clr-control-container">
                     <div class="clr-textarea-wrapper">
                         <textarea
                         class="clr-textarea"
                         name="notes"
                         formControlName="notes"
+                        [placeholder]="application === null ? 'Great first impression.' : ''"
                         ></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="clr-form-control">
-                <label for="date" class="clr-control-label">Date</label>
+                <label for="date" class="clr-control-label">
+                    <cds-icon shape="calendar"></cds-icon>
+                    Date
+                </label>
                 <clr-date-container>
                     <input clrDate type="date" name="date" formControlName="date"/>
                 </clr-date-container>
             </div>
 
             <div class="clr-form-control">
-                <label for="group" class="clr-control-label">Group *</label>
+                <label for="group" class="clr-control-label">
+                    <cds-icon shape="block"></cds-icon>
+                    Group *
+                </label>
                 <select clrSelect name="group" formControlName="group">
-                    <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+                    <option *ngFor="let group of groups; let i = index" [value]="group.id">{{group.name}}</option>
                 </select>
             </div>
 
             <div class="clr-form-control" *ngIf="application === null">
-                <label for="initialStep" class="clr-control-label">Initial Step *</label>
+                <label for="initialStep" class="clr-control-label">
+                    <cds-icon shape="flag"></cds-icon>
+                    Initial Step *</label>
                 <select clrSelect name="initialStep" formControlName="initialStep">
-                    <option *ngFor="let step of initialSteps" [value]="step.id">{{step.name}}</option>
+                    <option *ngFor="let step of initialSteps; let i = index" [value]="step.id">{{step.name}}</option>
                 </select>
             </div>
         </form>
