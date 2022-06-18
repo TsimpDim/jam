@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if not os.getenv("DEBUG") else True
 
-ALLOWED_HOSTS = ["localhost", "api.jam.local", ".tsdim.net"]
+ALLOWED_HOSTS = ["localhost", "api.jam.local", "jam-api.tsdim.net"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:81",
@@ -37,7 +37,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False
 
 # Application definition
 
