@@ -1,5 +1,6 @@
 <clr-vertical-nav [clrVerticalNavCollapsible]="true" style="height: 100%">
     <a clrVerticalNavLink (click)="onOpenAndClearJobAppModal.emit()">Add New Application</a>
+    <div *ngIf="loadingApplications"  style="font-size: 1px" class="progress loop"><progress></progress></div>
     <clr-vertical-nav-group
         *ngFor="let group of applications | keyvalue"
         (clrVerticalNavGroupExpandedChange)="persistNavState($event, group.key)"

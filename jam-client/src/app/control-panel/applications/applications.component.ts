@@ -1,7 +1,4 @@
-import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { objectsIcon } from '@cds/core/icon';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
@@ -11,7 +8,9 @@ import { JamService } from 'src/app/_services/jam.service';
 })
 export class ApplicationsComponent implements OnInit {
   public applications: any;
-  public loading: boolean = true;
+  public loadingTimeline: boolean = true;
+  public loadingApplications: boolean = true;
+  public loadingSelectedApplication: boolean = false;
   public selectedApp: any = null;
   public jobAppModalIsOpen: boolean = false;
   public selectedAppTimeline: any;
@@ -31,10 +30,13 @@ export class ApplicationsComponent implements OnInit {
   }
 
   getApplications() {
+    this.loadingApplications = true;
+    this.loadingSelectedApplication = true;
     this.jamService.getJobApplications(true)
     .subscribe({
       next: (data: any) => {
-        this.loading = false;
+        this.loadingSelectedApplication = false;
+        this.loadingApplications = false;
         this.applications = data;
 
         if (this.selectedApp !== null) {
@@ -42,9 +44,7 @@ export class ApplicationsComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+      }
     })
   }
 
@@ -65,42 +65,35 @@ export class ApplicationsComponent implements OnInit {
     this.jamService.getSteps()
     .subscribe({
       next: (data) => {
-        this.loading = false;
         this.steps = data;
         this.nonStartingSteps = this.steps.filter((s: any) => s.type === 'D' || s.type == 'E');
-      },
-      error: (error) => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+      }
     })
   }
   
   refreshSelectedJobApp() {
+    this.loadingSelectedApplication = true;
     this.jamService.getJobApplication(this.selectedApp.id)
     .subscribe({
       next: (data: any) => {
-        this.loading = false;
+        this.loadingSelectedApplication = false;
         this.selectedApp = data;
-      },
-      error: () => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+      }
     })
   }
 
   getTimeline() {
+    this.selectedAppTimeline = null;
+    this.loadingTimeline = true;
     this.jamService.getTimeline(this.selectedApp.id)
     .subscribe({
       next: (data: any) => {
-        this.loading = false;
+        this.loadingTimeline = false;
         this.selectedAppTimeline = data;
       },
       error: () => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+        this.loadingTimeline = true;
+      }
     })
   }
 

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Utils } from 'src/app/shared/shared.utils';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
@@ -15,7 +14,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   @Output() onApplicationsNeedUpdate = new EventEmitter();
 
   public jobAppForm: FormGroup;
-  public loading: boolean = true;
+  public loading: boolean = false;
   public initialSteps: any = null;
   public groups: any = null;
 
@@ -71,22 +70,25 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.getGroups();
   }
 
+  submitJobAppForm() {
+    if (this.application === null) {
+      this.createJobApplication();
+    } else {
+      this.updateJobApplication();
+    }
+  }
+
   getGroups() {
     this.jamService.getGroups()
     .subscribe({
       next: (data) => {
-        this.loading = false;
         this.groups = data;
 
         // set default value in form
         this.jobAppForm.patchValue({
           'group': this.groups[0].id
         })
-      },
-      error: (error) => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+      }
     })
   }
 
@@ -94,32 +96,18 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.jamService.getSteps()
     .subscribe({
       next: (data: any) => {
-        this.loading = false;
         this.initialSteps = data.filter((s: any) => s.type === 'S');
 
         // set default value in form
         this.jobAppForm.patchValue({
           'initialStep': this.initialSteps[0].id
         })
-      },
-      error: (error) => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+      }
     })
-  }
-  
-  submitJobAppForm() {
-    if (this.application === null) {
-      this.createJobApplication();
-    } else {
-      this.updateJobApplication();
-    }
-
-    this.closeModal();
   }
 
   createJobApplication() {
+    this.loading = true;
     this.jamService.createJobApplication(
       this.jobAppForm.value.company,
       this.jobAppForm.value.role,
@@ -129,18 +117,21 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.group,
       this.jobAppForm.value.initialStep
     ).subscribe({
-      next: (data: any) => {
-        this.loading = false;
+      next: () => {
         this.onApplicationsNeedUpdate.emit();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
-      complete: () => this.loading = true
+      complete: () => {
+        this.closeModal();
+        this.loading = false;
+      }
     })
   }
 
   updateJobApplication() {
+    this.loading = true;
     this.jamService.updateJobApplication(
       this.application.id,
       this.jobAppForm.value.company,
@@ -150,32 +141,34 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.date,
       this.jobAppForm.value.group
     ).subscribe({
-      next: (data: any) => {
-        this.loading = false;
+      next: () => {
         this.application = null;
         this.onApplicationsNeedUpdate.emit();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
-      complete: () => this.loading = true
+      complete: () => {
+        this.closeModal();
+        this.loading = false;
+      }
     })
   }
 
   deleteJobApp(jobAppId: number) {
+    this.loading = true;
     this.jamService.deleteJobApplication(
       jobAppId
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.application = null;
         this.onApplicationsNeedUpdate.emit();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
+        this.closeModal();
         this.loading = false;
       }
     })

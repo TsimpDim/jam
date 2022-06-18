@@ -13,6 +13,7 @@ export class StepsComponent implements OnInit {
   public stepForm: FormGroup;
   public modalIsOpen: boolean = false;
   public loading: boolean = false;
+  public loadingSteps: boolean = true;
   public steps: any;
   public STEP_TYPES = {
     'S': 'Starting Step',
@@ -45,16 +46,16 @@ export class StepsComponent implements OnInit {
   }
 
   getSteps() {
+    this.loadingSteps = true;
     this.jamService.getSteps()
     .subscribe({
       next: (data: any) => {
-        this.loading = false;
         this.steps = data;
       },
       error: () => {
-        this.loading = true;
+        this.loadingSteps = false;
       },
-      complete: () => this.loading = true
+      complete: () => this.loadingSteps = false
     })
   }
 
@@ -83,35 +84,31 @@ export class StepsComponent implements OnInit {
 
   selectStep(stepId: number) {
     this.selectedStep = this.steps.find((s: any) => s.id == stepId);
-    this.stepForm.reset({
-      'name': this.selectedStep.name,
-      'notes': this.selectedStep.notes,
-      'type': this.selectedStep.type,
-      'color': this.selectedStep.color
-    });
+    this.stepForm.reset(this.selectedStep);
     this.openModal();
   }
 
   deleteStep(stepId: number) {
+    this.loading = true;
     this.jamService.deleteStep(
       stepId
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.selectedStep = null;
         this.getSteps();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }
 
   createStep() {
+    this.loading = true;
     this.jamService.createStep(
       this.stepForm.value.name,
       this.stepForm.value.notes,
@@ -119,21 +116,21 @@ export class StepsComponent implements OnInit {
       this.stepForm.value.color
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.selectedStep = null;
         this.getSteps();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }
 
   updateStep() {
+    this.loading = true;
     this.jamService.updateStep(
       this.selectedStep.id,
       this.stepForm.value.name,
@@ -141,16 +138,15 @@ export class StepsComponent implements OnInit {
       this.stepForm.value.color
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.selectedStep = null;
         this.getSteps();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }

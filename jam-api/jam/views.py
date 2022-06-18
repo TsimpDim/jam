@@ -41,7 +41,10 @@ class StepViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         data["user"] = self.request.user.id
-        data["color"] = Step.DEFAULT_COLOR
+        
+        if 'color' not in data:
+            data["color"] = Step.DEFAULT_COLOR
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -127,7 +130,7 @@ class TimelineViewSet(viewsets.ModelViewSet):
     def create(self, request):
         group_id = request.data["group"]
         step_id = request.data["step"]
-        notes = request.data["notes"]
+        notes = request.data["notes"] if 'notes' in request.data else None
         user = self.request.user
         job_application_id = request.data["jobapp"]
         

@@ -51,6 +51,7 @@
 
 
     <div class="modal-footer">
+        <clr-spinner *ngIf="loading" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
         <button type="button" class="btn btn-danger-outline"
         (click)="deleteTimelineStep()"
         *ngIf="timelineStep !== null && timelineStep.step.type !== 'S'"

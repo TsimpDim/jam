@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 })
 export class JobNavComponent {
   @Input() applications: any = null;
+  @Input() loadingApplications: boolean = false;
   @Output() onSelectApp = new EventEmitter();
   @Output() onOpenAndClearJobAppModal = new EventEmitter();
   navState: any = {};

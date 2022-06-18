@@ -5,6 +5,7 @@
     <div class="content-container">
         <app-job-nav
             [applications]="applications"
+            [loadingApplications]="loadingApplications"
             (onSelectApp)="selectApp($event)"
             (onOpenAndClearJobAppModal)="openAndClearJobAppModal()"
         >
@@ -19,7 +20,7 @@
                 <h4>Job Application</h4>
                 <div class="card">
                     <div class="card-header">
-                        {{selectedApp.company}} <span *ngIf="selectedApp.location !== ''">- {{selectedApp.location}}</span>
+                        {{selectedApp.company}} <span *ngIf="selectedApp.location !== null && selectedApp.location !== ''">- {{selectedApp.location}}</span>
                         <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date | date}}</span>
                         <span class="badge badge-light-blue" style="font-size: .7em;float:right">{{selectedApp.status}}</span>
                     </div>
@@ -32,11 +33,14 @@
                         </div>
                     </div>
                     <div class="card-footer">
+                        <div *ngIf="loadingSelectedApplication"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+
                         <button class="btn btn-sm btn-link" (click)="openJobAppModal()">Edit</button>
                     </div>
             </div>
 
             <h4>Timeline</h4>
+            <clr-spinner *ngIf="loadingTimeline" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
 
             <ul class="clr-timeline clr-timeline-vertical">
                 <li class="clr-timeline-step" *ngFor="let tl of selectedAppTimeline">

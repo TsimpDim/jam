@@ -70,8 +70,8 @@ export class JamService {
       { 
         "company": company,
         "role": role,
-        "location": location,
-        "notes": notes,
+        "location": location ? location : undefined,
+        "notes": notes !== "" ? notes : undefined,
         "date": date ? date : undefined,
         "group": group
       }
@@ -104,14 +104,23 @@ export class JamService {
   updateStep(stepId: number, stepName: string, stepNotes: string, color: string) {
     return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/steps/' + stepId +'/',
-      { "name": stepName, "notes": stepNotes, "color": color }
+      { 
+        "name": stepName,
+        "notes": stepNotes ? stepNotes : undefined,
+        "color": color ? color : undefined
+      }
     );
   }
 
   createStep(stepName: string, stepNotes: string, stepType: string, color: string) {
     return this.runHttpCall('POST',
       environment.apiUrl + '/jam/steps/',
-      { "name": stepName, "notes": stepNotes, "type": stepType, "color": color }
+      { 
+        "name": stepName,
+        "notes": stepNotes ? stepNotes : undefined,
+        "type": stepType,
+        "color": color ? color : undefined
+      }
     );
   }
   
@@ -159,7 +168,7 @@ export class JamService {
       {
         "group": jobAppGroup,
         "step": nextStep,
-        "notes": timelineNotes,
+        "notes": timelineNotes ? timelineNotes : undefined,
         "jobapp": jobAppId,
         "date": date ? date : undefined
       }
@@ -174,7 +183,7 @@ export class JamService {
     return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
       {
-        "notes": notes,
+        "notes": notes ? notes : undefined,
         "date": date ? date : undefined,
       }
     );

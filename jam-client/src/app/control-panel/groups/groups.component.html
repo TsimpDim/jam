@@ -1,11 +1,13 @@
 <div class="main-container">
-    <app-header></app-header>
+  <app-header></app-header>
   
   
   <div class="content-container">
     <div class="content-area">
       <div class="clr-column">
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
+        <div *ngIf="loadingGroups"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+
         <div class="card clickable" (click)="selectGroup(group.id)" *ngFor="let group of groups">
           <div class="card-header">
             {{group.name}}
@@ -59,6 +61,8 @@
           </form>
         </div>
         <div class="modal-footer">
+          <clr-spinner *ngIf="loading" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+
           <button type="button" class="btn btn-danger-outline"
           (click)="deleteGroup(selectedGroup.id)"
           *ngIf="selectedGroup !== null"

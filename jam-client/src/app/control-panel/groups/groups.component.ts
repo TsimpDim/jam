@@ -8,8 +8,9 @@ import { JamService } from 'src/app/_services/jam.service';
   styleUrls: ['./groups.component.scss']
 })
 export class GroupsComponent implements OnInit {
-  public groups: any;
-  public loading: Boolean = true;
+  public groups: any = null;
+  public loadingGroups: boolean = true;
+  public loading : boolean = false;
   public modalIsOpen: boolean = false;
   public selectedGroup: any = null;
   public groupForm: FormGroup;
@@ -29,23 +30,22 @@ export class GroupsComponent implements OnInit {
   }
 
   getGroups() {
+    this.loadingGroups = true;
     this.jamService.getGroups()
     .subscribe({
       next: (data) => {
-        this.loading = false;
         this.groups = data;
       },
-      error: (error) => {
-        this.loading = true;
+      error: () => {
+        this.loadingGroups = false;
       },
-      complete: () => this.loading = true
+      complete: () => this.loadingGroups = false
     })
   }
 
   clearAndOpenModal() {
     this.selectedGroup = null;
-    this.groupForm.get("name")?.setValue(null);
-    this.groupForm.get("description")?.setValue(null);
+    this.groupForm.reset();
     this.openModal();
   }
 
@@ -60,8 +60,7 @@ export class GroupsComponent implements OnInit {
 
   selectGroup(groupId: number) {
     this.selectedGroup = this.groups.find((g: any) => g.id == groupId);
-    this.groupForm.get('name')?.setValue(this.selectedGroup.name);
-    this.groupForm.get('description')?.setValue(this.selectedGroup.description);
+    this.groupForm.reset(this.selectedGroup);
     this.openModal();
   }
 
@@ -74,61 +73,61 @@ export class GroupsComponent implements OnInit {
   }
 
   deleteGroup(groupId: number) {
+    this.loading = true;
     this.jamService.deleteGroup(
       groupId
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.selectedGroup = null;
         this.getGroups();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }
 
   createGroup() {
+    this.loading = true;
     this.jamService.createGroup(
       this.groupForm.value.name,
       this.groupForm.value.description
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.selectedGroup = null;
         this.getGroups();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }
 
   updateGroup() {
+    this.loading = true;
     this.jamService.updateGroup(
       this.selectedGroup.id,
       this.groupForm.value.name,
       this.groupForm.value.description
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.selectedGroup = null;
         this.getGroups();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }

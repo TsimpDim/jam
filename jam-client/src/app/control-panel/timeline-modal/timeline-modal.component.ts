@@ -19,7 +19,7 @@ export class TimelineModalComponent implements OnInit {
   @Output() onAllApplicationsNeedUpdate = new EventEmitter();
 
   public timelineStepForm: FormGroup;
-  public loading: boolean = true;
+  public loading: boolean = false;
   public nonInitialSteps: any = null;
 
   constructor(
@@ -71,11 +71,11 @@ export class TimelineModalComponent implements OnInit {
     } else {
       this.updateTimelineStep();
     }
-
-    this.closeModal();
   }
 
   addStepToTimeline() {
+    this.loading = true;
+
     this.jamService.addStepToTimeline(
       this.application.id,
       this.application.group,
@@ -84,52 +84,57 @@ export class TimelineModalComponent implements OnInit {
       this.timelineStepForm.value.date
     ).subscribe({
       next: (data: any) => {
-        this.loading = false;
         this.onTimelineNeedsUpdate.emit();
         this.onApplicationNeedsUpdate.emit();
         this.onAllApplicationsNeedUpdate.emit()
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
-      complete: () => this.loading = true
+      complete: () => {
+        this.loading = false;
+        this.closeModal();
+      }
     })
   }
 
   updateTimelineStep() {
+    this.loading = true;
     this.jamService.updateTimelineStep(
       this.timelineStep.id,
       this.timelineStepForm.value.notes,
       this.timelineStepForm.value.date
     ).subscribe({
       next: (data: any) => {
-        this.loading = false;
         this.onTimelineNeedsUpdate.emit();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
-      complete: () => this.loading = true
+      complete: () => {
+        this.loading = false;
+        this.closeModal();
+      }
     })
   }
 
   deleteTimelineStep() {
+    this.loading = true;
     this.jamService.deleteTimelineStep(
       this.timelineStep.id
     ).subscribe({
       next: () => {
-        this.loading = false;
         this.timelineStep = null;
         this.onApplicationNeedsUpdate.emit();
         this.onAllApplicationsNeedUpdate.emit();
         this.onTimelineNeedsUpdate.emit();
-        this.closeModal();
       },
       error: () => {
-        this.loading = true;
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }
@@ -138,18 +143,13 @@ export class TimelineModalComponent implements OnInit {
     this.jamService.getSteps()
     .subscribe({
       next: (data: any) => {
-        this.loading = false;
         this.nonInitialSteps = data.filter((s: any) => s.type !== 'S');
 
         // set default value
         this.timelineStepForm.patchValue({
           'step': this.nonInitialSteps[0].id
         })
-      },
-      error: (error) => {
-        this.loading = true;
-      },
-      complete: () => this.loading = true
+      }
     })
   }
 }
