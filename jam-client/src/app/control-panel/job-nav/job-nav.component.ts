@@ -13,12 +13,4 @@ export class JobNavComponent {
   navState: any = {};
 
   constructor() { }
-
-  persistNavState(event: boolean, groupName: any) {
-    this.navState[groupName] = event;
-  }
-
-  getNavState(groupName: any) {
-    return this.navState[groupName];
-  }
 }

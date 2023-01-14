@@ -10,6 +10,7 @@ import '@cds/core/icon/register.js';
 import { ClarityIcons,
    cogIcon,
    idBadgeIcon,
+   plusIcon,
    organizationIcon,
    noteIcon,
    calendarIcon,
@@ -18,6 +19,7 @@ import { ClarityIcons,
    flagIcon, 
    nodeIcon, 
    blocksGroupIcon,
+   pencilIcon,
    colorPaletteIcon} from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
@@ -39,11 +41,13 @@ ClarityIcons.addIcons(
   cogIcon,
   organizationIcon,
   noteIcon,
+  plusIcon,
   calendarIcon,
   mapMarkerIcon,
   blockIcon,
   flagIcon,
   nodeIcon,
+  pencilIcon,
   blocksGroupIcon,
   colorPaletteIcon
 );

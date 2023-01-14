@@ -6,3 +6,46 @@ a:hover {
     cursor: pointer;
     background-color: rgb(241, 241, 241);
 }
+
+.badge {
+    font-size: .7em;
+    font-weight: 500;
+    float:right;
+    padding: .7em;
+}
+
+#timeline {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.clr-timeline-step {
+    min-width: 0;
+    width: 15em;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.clr-timeline-step-description {
+    word-break: break-all;
+    
+}
+
+#add-step-btn {
+    border-radius: 100%;
+    min-width: 0;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    margin-top: 2.55em;
+    margin-left: .15em;
+
+    cds-icon {
+        min-width: 0;
+        min-height: 0;
+        height: 1.8em;
+        width: 1.2em;
+    }
+}

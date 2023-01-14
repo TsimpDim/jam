@@ -96,7 +96,8 @@
             <div class="clr-form-control" *ngIf="application === null">
                 <label for="initialStep" class="clr-control-label">
                     <cds-icon shape="flag"></cds-icon>
-                    Initial Step *</label>
+                    Initial Step *
+                </label>
                 <select clrSelect name="initialStep" formControlName="initialStep">
                     <option *ngFor="let step of initialSteps; let i = index" [value]="step.id">{{step.name}}</option>
                 </select>

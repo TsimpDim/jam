@@ -13,7 +13,7 @@
     
         <div class="content-area">
             <h6 *ngIf="selectedApp == null">
-                Please select an application from the menu on the left.
+                Please create or select an application from the menu on the left.
             </h6>
 
             <div class="clr-column" *ngIf="selectedApp != null">
@@ -21,8 +21,8 @@
                 <div class="card">
                     <div class="card-header">
                         {{selectedApp.company}} <span *ngIf="selectedApp.location !== null && selectedApp.location !== ''">- {{selectedApp.location}}</span>
-                        <span class="badge" style="font-size: .7em;float:right">{{selectedApp.date | date}}</span>
-                        <span class="badge badge-light-blue" style="font-size: .7em;float:right">{{selectedApp.status}}</span>
+                        <span class="badge">Created at {{selectedApp.date | date}}</span>
+                        <span [ngClass]="{'badge': true, 'badge-light-blue': selectedApp.status !== 'FNISHED', 'badge-success': selectedApp.status === 'FINISHED'}">{{selectedApp.status}}</span>
                     </div>
                     <div class="card-block">
                         <div class="card-title">
@@ -35,30 +35,42 @@
                     <div class="card-footer">
                         <div *ngIf="loadingSelectedApplication"  style="font-size: 1px" class="progress loop"><progress></progress></div>
 
-                        <button class="btn btn-sm btn-link" (click)="openJobAppModal()">Edit</button>
+                        <button class="btn btn-sm btn-link" (click)="openJobAppModal()">Edit <cds-icon shape="pencil"></cds-icon></button>
                     </div>
             </div>
 
             <h4>Timeline</h4>
-            <clr-spinner *ngIf="loadingTimeline" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+            <div style="display: flex; flex-direction:row">
+                <clr-spinner *ngIf="loadingTimeline" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
 
-            <ul class="clr-timeline clr-timeline-vertical">
-                <li class="clr-timeline-step" *ngFor="let tl of selectedAppTimeline">
-                    <div class="clr-timeline-step-header">{{tl.date | date}}</div>
-                    <cds-icon shape="circle" [style.color]="tl.step.color"></cds-icon>
-                    <div class="clr-timeline-step-body"  (click)="openEditTimelineModal(tl.id)">
-                        <div class="clr-timeline-step-title">{{tl.step.name}}</div>
-                        <div class="clr-timeline-step-description">{{tl.notes}}</div>
-                    </div>
-                </li>
-            </ul>
+                <ul id="timeline" class="clr-timeline clr-timeline-horizontal">
+                    <ng-container *ngFor="let tl of selectedAppTimeline; index as i">
+                        <li
+                            class="clr-timeline-step"
+                            (click)="openEditTimelineModal(tl.id)"
+                            [ngStyle]="{width: selectedApp.status === 'IN PROGRESS' && i === selectedAppTimeline.length-1? '3em' : '15em'}"
+                            >
+                            <div class="clr-timeline-step-header">{{tl.date | date}}</div>
+                            <cds-icon shape="circle" [style.color]="tl.step.color" ></cds-icon>
+                            <div class="clr-timeline-step-body" (click)="openEditTimelineModal(tl.id)">
+                                <div class="clr-timeline-step-title">{{tl.step.name}}</div>
+                                <div class="clr-timeline-step-description">{{tl.notes}}</div>
+                            </div>
+                        </li>
+                    </ng-container>
 
-            <button
-            class="btn btn-success"
-            style="margin-top: 2em;"
-            [disabled]="selectedApp.status == 'FINISHED'"
-            (click)="openTimelineStepModal()"
-            >Add step</button>
+                    <li class="clr-timeline-step" *ngIf="!loadingTimeline && selectedApp.status === 'IN PROGRESS'">
+                        <button
+                            class="btn btn-primary"
+                            id="add-step-btn"
+                            [disabled]="selectedApp.status == 'FINISHED'"
+                            (click)="openTimelineStepModal()"
+                        >
+                            <cds-icon shape="plus"></cds-icon>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 

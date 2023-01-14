@@ -22,7 +22,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
         if obj.is_completed():
             return "FINISHED"
         else:
-            return "IN_PROGRESS"
+            return "IN PROGRESS"
     
     def get_last_step_color(self, obj):
         last_tl = Timeline.objects.filter(application_id=obj.id).last()

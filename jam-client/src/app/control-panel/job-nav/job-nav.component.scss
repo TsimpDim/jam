@@ -1,0 +1,22 @@
+#add-new-app {
+    background-color: var(--clr-btn-primary-bg-color, #0072a3);
+    font-size: var(--clr-btn-appearance-form-font-size, 0.6rem);
+    font-weight: var(--clr-btn-appearance-form-font-weight, 500);
+    
+    color: var(--clr-btn-primary-color, white);
+    text-align: center;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    border-radius: var(--clr-btn-border-radius, 0.15rem);
+
+    &:hover {
+        background-color: var(--clr-btn-primary-hover-bg-color, #00567a);
+        cursor: pointer;
+    }
+}
+
+.group-item-app:hover {
+    cursor: pointer;
+}
