@@ -57,7 +57,8 @@
                             (click)="openEditTimelineModal(tl.id)"
                             [ngStyle]="{width: selectedApp.status === 'IN PROGRESS' && i === selectedAppTimeline.length-1? '3em' : '15em'}"
                             >
-                            <div class="clr-timeline-step-header">{{tl.date | date}}</div>
+                            <div class="clr-timeline-step-header" *ngIf="tl.date_relevant">{{tl.date | date}}</div>
+                            <div class="clr-timeline-step-header" *ngIf="!tl.date_relevant">?</div>
                             <cds-icon shape="circle" [style.color]="tl.step.color" ></cds-icon>
                             <div class="clr-timeline-step-body" (click)="openEditTimelineModal(tl.id)">
                                 <div class="clr-timeline-step-title">{{tl.step.name}}</div>

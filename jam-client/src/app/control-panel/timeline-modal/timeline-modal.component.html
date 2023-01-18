@@ -41,7 +41,12 @@
         <div class="clr-form-control">
             <label for="date" class="clr-control-label">
                 <cds-icon shape="calendar"></cds-icon>
-                Date</label>
+                Date
+                <a href="..." role="tooltip" aria-haspopup="true" class="tooltip tooltip-sm">
+                    <cds-icon shape="info-circle" size="24"></cds-icon>
+                    <span class="tooltip-content">Enter a single question mark '?' if the date is not relevant for this step.</span>
+                </a>
+            </label>
             <clr-date-container>
                 <input clrDate type="date" name="date" formControlName="date"/>
             </clr-date-container>

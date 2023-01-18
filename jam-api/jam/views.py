@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -127,6 +127,35 @@ class TimelineViewSet(viewsets.ModelViewSet):
         jap = Timeline.objects.filter(application=job_application_id).order_by('date')
         return Response(TimelineSerializer(jap, many=True).data)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        app = instance.application
+
+        # set default date to NOW if not given
+        if "date" in request.data:
+            date_str = request.data["date"]
+            lastStepDate = Timeline.objects.filter(application=app).last().date
+            firstStepDate = Timeline.objects.filter(application=app).first().date
+
+            if date_str == '?':
+                # Get last timeline
+                lastStepDate = Timeline.objects.filter(application=app).last().date
+                if lastStepDate:
+                    request.data['date'] = lastStepDate + timedelta(hours=1)
+                    request.data['date_relevant'] = False
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                date = datetime.strptime(date_str, '%Y-%m-%d').date() # set default date to NOW if not given
+                if firstStepDate != lastStepDate and date < firstStepDate or date > lastStepDate:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                request.data['date_relevant'] = True
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
     def create(self, request):
         group_id = request.data["group"]
         step_id = request.data["step"]
@@ -134,10 +163,23 @@ class TimelineViewSet(viewsets.ModelViewSet):
         user = self.request.user
         job_application_id = request.data["jobapp"]
         
-        # set default date to NOW if not given
+        date_relevant = True
         if "date" in request.data:
             date_str = request.data["date"]
-            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            lastStepDate = Timeline.objects.filter(application=job_application_id).last().date
+            firstStepDate = Timeline.objects.filter(application=job_application_id).first().date
+
+            if date_str == '?':
+                # Set date to prev + 1hour if ?
+                if lastStepDate:
+                    date = lastStepDate + timedelta(hours=1)
+                    date_relevant = False
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                date = datetime.strptime(date_str, '%Y-%m-%d').date() # set default date to NOW if not given
+                if date < firstStepDate or date > lastStepDate:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             date = datetime.now().date()
 
@@ -161,6 +203,7 @@ class TimelineViewSet(viewsets.ModelViewSet):
                 group=group,
                 step=step,
                 notes=notes,
+                date_relevant=date_relevant,
                 date=date,
                 user=user,
             )

@@ -40,6 +40,11 @@ export class TimelineModalComponent implements OnInit {
       changes['timelineStep'].currentValue !== null)
     ) {
       let timelineStep = this.timelineStep;
+
+      if (!timelineStep.date_relevant) {
+        timelineStep.date = '?';
+      }
+
       this.timelineStepForm.reset(timelineStep);
     } else if (
       'timelineStep' in changes &&

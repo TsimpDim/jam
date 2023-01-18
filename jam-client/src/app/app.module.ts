@@ -22,6 +22,7 @@ import { ClarityIcons,
    pencilIcon,
    infoStandardIcon,
    linkIcon,
+   helpIcon,
    colorPaletteIcon} from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
@@ -43,6 +44,7 @@ ClarityIcons.addIcons(
   cogIcon,
   organizationIcon,
   noteIcon,
+  helpIcon,
   plusIcon,
   calendarIcon,
   mapMarkerIcon,

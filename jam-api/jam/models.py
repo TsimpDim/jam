@@ -49,6 +49,7 @@ class Timeline(models.Model):
     step = models.ForeignKey(Step, on_delete=models.DO_NOTHING)
     application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
     date = models.DateField()
+    date_relevant = models.BooleanField(null=False, blank=False, default=True)
     notes = models.TextField(null=True, blank=True)
 
     # This is done so that if we give a date, it is set
