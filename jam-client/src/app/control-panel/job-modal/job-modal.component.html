@@ -57,6 +57,40 @@
             </div>
 
             <div class="clr-form-control">
+                <label for="appliedThrough" class="clr-control-label">
+                    <cds-icon shape="info-standard"></cds-icon>
+                    Applied Through
+                </label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="appliedThrough"
+                        formControlName="appliedThrough"
+                        [placeholder]="application === null ? 'LinkedIn' : ''"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
+                <label for="externalLink" class="clr-control-label">
+                    <cds-icon shape="link"></cds-icon>
+                    External Link
+                </label>
+                <div class="clr-control-container">
+                    <div class="clr-textarea-wrapper">
+                        <input clrInput
+                        type="text"
+                        name="externalLink"
+                        formControlName="externalLink"
+                        [placeholder]="application === null ? 'https://...' : ''"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="clr-form-control">
                 <label for="notes" class="clr-control-label">
                     <cds-icon shape="note"></cds-icon>
                     Notes

@@ -121,7 +121,7 @@ export class ApplicationsComponent implements OnInit {
   }
 
   openEditTimelineModal(timelineStepId: any) {
-    this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId)
+    this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId);
     this.timelineStepModalIsOpen = true;
   }
 }

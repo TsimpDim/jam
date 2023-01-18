@@ -27,6 +27,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       'role': new FormControl('', [Validators.required]),
       'date': new FormControl('', [Validators.required]),
       'location': new FormControl('', []),
+      'appliedThrough': new FormControl('', []),
+      'externalLink': new FormControl('', []),
       'notes': new FormControl('', []),
       'group': new FormControl('', [Validators.required]),
       'initialStep': new FormControl('', [Validators.required])
@@ -41,6 +43,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       changes['application'].currentValue !== null)
     ) {
       let application = this.application;
+      application.externalLink = application.external_link;
+      application.appliedThrough = application.applied_through;
       this.jobAppForm.reset(application);
     // if it has changed but has been nulled, make sure
     // to show default values in jobapp creation modal
@@ -112,6 +116,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.company,
       this.jobAppForm.value.role,
       this.jobAppForm.value.location,
+      this.jobAppForm.value.appliedThrough,
+      this.jobAppForm.value.externalLink,
       this.jobAppForm.value.notes,
       this.jobAppForm.value.date,
       this.jobAppForm.value.group,
@@ -137,6 +143,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.company,
       this.jobAppForm.value.role,
       this.jobAppForm.value.location,
+      this.jobAppForm.value.appliedThrough,
+      this.jobAppForm.value.externalLink,
       this.jobAppForm.value.notes,
       this.jobAppForm.value.date,
       this.jobAppForm.value.group

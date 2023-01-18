@@ -22,6 +22,9 @@
                     <div class="card-header">
                         {{selectedApp.company}} <span *ngIf="selectedApp.location !== null && selectedApp.location !== ''">- {{selectedApp.location}}</span>
                         <span class="badge">Created at {{selectedApp.date | date}}</span>
+                        <span class="badge" *ngIf="selectedApp.appliedThrough">
+                            Applied through: {{selectedApp.appliedThrough}}
+                        </span>
                         <span [ngClass]="{'badge': true, 'badge-light-blue': selectedApp.status !== 'FNISHED', 'badge-success': selectedApp.status === 'FINISHED'}">{{selectedApp.status}}</span>
                     </div>
                     <div class="card-block">
@@ -29,13 +32,17 @@
                             {{selectedApp.role}}
                         </div>
                         <div class="card-text">
-                        {{selectedApp.notes}}
+                            {{selectedApp.notes}}
                         </div>
                     </div>
                     <div class="card-footer">
                         <div *ngIf="loadingSelectedApplication"  style="font-size: 1px" class="progress loop"><progress></progress></div>
 
                         <button class="btn btn-sm btn-link" (click)="openJobAppModal()">Edit <cds-icon shape="pencil"></cds-icon></button>
+
+                        <ng-container *ngIf="selectedApp.externalLink">
+                            <a target="_blank" href="{{selectedApp.externalLink}}">Link <cds-icon shape="link"></cds-icon></a>
+                        </ng-container>
                     </div>
             </div>
 

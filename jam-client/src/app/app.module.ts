@@ -20,6 +20,8 @@ import { ClarityIcons,
    nodeIcon, 
    blocksGroupIcon,
    pencilIcon,
+   infoStandardIcon,
+   linkIcon,
    colorPaletteIcon} from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
@@ -49,7 +51,9 @@ ClarityIcons.addIcons(
   nodeIcon,
   pencilIcon,
   blocksGroupIcon,
-  colorPaletteIcon
+  colorPaletteIcon,
+  linkIcon,
+  infoStandardIcon
 );
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity

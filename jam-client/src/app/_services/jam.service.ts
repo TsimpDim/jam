@@ -37,6 +37,8 @@ export class JamService {
     company: string,
     role: string,
     location: string,
+    appliedThrough: string,
+    externalLink: string,
     notes: string,
     date: string,
     group: number,
@@ -48,6 +50,8 @@ export class JamService {
         "company": company,
         "role": role,
         "location": location,
+        "applied_through": appliedThrough,
+        "external_link": externalLink,
         "notes": notes,
         "date": date ? date : undefined,
         "group": group,
@@ -61,6 +65,8 @@ export class JamService {
     company: string,
     role: string,
     location: string,
+    appliedThrough: string,
+    externalLink: string,
     notes: string,
     date: string,
     group: number
@@ -70,7 +76,9 @@ export class JamService {
       { 
         "company": company,
         "role": role,
-        "location": location ? location : undefined,
+        "location": location,
+        "applied_through": appliedThrough,
+        "external_link": externalLink,
         "notes": notes !== "" ? notes : undefined,
         "date": date ? date : undefined,
         "group": group
