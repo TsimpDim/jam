@@ -10,7 +10,19 @@ export class JobNavComponent {
   @Input() loadingApplications: boolean = false;
   @Output() onSelectApp = new EventEmitter();
   @Output() onOpenAndClearJobAppModal = new EventEmitter();
-  navState: any = {};
+  static navState: any = {};
 
-  constructor() { }
+  toggleNavState(event: any, groupName: any) {
+    event.stopPropagation();
+
+    if (JobNavComponent.navState[groupName] !== undefined) {
+      JobNavComponent.navState[groupName] = !JobNavComponent.navState[groupName];
+    } else {
+      JobNavComponent.navState[groupName] = true;
+    }
+  }
+
+  getNavState(groupName: any) {
+    return JobNavComponent.navState[groupName];
+  }
 }

@@ -7,8 +7,11 @@
     <div *ngIf="loadingApplications" style="font-size: 1px" class="progress loop"><progress></progress></div>
     <clr-vertical-nav-group
         *ngFor="let group of applications | keyvalue"
+        [clrVerticalNavGroupExpanded]="getNavState(group.key)"
     >
-        {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span> 
+        <div (click)="toggleNavState($event, group.key)">    
+            {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span> 
+        </div>
         <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
             <a class="group-item-app" clrVerticalNavLink (click)="onSelectApp.emit({'groupName':group.key, 'jobAppId':app.id})">
               <span class="badge" [style.background-color]="app.last_step_color"></span>
