@@ -1,0 +1,39 @@
+.color-option {
+    width: 25px;
+    height: 25px;
+    margin-left: 7px;
+    border-radius: 100%;
+
+    &:hover {
+        cursor: pointer;
+        outline: 3px solid #ababab;
+    }
+}
+
+.color-option-selected {
+    outline: 3px solid #323232;
+    outline-offset: 1px;
+}
+
+.color-option-container {
+    display: flex;
+    flex-direction: row;
+}
+.color-option-red {
+    background-color: #db4848;
+}
+.color-option-grey {
+    background-color: #cccccc;
+}
+.color-option-green {
+    background-color: #43cc7f;
+}
+.color-option-blue {
+    background-color: #4696d4;
+}
+.color-option-black {
+    background-color: #2e2e2e;
+}
+.color-option-orange {
+    background-color: #fcba03;
+}

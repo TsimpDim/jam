@@ -20,6 +20,15 @@ export class StepsComponent implements OnInit {
     'D': 'Default Step',
     'E': 'Ending Step'
   }
+  selectedColor = 'grey';
+  COLOR_HEXES = {
+    'red': '#db4848',
+    'grey': '#cccccc',
+    'green': '#43cc7f',
+    'blue': '#4696d4',
+    'black': '#2e2e2e',
+    'orange': '#fcba03'
+  } as Record<string, string>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,6 +44,11 @@ export class StepsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSteps();
+  }
+
+  selectColor(color: string) {
+    this.selectedColor = color;
+    this.stepForm.get('color')?.setValue(this.COLOR_HEXES[color]);
   }
 
   getStepTypeDisplayText(type?: String) {
@@ -61,6 +75,7 @@ export class StepsComponent implements OnInit {
 
   clearAndOpenModal() {
     this.selectedStep = null;
+    this.selectedColor = 'grey';
     this.stepForm.reset();
     this.openModal();
   }
@@ -72,6 +87,7 @@ export class StepsComponent implements OnInit {
   closeModal() {
     this.modalIsOpen = false;
     this.selectedStep = null;
+    this.selectedColor = 'grey';
   }
 
   submitForm() {
@@ -84,6 +100,7 @@ export class StepsComponent implements OnInit {
 
   selectStep(stepId: number) {
     this.selectedStep = this.steps.find((s: any) => s.id == stepId);
+    this.selectedColor = Object.keys(this.COLOR_HEXES).find(c => this.COLOR_HEXES[c] === this.selectedStep.color) || 'grey';
     this.stepForm.reset(this.selectedStep);
     this.openModal();
   }

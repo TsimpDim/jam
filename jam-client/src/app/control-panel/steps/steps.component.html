@@ -60,19 +60,17 @@
             </div>
 
             <div class="clr-form-control">
-              <label for="color" class="clr-control-label">
+              <label  class="clr-control-label">
                 <cds-icon shape="color-palette"></cds-icon>
-                Hex Color
+                Color
               </label>
-              <div class="clr-control-container">
-                <div class="clr-input-wrapper">
-                  <input clrInput
-                  type="text"
-                  name="color"
-                  formControlName="color"
-                  [placeholder]="selectedStep === null ? '#8c8c8c' : ''"
-                  />
-                </div>
+              <div class="clr-control-container color-option-container">
+                <div class="color-option color-option-red" (click)="selectColor('red')" [ngClass]="{'color-option-selected': selectedColor === 'red'}"></div>
+                <div class="color-option color-option-grey" (click)="selectColor('grey')" [ngClass]="{'color-option-selected': selectedColor === 'grey'}"></div>
+                <div class="color-option color-option-green" (click)="selectColor('green')" [ngClass]="{'color-option-selected': selectedColor === 'green'}"></div>
+                <div class="color-option color-option-orange" (click)="selectColor('orange')" [ngClass]="{'color-option-selected': selectedColor === 'orange'}"></div>
+                <div class="color-option color-option-blue" (click)="selectColor('blue')" [ngClass]="{'color-option-selected': selectedColor === 'blue'}"></div>
+                <div class="color-option color-option-black" (click)="selectColor('black')" [ngClass]="{'color-option-selected': selectedColor === 'black'}"></div>
               </div>
             </div>
           
