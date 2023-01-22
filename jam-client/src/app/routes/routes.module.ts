@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router'; // CLI imports router
 import { LoginComponent } from '../auth/login/login.component';
 import { RegisterComponent } from '../auth/register/register.component';
+import { AnalyticsComponent } from '../control-panel/analytics/analytics.component';
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
 import { GroupsComponent } from '../control-panel/groups/groups.component';
 import { StepsComponent } from '../control-panel/steps/steps.component';
@@ -25,6 +26,11 @@ const routes: Routes = [
   {
     path: 'control-panel/steps',
     component: StepsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'control-panel/analytics',
+    component: AnalyticsComponent,
     canActivate: [AuthGuard]
   },
   {

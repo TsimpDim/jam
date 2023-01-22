@@ -212,3 +212,18 @@ class TimelineViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class AnalyticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        total_jobapps = JobApplication.objects.all()
+        completed_jobapps = len([jap.id for jap in total_jobapps if jap.is_completed()])
+        pending_jobapps = total_jobapps.count() - completed_jobapps
+
+        return Response({
+            'totalJobApps': total_jobapps.count(),
+            'completedJobApps': completed_jobapps,
+            'pendingJobApps': pending_jobapps
+        }, status=200)
+        

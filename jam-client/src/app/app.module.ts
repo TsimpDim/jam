@@ -38,6 +38,7 @@ import { TimelineModalComponent } from './control-panel/timeline-modal/timeline-
 import { HomeComponent } from './home/home.component';
 import { JobNavComponent } from './control-panel/job-nav/job-nav.component';
 import { registerLocaleData } from '@angular/common';
+import { AnalyticsComponent } from './control-panel/analytics/analytics.component';
 
 ClarityIcons.addIcons(
   idBadgeIcon,
@@ -75,7 +76,8 @@ registerLocaleData(localeEnCa);
     JobModalComponent,
     TimelineModalComponent,
     HomeComponent,
-    JobNavComponent
+    JobNavComponent,
+    AnalyticsComponent
   ],
   imports: [
     BrowserModule,

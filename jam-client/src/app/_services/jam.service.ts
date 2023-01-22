@@ -164,6 +164,12 @@ export class JamService {
     );
   }
 
+  getAnalytics() {
+    return this.runHttpCall('GET',
+      environment.apiUrl + '/jam/analytics/'
+    );
+  }
+
   addStepToTimeline(
     jobAppId: number,
     jobAppGroup: number,

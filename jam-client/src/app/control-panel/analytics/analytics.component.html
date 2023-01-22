@@ -1,0 +1,20 @@
+<div class="main-container">
+    <app-header></app-header>
+
+    <div *ngIf="loading"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+
+    <div id="container" *ngIf="!loading">
+        <div class="clr-row">
+            <div>
+                <div class="card">
+                    <h3 class="card-header">Total Job Applications</h3>
+                    <div class="card-block">
+                        <h4 class="card-title">{{analytics.totalJobApps}}</h4>
+                        <h4 class="card-title">{{analytics.totalJobApps}}</h4>
+                        <h4 class="card-title">{{analytics.totalJobApps}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

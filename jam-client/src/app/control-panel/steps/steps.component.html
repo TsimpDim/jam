@@ -3,10 +3,11 @@
   
   
   <div class="content-container">
+    <div *ngIf="loadingSteps"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+
     <div class="content-area">
       <div class="clr-column">
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
-        <div *ngIf="loadingSteps"  style="font-size: 1px" class="progress loop"><progress></progress></div>
 
         <div class="card clickable" (click)="selectStep(step.id)" *ngFor="let step of steps">
           <div class="card-header">

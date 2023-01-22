@@ -3,10 +3,11 @@
   
   
   <div class="content-container">
+    <div *ngIf="loadingGroups"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+
     <div class="content-area">
       <div class="clr-column">
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
-        <div *ngIf="loadingGroups"  style="font-size: 1px" class="progress loop"><progress></progress></div>
 
         <div class="card clickable" (click)="selectGroup(group.id)" *ngFor="let group of groups">
           <div class="card-header">
