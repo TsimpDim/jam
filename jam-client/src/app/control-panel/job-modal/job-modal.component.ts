@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JamService } from 'src/app/_services/jam.service';
 
@@ -12,6 +12,11 @@ export class JobModalComponent implements OnInit, OnChanges {
   @Input() application: any = null;
   @Output() onClose = new EventEmitter();
   @Output() onApplicationsNeedUpdate = new EventEmitter();
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) { 
+    this.onClose.emit();
+  }
 
   public jobAppForm: FormGroup;
   public loading: boolean = false;

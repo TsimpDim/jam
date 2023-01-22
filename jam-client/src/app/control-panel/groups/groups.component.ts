@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JamService } from 'src/app/_services/jam.service';
 
@@ -14,6 +14,11 @@ export class GroupsComponent implements OnInit {
   public modalIsOpen: boolean = false;
   public selectedGroup: any = null;
   public groupForm: FormGroup;
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) { 
+    this.modalIsOpen = false;
+  }
 
   constructor(
     private jamService: JamService,

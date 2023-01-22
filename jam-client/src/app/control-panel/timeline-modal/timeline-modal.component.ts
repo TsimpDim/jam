@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges, HostListener } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Utils } from 'src/app/shared/shared.utils';
 import { JamService } from 'src/app/_services/jam.service';
@@ -17,6 +17,11 @@ export class TimelineModalComponent implements OnInit {
   @Output() onTimelineNeedsUpdate = new EventEmitter();
   @Output() onApplicationNeedsUpdate = new EventEmitter();
   @Output() onAllApplicationsNeedUpdate = new EventEmitter();
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) { 
+    this.onClose.emit();
+  }
 
   public timelineStepForm: FormGroup;
   public loading: boolean = false;

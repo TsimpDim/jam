@@ -191,7 +191,7 @@ export class JamService {
     return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
       {
-        "notes": notes ? notes : undefined,
+        "notes": notes,
         "date": date ? date : undefined,
       }
     );

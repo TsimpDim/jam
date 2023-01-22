@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { JamService } from 'src/app/_services/jam.service';
 
@@ -29,6 +29,11 @@ export class StepsComponent implements OnInit {
     'black': '#2e2e2e',
     'orange': '#fcba03'
   } as Record<string, string>;
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) { 
+    this.modalIsOpen = false;
+  }
 
   constructor(
     private formBuilder: FormBuilder,
