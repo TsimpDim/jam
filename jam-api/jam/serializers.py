@@ -19,7 +19,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         if obj.is_completed():
-            return "FINISHED"
+            return "COMPLETED"
         else:
             return "IN PROGRESS"
     

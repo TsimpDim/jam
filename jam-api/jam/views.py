@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from dateutil.relativedelta import relativedelta
 
 class GroupsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -217,13 +217,55 @@ class AnalyticsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
-        total_jobapps = JobApplication.objects.all()
+        user = self.request.user
+
+        # Basic JobApps
+        total_jobapps = JobApplication.objects.filter(user=user)
         completed_jobapps = len([jap.id for jap in total_jobapps if jap.is_completed()])
         pending_jobapps = total_jobapps.count() - completed_jobapps
 
+        # Break-down by Steps
+        timelines = Timeline.objects.filter(user=user)
+        step_breakdown = {}
+        for timeline in timelines:
+            if timeline.step.name in step_breakdown:
+                step_breakdown[timeline.step.name] += 1
+            else:
+                step_breakdown[timeline.step.name] = 0
+
+        # Avg Steps per Application
+        steps_per_apps = len(total_jobapps) / len(timelines)
+
+        # Avg Time in-between Steps
+        non_relevant_dates = len(timelines.filter(date_relevant=False))
+        count_dates_used = 0
+        year_delta_sum = 0
+        month_delta_sum = 0
+        day_delta_sum = 0
+        hour_delta_sum = 0
+        for idx, timeline in enumerate(list(timelines)[:-1]):
+            next_tl = timelines[idx+1]
+            # don't take non-date-relevant timelines into consideration
+            if timeline.date_relevant and next_tl.date_relevant:
+                time_delta = relativedelta(next_tl.date, timeline.date)
+                year_delta_sum += time_delta.years
+                month_delta_sum += time_delta.months
+                day_delta_sum += time_delta.days
+                hour_delta_sum += time_delta.hours
+                count_dates_used += 1
+        
         return Response({
             'totalJobApps': total_jobapps.count(),
             'completedJobApps': completed_jobapps,
-            'pendingJobApps': pending_jobapps
+            'pendingJobApps': pending_jobapps,
+            'stepBreakdown': step_breakdown,
+            'stepsPerApp': f'{steps_per_apps:.2f}',
+            'timeDelta': {
+                'years': f'{year_delta_sum/count_dates_used:.2f}',
+                'months': f'{month_delta_sum/count_dates_used:.2f}',
+                'days': f'{day_delta_sum/count_dates_used:.2f}',
+                'hours': f'{hour_delta_sum/count_dates_used:.2f}',
+            },
+            'nonRelevantDates': non_relevant_dates
         }, status=200)
         

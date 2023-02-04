@@ -5,14 +5,36 @@
 
     <div id="container" *ngIf="!loading">
         <div class="clr-row">
-            <div>
-                <div class="card">
-                    <h3 class="card-header">Total Job Applications</h3>
-                    <div class="card-block">
-                        <h4 class="card-title">{{analytics.totalJobApps}}</h4>
-                        <h4 class="card-title">{{analytics.totalJobApps}}</h4>
-                        <h4 class="card-title">{{analytics.totalJobApps}}</h4>
-                    </div>
+            <div class="card">
+                <h3 class="card-header">#Job Applications</h3>
+                <div class="card-block" style="display: flex;flex-direction:row;">
+                    <span class="numeric" style="margin-right:.5em;color: grey;display: flex;flex-direction:column;">{{analytics.totalJobApps}} <span class="badge" >total</span></span>
+                    /
+                    <span class="numeric" style="margin-right:.5em;margin-left:.5em;color: red;display: flex;flex-direction:column;">{{analytics.pendingJobApps}} <span class="badge badge-danger">pending</span></span>
+                    /
+                    <span class="numeric" style="margin-right:.5em;margin-left:.5em;color: green;display: flex;flex-direction:column;">{{analytics.completedJobApps}} <span class="badge badge-success">completed</span></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-header">Step Breakdown</h3>
+                <div class="card-block" style="display: flex;flex-direction:row;">
+                    <span *ngFor="let step of analytics.stepBreakdown | keyvalue" class="numeric" style="margin-right:1em;color: grey;display: flex;flex-direction:column;">{{step.value}}<span class="badge">{{step.key}}</span></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-header">Avg. Steps per Application</h3>
+                <div class="card-block" style="display: flex;flex-direction:row;">
+                    <span class="numeric" style="color: grey;display: flex;flex-direction:column;">{{analytics.stepsPerApp}}</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-header">Time Difference across Steps</h3>
+                <div class="card-block" style="display: flex;flex-direction:row;">
+                    <span *ngFor="let step of analytics.timeDelta | keyvalue" class="numeric" style="margin-right:1em;color: grey;display: flex;flex-direction:column;">{{step.value}}<span class="badge">{{step.key}}</span></span>
+                    <span class="numeric" style="margin-left: auto;color: grey;display: flex;flex-direction:column;">{{analytics.nonRelevantDates}}<span class="badge">non-relevant dates</span></span>
                 </div>
             </div>
         </div>
