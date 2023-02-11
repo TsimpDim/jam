@@ -4,4 +4,24 @@
 
 .numeric {
     font-size: 2em;
+    margin-right:.5em;
+    display: flex;
+    flex-direction:column;
+    text-align: center;
+    color: grey;
+}
+
+.card {
+    width: auto;
+    margin-right: 2em;
+    border: 2px solid lightgrey;
+    transition: outline ease .1s;
+
+    &:hover {
+        outline: 1px solid lightgrey;
+    }
+}
+
+.card-header {
+    border: none;
 }

@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from dateutil.relativedelta import relativedelta
 
 
 class Group(models.Model):
@@ -41,6 +42,13 @@ class JobApplication(models.Model):
     def is_completed(self):
         tl = self.timeline_set.last()
         return tl and tl.step.type == "E"
+
+    def time_took(self):
+        if self.is_completed():
+            first = Timeline.objects.filter(application=self).first()
+            last = Timeline.objects.filter(application=self).last()
+
+            return relativedelta(last.date, first.date)
 
 
 class Timeline(models.Model):

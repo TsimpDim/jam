@@ -1,6 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { JamService } from 'src/app/_services/jam.service';
 
+interface Analytics {
+  totalJobApps: number,
+  completedJobApps: number,
+  pendingJobApps: number,
+  stepBreakdown: Record<string, {count: number, color: string}>
+  stepsPerApp: number,
+  timeBetweenSteps: Record<string, {years: number, months: number, days: number, hours: number}>,
+  nonRelevantDates: number,
+  appliedThrough: Record<string, string>,
+  timeToCompletion: Record<string, {years: number, months: number, days: number, hours: number}>,
+}
+
+
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
@@ -8,7 +21,7 @@ import { JamService } from 'src/app/_services/jam.service';
 })
 export class AnalyticsComponent implements OnInit {
   loading = false;
-  analytics: any = undefined;
+  analytics: Analytics = {} as Analytics;
 
   constructor (
     private jamService: JamService

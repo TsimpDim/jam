@@ -178,7 +178,7 @@ class TimelineViewSet(viewsets.ModelViewSet):
                     return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
                 date = datetime.strptime(date_str, '%Y-%m-%d').date() # set default date to NOW if not given
-                if date < firstStepDate or date > lastStepDate:
+                if date < firstStepDate:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             date = datetime.now().date()
@@ -221,17 +221,21 @@ class AnalyticsView(APIView):
 
         # Basic JobApps
         total_jobapps = JobApplication.objects.filter(user=user)
-        completed_jobapps = len([jap.id for jap in total_jobapps if jap.is_completed()])
-        pending_jobapps = total_jobapps.count() - completed_jobapps
+        completed_jobapps = [jap for jap in total_jobapps if jap.is_completed()]
+        completed_jobapps_count = len(completed_jobapps)
+        pending_jobapps = total_jobapps.count() - completed_jobapps_count
 
         # Break-down by Steps
         timelines = Timeline.objects.filter(user=user)
         step_breakdown = {}
         for timeline in timelines:
             if timeline.step.name in step_breakdown:
-                step_breakdown[timeline.step.name] += 1
+                step_breakdown[timeline.step.name]['count'] += 1
             else:
-                step_breakdown[timeline.step.name] = 0
+                step_breakdown[timeline.step.name] = {
+                    'count': 0,
+                    'color': timeline.step.color
+                }
 
         # Avg Steps per Application
         steps_per_apps = len(total_jobapps) / len(timelines)
@@ -253,19 +257,58 @@ class AnalyticsView(APIView):
                 day_delta_sum += time_delta.days
                 hour_delta_sum += time_delta.hours
                 count_dates_used += 1
+
+        time_between_steps = {
+            'years': f'{year_delta_sum/count_dates_used:.2f}',
+            'months': f'{month_delta_sum/count_dates_used:.2f}',
+            'days': f'{day_delta_sum/count_dates_used:.2f}',
+            'hours': f'{hour_delta_sum/count_dates_used:.2f}',
+        }
+
+        # Applied Through breakdown
+        all_applied_through = [i['applied_through'] for i in total_jobapps.values('applied_through').distinct()]
+        all_applied_through_count = {} 
+        for at in all_applied_through:
+            stored_key = at
+            if at == '' or not at:
+                stored_key = 'empty'
+
+            if stored_key not in all_applied_through_count:
+                all_applied_through_count[stored_key] = 0
+            all_applied_through_count[stored_key] += total_jobapps.filter(applied_through=at).count()
+
+        # Avg. time until completion
+        count_dates_used = 0
+        month_delta_sum = 0
+        day_delta_sum = 0
+        hour_delta_sum = 0
+        year_delta_sum = 0
+        for app in completed_jobapps:
+            time_delta = app.time_took()
+
+            month_delta_sum += time_delta.months
+            day_delta_sum += time_delta.days
+            hour_delta_sum += time_delta.hours
+            year_delta_sum += time_delta.years
+            count_dates_used += 1
+        
+        time_to_completion = {
+            'months': f'{month_delta_sum/count_dates_used:.2f}',
+            'days': f'{day_delta_sum/count_dates_used:.2f}',
+            'hours': f'{hour_delta_sum/count_dates_used:.2f}',
+            'years': f'{year_delta_sum/count_dates_used:.2f}'
+        }
+        
         
         return Response({
             'totalJobApps': total_jobapps.count(),
-            'completedJobApps': completed_jobapps,
+            'completedJobApps': completed_jobapps_count,
             'pendingJobApps': pending_jobapps,
             'stepBreakdown': step_breakdown,
             'stepsPerApp': f'{steps_per_apps:.2f}',
-            'timeDelta': {
-                'years': f'{year_delta_sum/count_dates_used:.2f}',
-                'months': f'{month_delta_sum/count_dates_used:.2f}',
-                'days': f'{day_delta_sum/count_dates_used:.2f}',
-                'hours': f'{hour_delta_sum/count_dates_used:.2f}',
-            },
-            'nonRelevantDates': non_relevant_dates
+            'timeBetweenSteps': time_between_steps,
+            'nonRelevantDates': non_relevant_dates,
+            'appliedThrough':  all_applied_through_count,
+            'timeToCompletion': time_to_completion
         }, status=200)
         
