@@ -1,42 +1,38 @@
 <div class="main-container">
 
-    <app-header [showSubMenu]="isLoggedIn"></app-header>
+    <app-header *ngIf="isLoggedIn" [showSubMenu]="isLoggedIn"></app-header>
 
     <div class="content-container">
-        <div class="content-area">
-            <div class="col">
-                <div class="row" id="intro-title">
-                    <img src="../../assets/undraw_woman_timeline.svg">
+        <div class="col">
+            <div class="row" id="intro-title">
+                <div class="col intro-text">
+                    <h1>Welcome!</h1>
+                    <p>Looking for a new job can be daunting. It's an arduous process where
+                        you have to orchestrate, plan, and organize a ton of back-and-forth
+                        communication with potential employers.
+                    </p>
 
-                    <div class="col intro-text">
-                        <h1>Welcome!</h1>
-                        <p>Looking for a new job can be daunting. It's an arduous process where
-                            you have to orchestrate, plan, and organize a ton of back-and-forth
-                            communication with potential employers.
-                        </p>
+                    <p>
+                        <span class="jam"></span> allows you to keep track of all your job
+                        applications, so that you can easily keep tab on everything that is
+                        important to your career and future. Through the dashboard you can
+                        also have access to valuable insights and metrics that will provide you
+                        with a 360° view of the job market.
+                    </p>
+                    <p>
+                        Everything revolves around Steps, Groups,
+                        and Applications - manage them all from a central location and take your job-hunting to the next level.
+                    </p>
 
-                        <p>
-                            <span class="jam"></span> allows you to keep track of all your job
-                            applications, so that you can easily keep tab on everything that is
-                            important to your career and future. Through the dashboard you can
-                            also have access to valuable insights and metrics that will provide you
-                            with a 360° view of the job market.
-                        </p>
-                        <p>
-                            Everything revolves around Steps, Groups,
-                            and Applications - manage them all from a central location and take your job-hunting to the next level.
-                        </p>
-
-                        <div *ngIf="!isLoggedIn" style="margin-top: 1em;">
-                            <h4>Start below</h4>
-                            <a class="btn btn-primary" routerLink="/auth/login">Login</a>
-                            <a class="btn btn-primary" routerLink="/auth/register">Register</a>
-                        </div>
-                        <div *ngIf="isLoggedIn" style="margin-top: 1em;">
-                            <a class="btn btn-primary" routerLink="/control-panel/applications">View Applications</a>
-                        </div>
+                    <div *ngIf="!isLoggedIn" class="action-cont" style="margin-top: 1em;">
+                        <a class="btn btn-primary action" routerLink="/auth/login">Login</a>
+                        <a class="btn btn-primary action" routerLink="/auth/register">Register</a>
+                    </div>
+                    <div *ngIf="isLoggedIn" class="action-cont" style="margin-top: 1em;">
+                        <a class="btn btn-primary action" routerLink="/control-panel/applications">View Applications</a>
                     </div>
                 </div>
+                <img src="../../assets/undraw_absorbed_in.svg">
             </div>
         </div>
     </div>

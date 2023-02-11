@@ -1,6 +1,7 @@
 #intro-title {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
 #intro-title h1 {
@@ -10,16 +11,45 @@
 
 #intro-title img {
     margin-top: 15em;
-    margin-right: 10em;
     height: 50vh;
     width: 50vw;
 }
 
 .intro-text {
-    width: 30vw;
-    margin-top: 10em;
-}
+    width: 50vw;
+    margin: 0;
+    height: 100%;
+    padding: 4em;
+    background-color: #320047;
+    color: white;
 
-.intro-text p {
-    font-size: 1.2em
+    & p {
+        font-size: 1.2em;
+        color: white;
+    }
+
+    & h1 {
+        color: white;
+    }
+
+    & .action {
+        height: 5em;
+        width: 20em;
+        margin-top: 15em;
+        float: right;
+        background-color: white;
+        color: #320047;
+        box-shadow: 0 2px 0 0 rgba(211, 211, 211, .6);
+        line-height: 5em;
+        font-size: 1.1em;
+        transition: all ease 100ms;
+
+        &:hover {
+            box-shadow: 0 5px 0 0 rgba(211, 211, 211, .6);
+        }
+
+        &:active {
+            box-shadow: 0 0 0 0 rgba(211, 211, 211, .6);
+        }
+    }
 }
