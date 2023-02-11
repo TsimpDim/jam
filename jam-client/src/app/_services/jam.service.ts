@@ -79,7 +79,7 @@ export class JamService {
         "location": location,
         "applied_through": appliedThrough,
         "external_link": externalLink,
-        "notes": notes !== "" ? notes : undefined,
+        "notes": notes,
         "date": date ? date : undefined,
         "group": group
       }
