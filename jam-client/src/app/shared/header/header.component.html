@@ -11,10 +11,6 @@
             <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/steps">Steps</a>
             <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/analytics">Analytics</a>
         </ng-container>
-        <ng-container *ngIf="!isLoggedIn">
-            <a class="nav-link" routerLinkActive="active" routerLink="/auth/login">Login</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/auth/register">Register</a>
-        </ng-container>
     </div>
     <div class="header-actions">
         <clr-dropdown>

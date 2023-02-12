@@ -56,18 +56,23 @@
             </div>
         </div> -->
 
-        <div class="row">
-          <clr-spinner *ngIf="loading" [clrInline]="true" [clrInverse]="true"></clr-spinner>
-          <button
-          class="btn btn-primary"
-          type="submit"
-          (click)="login()"
-          [disabled]="loading"
-          >  
-            LOG IN
-          </button>
+        <div class="column" style="margin-left: auto;">
+          <div class="row">
+            <button
+            class="btn btn-primary action"
+            type="submit"
+            (click)="login()"
+            [disabled]="loading"
+            >  
+              LOG IN
+            </button>
+          </div>
+          <div class="row">
+            or <a class="nav-link" routerLinkActive="active" routerLink="/auth/register" style="margin-left: .3em">register</a>
+          </div>
         </div>
       </div>
     </form>
+    <img src="../../../assets/undraw_login.svg">
   </div>
 </div>
