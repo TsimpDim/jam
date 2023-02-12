@@ -233,7 +233,7 @@ class AnalyticsView(APIView):
                 step_breakdown[timeline.step.name]['count'] += 1
             else:
                 step_breakdown[timeline.step.name] = {
-                    'count': 0,
+                    'count': 1,
                     'color': timeline.step.color
                 }
 
@@ -299,7 +299,8 @@ class AnalyticsView(APIView):
             'years': f'{year_delta_sum/count_dates_used:.2f}'
         }
         
-        
+        # Amount of time that groups lasted (first app date, last app date, first ending step, last ending step)
+
         return Response({
             'totalJobApps': total_jobapps.count(),
             'completedJobApps': completed_jobapps_count,
