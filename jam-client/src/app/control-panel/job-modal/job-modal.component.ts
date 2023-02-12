@@ -10,6 +10,7 @@ import { JamService } from 'src/app/_services/jam.service';
 export class JobModalComponent implements OnInit, OnChanges {
   @Input() isOpen: boolean = false;
   @Input() application: any = null;
+  @Input() groupToSelect: any = null;
   @Output() onClose = new EventEmitter();
   @Output() onApplicationsNeedUpdate = new EventEmitter();
 
@@ -54,20 +55,34 @@ export class JobModalComponent implements OnInit, OnChanges {
     // if it has changed but has been nulled, make sure
     // to show default values in jobapp creation modal
     } else if (
-      'application' in changes &&
+      ('application' in changes &&
       (changes['application'].currentValue == undefined ||
-      changes['application'].currentValue !== null)
+      changes['application'].currentValue !== null)) || ('groupToSelect' in changes)
     ) {
       this.jobAppForm.reset();
 
       if (this.groups !== null && this.initialSteps !== null) {
         // set default values in form
         this.jobAppForm.patchValue({
-          'group': this.groups[0].id,
+          'group': this.getDefaultGroup(),
           'initialStep': this.initialSteps[0].id
         })
       }
     }
+  }
+
+  getDefaultGroup() {
+    let defaultGroupId = '';
+    if (this.groups) {
+      defaultGroupId = this.groups[0].id;
+      console.log(this.groupToSelect);
+      if (this.groupToSelect) {
+        defaultGroupId = this.groups.find((g: any) => g.name === this.groupToSelect).id;
+      }
+    }
+
+    console.log(defaultGroupId);
+    return defaultGroupId;
   }
 
   closeModal() {
@@ -95,7 +110,7 @@ export class JobModalComponent implements OnInit, OnChanges {
 
         // set default value in form
         this.jobAppForm.patchValue({
-          'group': this.groups[0].id
+          'group': this.getDefaultGroup()
         })
       }
     })

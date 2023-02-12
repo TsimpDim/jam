@@ -19,6 +19,7 @@ export class ApplicationsComponent implements OnInit {
   public nonStartingSteps: any;
   public editTimelineModalIsOpen: boolean = false;
   public selectedTimelineStep: any = null;
+  public groupToSelect: any = null;
 
   constructor (
     private jamService: JamService
@@ -97,9 +98,13 @@ export class ApplicationsComponent implements OnInit {
     })
   }
 
-  openAndClearJobAppModal() {
+  openAndClearJobAppModal(emmited: {group: string} | undefined) {
     this.selectedApp = null;
     this.jobAppModalIsOpen = true;
+    if (emmited) {
+      this.groupToSelect = emmited.group;
+      console.log(this.groupToSelect);
+    }
   }
 
   openJobAppModal() {

@@ -7,7 +7,7 @@
             [applications]="applications"
             [loadingApplications]="loadingApplications"
             (onSelectApp)="selectApp($event)"
-            (onOpenAndClearJobAppModal)="openAndClearJobAppModal()"
+            (onOpenAndClearJobAppModal)="openAndClearJobAppModal($event)"
         >
         </app-job-nav>
     
@@ -87,6 +87,7 @@
     <app-job-modal
         [isOpen]="jobAppModalIsOpen"
         [application]="selectedApp"
+        [groupToSelect]="groupToSelect"
         (onClose)="jobAppModalIsOpen = false"
         (onApplicationsNeedUpdate)="getApplications()"
     >
