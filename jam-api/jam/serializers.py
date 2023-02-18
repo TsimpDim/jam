@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Group, JobApplication, Step, Timeline
+from .models import Group, JobApplication, Step, Timeline, Lead
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -46,4 +46,9 @@ class TimelineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Timeline
+        fields = "__all__"
+
+class LeadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lead
         fields = "__all__"

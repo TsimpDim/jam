@@ -67,3 +67,12 @@ class Timeline(models.Model):
             self.date = datetime.now()
 
         super().save(*args, **kwargs)
+
+class Lead(models.Model):
+    company = models.CharField(max_length=40, null=False)
+    role = models.CharField(max_length=40, null=False)
+    location = models.CharField(max_length=50, null=True, blank=True)
+    external_link = models.URLField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)

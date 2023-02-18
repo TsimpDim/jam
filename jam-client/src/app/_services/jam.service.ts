@@ -209,6 +209,44 @@ export class JamService {
     )
   }
 
+  getLeads() {
+    return this.runHttpCall('GET',
+      environment.apiUrl + '/jam/leads/'
+    );
+  }
+
+  deleteLead(leadId: number) {
+    return this.runHttpCall('DELETE',
+      environment.apiUrl + '/jam/leads/' + leadId + '/'
+    );
+  }
+
+  updateLead(leadId: number, location: string, notes: string, externalLink: string, role: string, company: string) {
+    return this.runHttpCall('PATCH',
+      environment.apiUrl + '/jam/leads/' + leadId +'/',
+      {
+        "company": company,
+        "notes": notes,
+        "role": role,
+        "external_link": externalLink,
+        "location": location
+      }
+    );
+  }
+
+  createLead(location: string, notes: string, externalLink: string, role: string, company: string) {
+    return this.runHttpCall('POST',
+      environment.apiUrl + '/jam/leads/',
+      {
+        "company": company,
+        "notes": notes,
+        "role": role,
+        "external_link": externalLink,
+        "location": location
+      }
+    );
+  }
+
   runHttpCall(method: string, url: string, payload: any = null) {
     let authHeader = { headers: {"Authorization": "Token " + this.authService.getSessionToken()} };
 
@@ -224,5 +262,5 @@ export class JamService {
       default:
         return new Observable();
     }
-  }  
+  }
 }

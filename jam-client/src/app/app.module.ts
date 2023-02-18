@@ -40,6 +40,7 @@ import { JobNavComponent } from './control-panel/job-nav/job-nav.component';
 import { registerLocaleData } from '@angular/common';
 import { AnalyticsComponent } from './control-panel/analytics/analytics.component';
 import { BadgeComponent } from './shared/badge/badge.component';
+import { LeadsComponent } from './control-panel/leads/leads.component';
 
 ClarityIcons.addIcons(
   idBadgeIcon,
@@ -79,7 +80,8 @@ registerLocaleData(localeEnCa);
     HomeComponent,
     JobNavComponent,
     AnalyticsComponent,
-    BadgeComponent
+    BadgeComponent,
+    LeadsComponent
   ],
   imports: [
     BrowserModule,

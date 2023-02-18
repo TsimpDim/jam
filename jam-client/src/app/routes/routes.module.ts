@@ -5,6 +5,7 @@ import { RegisterComponent } from '../auth/register/register.component';
 import { AnalyticsComponent } from '../control-panel/analytics/analytics.component';
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
 import { GroupsComponent } from '../control-panel/groups/groups.component';
+import { LeadsComponent } from '../control-panel/leads/leads.component';
 import { StepsComponent } from '../control-panel/steps/steps.component';
 import { HomeComponent } from '../home/home.component';
 import { AuthGuardService as AuthGuard } from '../_services/auth-guard.service';
@@ -31,6 +32,11 @@ const routes: Routes = [
   {
     path: 'control-panel/analytics',
     component: AnalyticsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'control-panel/leads',
+    component: LeadsComponent,
     canActivate: [AuthGuard]
   },
   {

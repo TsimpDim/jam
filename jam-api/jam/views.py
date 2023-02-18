@@ -4,8 +4,9 @@ from .serializers import (
     JobApplicationSerializer,
     StepSerializer,
     TimelineSerializer,
+    LeadSerializer
 )
-from .models import Group, JobApplication, Step, Timeline
+from .models import Group, JobApplication, Step, Timeline, Lead
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -13,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
+
 class GroupsViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = GroupSerializer
@@ -312,4 +314,28 @@ class AnalyticsView(APIView):
             'appliedThrough':  all_applied_through_count,
             'timeToCompletion': time_to_completion
         }, status=200)
+
+class LeadViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LeadSerializer
+    queryset = Lead.objects.all()
+
+    def get_queryset(self):
+        return Lead.objects.filter(user_id=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        data["user"] = self.request.user.id
         
+        # set default date to NOW if not given
+        if "date" not in data:
+            data["date"] = datetime.now().date()
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
