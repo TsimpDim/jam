@@ -41,7 +41,7 @@ export class StepsComponent implements OnInit {
   ) {
     this.stepForm = this.formBuilder.group({
       "name": new FormControl('', [Validators.required]),
-      "type": new FormControl('', []),
+      "type": new FormControl('D', []),
       "color": new FormControl('', [Validators.maxLength(7), Validators.minLength(7)]),
       "notes": new FormControl('', []),
     })
@@ -81,7 +81,7 @@ export class StepsComponent implements OnInit {
   clearAndOpenModal() {
     this.selectedStep = null;
     this.selectedColor = 'grey';
-    this.stepForm.reset();
+    this.stepForm.reset({'type': 'D'});
     this.openModal();
   }
 
