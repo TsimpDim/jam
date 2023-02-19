@@ -9,6 +9,8 @@
       <div class="clr-column">
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
 
+        <p class="empty-message" *ngIf="groups.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
+
         <div class="card clickable" (click)="selectGroup(group.id)" *ngFor="let group of groups">
           <div class="card-header">
             {{group.name}}

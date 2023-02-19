@@ -9,6 +9,8 @@
       <div class="clr-column">
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
 
+        <p class="empty-message" *ngIf="steps.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
+
         <div class="card clickable" (click)="selectStep(step.id)" *ngFor="let step of steps">
           <div class="card-header">
             <span class="badge" [style.background-color]="step.color"></span>

@@ -8,6 +8,8 @@
             <div class="clr-column">
                 <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
 
+                <p class="empty-message" *ngIf="leads.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
+
                 <div class="card clickable" (click)="selectLead(lead.id)" *ngFor="let lead of leads">
                     <div class="card-header">
                         {{lead.company}} - {{lead.role}}

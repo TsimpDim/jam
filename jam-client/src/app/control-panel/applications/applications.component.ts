@@ -103,7 +103,6 @@ export class ApplicationsComponent implements OnInit {
     this.jobAppModalIsOpen = true;
     if (emmited) {
       this.groupToSelect = emmited.group;
-      console.log(this.groupToSelect);
     }
   }
 

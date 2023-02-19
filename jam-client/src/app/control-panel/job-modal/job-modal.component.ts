@@ -75,13 +75,11 @@ export class JobModalComponent implements OnInit, OnChanges {
     let defaultGroupId = '';
     if (this.groups) {
       defaultGroupId = this.groups[0].id;
-      console.log(this.groupToSelect);
       if (this.groupToSelect) {
         defaultGroupId = this.groups.find((g: any) => g.name === this.groupToSelect).id;
       }
     }
 
-    console.log(defaultGroupId);
     return defaultGroupId;
   }
 
