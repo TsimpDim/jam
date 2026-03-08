@@ -188,16 +188,19 @@ class TimelineViewSet(viewsets.ModelViewSet):
         step = Step.objects.get(id=step_id)
         application = JobApplication.objects.get(id=job_application_id)
         group = Group.objects.get(id=group_id)
-        first_step = Timeline.objects.filter(application=application, group=group).first()
-        last_step = Timeline.objects.filter(application=application, group=group).last()
+        
+        # Get the global timeline for the application, ordered by date
+        timeline_qs = Timeline.objects.filter(application=application).order_by('date')
+        first_step = timeline_qs.first()
+        last_step = timeline_qs.last()
 
         # We do not allow a user to add a step
         # that occurred before the starting step.
         # But they can otherwise add a DEFAULT step and they will
         # be shown sorted by date. Non-default steps must be at the
         # start or end of a timeline
-        if not application.is_completed() and first_step.date <= date: 
-            if step.type != 'D' and last_step.date > date:
+        if not application.is_completed() and (first_step is None or first_step.date <= date): 
+            if step.type != 'D' and last_step and last_step.date > date:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
             t = Timeline(
