@@ -5,12 +5,17 @@
         <div class="content-area">
             <div class="clr-column">
                 <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
+                <button class="button btn btn-outline" (click)="toggleArchived()">
+                    {{ showArchived ? 'Show Active' : 'Show Archived' }}
+                </button>
 
                 <p class="empty-message" *ngIf="leads.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
 
                 <div class="card clickable" (click)="selectLead(lead.id)" *ngFor="let lead of leads">
                     <div class="card-header">
                         {{lead.company}} - {{lead.role}}
+                        <span class="badge" *ngIf="lead.group_name">{{lead.group_name}}</span>
+                        <span class="badge" *ngIf="lead.archived" style="background-color: #ffdbba; color: #333;">Archived</span>
                         <span class="badge">Created at {{lead.date | date}}</span>
                     </div>
                     <div class="card-block" *ngIf="lead.notes">
@@ -95,6 +100,21 @@
                         </div>
 
                         <div class="clr-form-control">
+                            <label for="group" class="clr-control-label">
+                                <cds-icon shape="folder"></cds-icon>
+                                Group
+                            </label>
+                            <div class="clr-control-container">
+                                <div class="clr-select-wrapper">
+                                    <select clrSelect name="group" formControlName="group">
+                                        <option [ngValue]="null">No Group</option>
+                                        <option *ngFor="let group of groups" [ngValue]="group.id">{{group.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clr-form-control">
                         <label for="notes" class="clr-control-label">
                             <cds-icon shape="note"></cds-icon>
                             Notes</label>
@@ -115,6 +135,14 @@
                 <div class="modal-footer">
                     <clr-spinner *ngIf="loading" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
 
+                    <button type="button" class="btn btn-warning-outline"
+                    (click)="archiveLead(selectedLead.id, !selectedLead.archived)"
+                    *ngIf="selectedLead != null && !selectedLead.archived"
+                    >Archive</button>
+                    <button type="button" class="btn btn-success-outline"
+                    (click)="archiveLead(selectedLead.id, false)"
+                    *ngIf="selectedLead != null && selectedLead.archived"
+                    >Unarchive</button>
                     <button type="button" class="btn btn-danger-outline"
                     (click)="deleteLead(selectedLead.id)"
                     *ngIf="selectedLead != null"

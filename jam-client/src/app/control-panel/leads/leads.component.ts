@@ -11,9 +11,11 @@ export class LeadsComponent implements OnInit {
 
   loading = false;
   leads: any;
+  groups: any;
   leadForm: FormGroup;
   modalIsOpen: boolean = false;
   selectedLead: any = null;
+  showArchived: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -25,6 +27,7 @@ export class LeadsComponent implements OnInit {
       "location": new FormControl('', []),
       "externalLink": new FormControl('', []),
       "notes": new FormControl('', []),
+      "group": new FormControl(null, []),
     })
   }
 
@@ -34,6 +37,12 @@ export class LeadsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getLeads();
+    this.getGroups();
+  }
+
+  toggleArchived() {
+    this.showArchived = !this.showArchived;
     this.getLeads();
   }
 
@@ -47,7 +56,7 @@ export class LeadsComponent implements OnInit {
 
   getLeads() {
     this.loading = true;
-    this.jamService.getLeads()
+    this.jamService.getLeads(this.showArchived)
     .subscribe({
       next: (data: any) => {
         this.leads = data;
@@ -56,6 +65,15 @@ export class LeadsComponent implements OnInit {
         this.loading = false;
       },
       complete: () => this.loading = false
+    })
+  }
+
+  getGroups() {
+    this.jamService.getGroups()
+    .subscribe({
+      next: (data: any) => {
+        this.groups = data;
+      }
     })
   }
 
@@ -78,14 +96,31 @@ export class LeadsComponent implements OnInit {
     })
   }
 
+  archiveLead(leadId: number, archived: boolean) {
+    this.loading = true;
+    this.jamService.archiveLead(leadId, archived)
+    .subscribe({
+      next: () => {
+        this.getLeads();
+      },
+      error: () => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    })
+  }
+
   createLead() {
     this.loading = true;
     this.jamService.createLead(
       this.leadForm.value.location,
       this.leadForm.value.notes,
-      this.leadForm.value.external_link,
+      this.leadForm.value.externalLink,
       this.leadForm.value.role,
-      this.leadForm.value.company
+      this.leadForm.value.company,
+      this.leadForm.value.group
     ).subscribe({
       next: () => {
         this.selectedLead = null;
@@ -103,13 +138,16 @@ export class LeadsComponent implements OnInit {
 
   updateLead() {
     this.loading = true;
+    const archived = this.selectedLead ? this.selectedLead.archived : false;
     this.jamService.updateLead(
       this.selectedLead.id,
       this.leadForm.value.location,
       this.leadForm.value.notes,
-      this.leadForm.value.external_link,
+      this.leadForm.value.externalLink,
       this.leadForm.value.role,
-      this.leadForm.value.company
+      this.leadForm.value.company,
+      archived,
+      this.leadForm.value.group
     ).subscribe({
       next: () => {
         this.selectedLead = null;

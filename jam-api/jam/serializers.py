@@ -49,6 +49,11 @@ class TimelineSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class LeadSerializer(serializers.ModelSerializer):
+    group_name = serializers.SerializerMethodField()
+
+    def get_group_name(self, obj):
+        return obj.group.name if obj.group else None
+
     class Meta:
         model = Lead
         fields = "__all__"

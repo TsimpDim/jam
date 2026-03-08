@@ -324,7 +324,15 @@ class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
 
     def get_queryset(self):
-        return Lead.objects.filter(user_id=self.request.user)
+        queryset = Lead.objects.filter(user_id=self.request.user)
+        
+        archived = self.request.query_params.get('archived')
+        if archived == 'true':
+            queryset = queryset.filter(archived=True)
+        else:
+            queryset = queryset.filter(archived=False)
+            
+        return queryset
 
     def create(self, request, *args, **kwargs):
         data = request.data

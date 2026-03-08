@@ -76,3 +76,5 @@ class Lead(models.Model):
     notes = models.TextField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    archived = models.BooleanField(default=False)
+    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, blank=True)

@@ -209,9 +209,9 @@ export class JamService {
     )
   }
 
-  getLeads() {
+  getLeads(archived: boolean = false) {
     return this.runHttpCall('GET',
-      environment.apiUrl + '/jam/leads/'
+      environment.apiUrl + '/jam/leads/?archived=' + archived
     );
   }
 
@@ -221,7 +221,7 @@ export class JamService {
     );
   }
 
-  updateLead(leadId: number, location: string, notes: string, externalLink: string, role: string, company: string) {
+  updateLead(leadId: number, location: string, notes: string, externalLink: string, role: string, company: string, archived: boolean = false, group: number | null = null) {
     return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/leads/' + leadId +'/',
       {
@@ -229,12 +229,14 @@ export class JamService {
         "notes": notes,
         "role": role,
         "external_link": externalLink,
-        "location": location
+        "location": location,
+        "archived": archived,
+        "group": group
       }
     );
   }
 
-  createLead(location: string, notes: string, externalLink: string, role: string, company: string) {
+  createLead(location: string, notes: string, externalLink: string, role: string, company: string, group: number | null = null) {
     return this.runHttpCall('POST',
       environment.apiUrl + '/jam/leads/',
       {
@@ -242,7 +244,17 @@ export class JamService {
         "notes": notes,
         "role": role,
         "external_link": externalLink,
-        "location": location
+        "location": location,
+        "group": group
+      }
+    );
+  }
+
+  archiveLead(leadId: number, archived: boolean = true) {
+    return this.runHttpCall('PATCH',
+      environment.apiUrl + '/jam/leads/' + leadId +'/',
+      {
+        "archived": archived
       }
     );
   }
