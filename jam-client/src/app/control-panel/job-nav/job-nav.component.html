@@ -6,7 +6,7 @@
     >ADD NEW APPLICATION</a>
     <div *ngIf="loadingApplications" style="font-size: 1px" class="progress loop"><progress></progress></div>
     <clr-vertical-nav-group
-        *ngFor="let group of applications | keyvalue"
+        *ngFor="let group of applications | keyvalue:keepOriginalOrder"
         [clrVerticalNavGroupExpanded]="getNavState(group.key)"
     >
         <div (click)="toggleNavState($event, group.key)">    

@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.shortcuts import get_object_or_404
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -32,7 +33,7 @@ class GroupsViewSet(viewsets.ModelViewSet):
         )
 
     def get_queryset(self):
-        return Group.objects.filter(user_id=self.request.user)
+        return Group.objects.filter(user_id=self.request.user).order_by('-id')
 
 
 class StepViewSet(viewsets.ModelViewSet):
@@ -102,7 +103,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     )
     def group(self, request):
         groupped_job_apps = {}
-        groups = Group.objects.filter(user_id=self.request.user)
+        groups = Group.objects.filter(user_id=self.request.user).order_by('-id')
         for group in groups.iterator():
             groupped_job_apps[group.name] = JobApplicationSerializer(
                 JobApplication.objects.filter(group__id=group.id), many=True
@@ -334,6 +335,14 @@ class LeadViewSet(viewsets.ModelViewSet):
             
         return queryset
 
+    def get_object(self):
+        queryset = self.filter_queryset(Lead.objects.filter(user_id=self.request.user))
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        instance = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, instance)
+        return instance
+
     def create(self, request, *args, **kwargs):
         data = request.data
         data["user"] = self.request.user.id
@@ -350,3 +359,10 @@ class LeadViewSet(viewsets.ModelViewSet):
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)

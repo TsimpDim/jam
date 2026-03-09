@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+.clr-form-horizontal .clr-form-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.clr-form-horizontal .clr-control-label {
+  flex: 0 0 150px;
+  padding-right: 1rem;
+}
+
+.clr-form-horizontal .clr-control-container {
+  flex: 1;
+}

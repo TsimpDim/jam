@@ -12,6 +12,8 @@ export class JobNavComponent {
   @Output() onOpenAndClearJobAppModal = new EventEmitter();
   static navState: any = {};
 
+  keepOriginalOrder = (a: any, b: any) => a.key;
+
   toggleNavState(event: any, groupName: any) {
     event.stopPropagation();
 

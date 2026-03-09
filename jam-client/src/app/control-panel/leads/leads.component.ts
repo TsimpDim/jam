@@ -15,7 +15,7 @@ export class LeadsComponent implements OnInit {
   leadForm: FormGroup;
   modalIsOpen: boolean = false;
   selectedLead: any = null;
-  showArchived: boolean = false;
+  viewingArchived: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -41,8 +41,8 @@ export class LeadsComponent implements OnInit {
     this.getGroups();
   }
 
-  toggleArchived() {
-    this.showArchived = !this.showArchived;
+  toggleViewMode() {
+    this.viewingArchived = !this.viewingArchived;
     this.getLeads();
   }
 
@@ -56,7 +56,7 @@ export class LeadsComponent implements OnInit {
 
   getLeads() {
     this.loading = true;
-    this.jamService.getLeads(this.showArchived)
+    this.jamService.getLeads(this.viewingArchived)
     .subscribe({
       next: (data: any) => {
         this.leads = data;
@@ -96,11 +96,15 @@ export class LeadsComponent implements OnInit {
     })
   }
 
-  archiveLead(leadId: number, archived: boolean) {
+  toggleLeadArchive(lead: any) {
+    const newArchivedState = !lead.archived;
     this.loading = true;
-    this.jamService.archiveLead(leadId, archived)
+    this.jamService.archiveLead(lead.id, newArchivedState)
     .subscribe({
       next: () => {
+        if (newArchivedState === false) {
+          this.viewingArchived = false;
+        }
         this.getLeads();
       },
       error: () => {
@@ -108,6 +112,7 @@ export class LeadsComponent implements OnInit {
       },
       complete: () => {
         this.loading = false;
+        this.closeModal();
       }
     })
   }
@@ -179,7 +184,15 @@ export class LeadsComponent implements OnInit {
 
   selectLead(leadId: number) {
     this.selectedLead = this.leads.find((l: any) => l.id == leadId);
-    this.leadForm.reset(this.selectedLead);
+    const formData = {
+      company: this.selectedLead.company,
+      role: this.selectedLead.role,
+      location: this.selectedLead.location,
+      externalLink: this.selectedLead.external_link,
+      notes: this.selectedLead.notes,
+      group: this.selectedLead.group
+    };
+    this.leadForm.reset(formData);
     this.openModal();
   }
 }
