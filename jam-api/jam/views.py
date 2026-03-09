@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404
+from django.db import models
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -244,7 +245,7 @@ class AnalyticsView(APIView):
                 }
 
         # Avg Steps per Application
-        steps_per_apps = len(total_jobapps) / len(timelines)
+        steps_per_apps = len(total_jobapps) / len(timelines) if timelines.count() > 0 else 0
 
         # Avg Time in-between Steps
         non_relevant_dates = len(timelines.filter(date_relevant=False))
@@ -265,10 +266,10 @@ class AnalyticsView(APIView):
                 count_dates_used += 1
 
         time_between_steps = {
-            'years': f'{year_delta_sum/count_dates_used:.2f}',
-            'months': f'{month_delta_sum/count_dates_used:.2f}',
-            'days': f'{day_delta_sum/count_dates_used:.2f}',
-            'hours': f'{hour_delta_sum/count_dates_used:.2f}',
+            'years': f'{year_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
+            'months': f'{month_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
+            'days': f'{day_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
+            'hours': f'{hour_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
         }
 
         # Applied Through breakdown
@@ -299,13 +300,76 @@ class AnalyticsView(APIView):
             count_dates_used += 1
         
         time_to_completion = {
-            'months': f'{month_delta_sum/count_dates_used:.2f}',
-            'days': f'{day_delta_sum/count_dates_used:.2f}',
-            'hours': f'{hour_delta_sum/count_dates_used:.2f}',
-            'years': f'{year_delta_sum/count_dates_used:.2f}'
+            'months': f'{month_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
+            'days': f'{day_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
+            'hours': f'{hour_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
+            'years': f'{year_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00'
         }
+
+        # ============ NEW METRICS ============
+
+        # 1. Conversion Funnel (by step type: S -> D -> E)
+        step_types = {'S': 'Started', 'D': 'In Progress', 'E': 'Completed'}
+        conversion_funnel = {}
+        for stype, sname in step_types.items():
+            step_timelines = timelines.filter(step__type=stype)
+            apps_with_step = step_timelines.values('application_id').distinct().count()
+            conversion_funnel[sname] = {
+                'count': apps_with_step,
+                'percentage': f'{(apps_with_step / total_jobapps.count() * 100):.1f}' if total_jobapps.count() > 0 else '0.0'
+            }
+
+        # 2. Source Effectiveness (which sources lead to completion)
+        source_effectiveness = {}
+        for at in all_applied_through:
+            stored_key = at if at and at != '' else 'empty'
+            apps_with_source = total_jobapps.filter(applied_through=at)
+            completed_count = len([a for a in apps_with_source if a.is_completed()])
+            source_effectiveness[stored_key] = {
+                'total': apps_with_source.count(),
+                'completed': completed_count,
+                'conversion_rate': f'{(completed_count / apps_with_source.count() * 100):.1f}' if apps_with_source.count() > 0 else '0.0'
+            }
+
+        # 3. Lead to Application Conversion
+        total_leads = Lead.objects.filter(user=user).count()
         
-        # Amount of time that groups lasted (first app date, last app date, first ending step, last ending step)
+        # 4. Stage Duration (avg time spent at each step)
+        stage_duration = {}
+        all_steps = Step.objects.filter(user=user)
+        for step in all_steps:
+            step_timelines = timelines.filter(step=step).order_by('date')
+            step_timeline_list = list(step_timelines)
+            if len(step_timeline_list) < 2:
+                continue
+            
+            total_duration = 0
+            count = 0
+            for idx, tl in enumerate(step_timeline_list[:-1]):
+                next_tl = step_timeline_list[idx + 1]
+                if tl.date_relevant and next_tl.date_relevant:
+                    delta = relativedelta(next_tl.date, tl.date)
+                    total_duration += delta.days + delta.months * 30 + delta.years * 365
+                    count += 1
+            
+            if count > 0:
+                avg_days = total_duration / count
+                stage_duration[step.name] = {
+                    'avg_days': f'{avg_days:.1f}',
+                    'color': step.color
+                }
+
+        # 5. Time Trends (applications per week/month)
+        from datetime import timedelta
+        from django.db.models.functions import TruncWeek, TruncMonth
+        
+        apps_by_week = total_jobapps.annotate(week=TruncWeek('date')).values('week').annotate(count=models.Count('id')).order_by('-week')[:12]
+        apps_by_month = total_jobapps.annotate(month=TruncMonth('date')).values('month').annotate(count=models.Count('id')).order_by('-month')[:12]
+        
+        time_trends = {
+            'weekly': [{'period': str(item['week']), 'count': item['count']} for item in apps_by_week if item['week']],
+            'monthly': [{'period': str(item['month']), 'count': item['count']} for item in apps_by_month if item['month']]
+        }
 
         return Response({
             'totalJobApps': total_jobapps.count(),
@@ -316,7 +380,12 @@ class AnalyticsView(APIView):
             'timeBetweenSteps': time_between_steps,
             'nonRelevantDates': non_relevant_dates,
             'appliedThrough':  all_applied_through_count,
-            'timeToCompletion': time_to_completion
+            'timeToCompletion': time_to_completion,
+            'conversionFunnel': conversion_funnel,
+            'sourceEffectiveness': source_effectiveness,
+            'totalLeads': total_leads,
+            'stageDuration': stage_duration,
+            'timeTrends': time_trends
         }, status=200)
 
 class LeadViewSet(viewsets.ModelViewSet):

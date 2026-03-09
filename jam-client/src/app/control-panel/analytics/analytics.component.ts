@@ -6,11 +6,19 @@ interface Analytics {
   completedJobApps: number,
   pendingJobApps: number,
   stepBreakdown: Record<string, {count: number, color: string}>
-  stepsPerApp: number,
+  stepsPerApp: string,
   timeBetweenSteps: Record<string, {years: number, months: number, days: number, hours: number}>,
   nonRelevantDates: number,
   appliedThrough: Record<string, string>,
   timeToCompletion: Record<string, {years: number, months: number, days: number, hours: number}>,
+  conversionFunnel: Record<string, {count: number, percentage: string}>,
+  sourceEffectiveness: Record<string, {total: number, completed: number, conversion_rate: string}>,
+  totalLeads: number,
+  stageDuration: Record<string, {avg_days: string, color: string}>,
+  timeTrends: {
+    weekly: Array<{period: string, count: number}>,
+    monthly: Array<{period: string, count: number}>
+  }
 }
 
 
@@ -42,5 +50,9 @@ export class AnalyticsComponent implements OnInit {
       error: (error) => {
       }
     })
+  }
+
+  parseFloat(value: string): number {
+    return parseFloat(value);
   }
 }

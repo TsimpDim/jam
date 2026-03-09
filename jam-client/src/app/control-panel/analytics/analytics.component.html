@@ -2,85 +2,187 @@
     <div *ngIf="loading"  style="font-size: 1px" class="progress loop"><progress></progress></div>
 
     <div id="container" *ngIf="!loading">
+        <!-- Section: Overview -->
+        <h3>Overview</h3>
         <div class="clr-row">
-            <div class="card">
-                <h3 class="card-header">#Job Applications</h3>
-                <div class="card-block" style="display: flex;flex-direction:row;">
+            <div class="card clr-col-12 clr-col-md-4">
+                <h3 class="card-header">Job Applications</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; justify-content: space-around;">
                     <span class="numeric" style="color: grey;">{{analytics.totalJobApps}}<app-badge background="grey">total</app-badge></span>
-                    <span style="font-size: 2em;">/</span>
                     <span class="numeric" style="color: #db4848">{{analytics.pendingJobApps}}<app-badge background="#db4848">pending</app-badge></span>
-                    <span style="font-size: 2em;">/</span>
                     <span class="numeric" style="color: green;">{{analytics.completedJobApps}}<app-badge background="green">completed</app-badge></span>
                 </div>
             </div>
 
-            <div class="card">
-                <!-- Add colors to steps -->
-                <h3 class="card-header">Step Breakdown</h3>
-                <div class="card-block" style="display: flex;flex-direction:row;">
-                    <span *ngFor="let step of analytics.stepBreakdown | keyvalue"
-                        class="numeric"
-                        style="margin-right:1em;"
-                        [ngStyle]="{color: step.value.color}"
-                    >
-                            {{step.value.count}}
-                            <app-badge [background]="step.value.color">{{step.key}}</app-badge>
-                    </span>
+            <div class="card clr-col-12 clr-col-md-4">
+                <h3 class="card-header">Leads</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; justify-content: center;">
+                    <span class="numeric" style="color: #0072a3;">{{analytics.totalLeads}}<app-badge background="#0072a3">total leads</app-badge></span>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card clr-col-12 clr-col-md-4">
                 <h3 class="card-header">Avg. Steps per Application</h3>
-                <div class="card-block" style="display: flex;flex-direction:row;">
+                <div class="card-block" style="display: flex; flex-direction: row; justify-content: center;">
                     <span class="numeric">{{analytics.stepsPerApp}} steps/app</span>
                 </div>
             </div>
+        </div>
 
-            <div class="card">
-                <h3 class="card-header">Avg. Time Difference across Steps</h3>
-                <div class="card-block" style="display: flex;flex-direction:row;">
-                    <span
-                        *ngFor="let step of analytics.timeBetweenSteps | keyvalue"
-                        class="numeric"
-                        style="margin-right:1em;"
-                    >
-                        {{step.value}}
-                        <app-badge>{{step.key}}</app-badge>
+        <!-- Section: Conversion Funnel -->
+        <h3>Conversion Funnel</h3>
+        <div class="clr-row">
+            <div class="card clr-col-12">
+                <h3 class="card-header">Application Pipeline</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; gap: 0.5em;">
+                    <div *ngFor="let stage of analytics.conversionFunnel | keyvalue" 
+                         style="text-align: center; padding: 0.75em; border-radius: 8px; background: #f5f5f5; min-width: 100px;">
+                        <div class="numeric" style="font-size: 1.5em; color: #333;">{{stage.value.count}}</div>
+                        <div style="font-weight: bold; margin: 0.25em 0;">{{stage.key}}</div>
+                        <app-badge [background]="stage.key === 'Completed' ? 'green' : stage.key === 'Started' ? '#0072a3' : '#db4848'">
+                            {{stage.value.percentage}}%
+                        </app-badge>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Source Effectiveness -->
+        <h3>Source Effectiveness</h3>
+        <div class="clr-row">
+            <div class="card clr-col-12">
+                <h3 class="card-header">Where Do Your Applications Come From?</h3>
+                <div class="card-block">
+                    <table class="table" *ngIf="(analytics.sourceEffectiveness | keyvalue).length > 0">
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Total Applications</th>
+                                <th>Completed</th>
+                                <th>Conversion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let source of analytics.sourceEffectiveness | keyvalue">
+                                <td>{{source.key}}</td>
+                                <td>{{source.value.total}}</td>
+                                <td>{{source.value.completed}}</td>
+                                <td>
+                                    <span [style.color]="parseFloat(source.value.conversion_rate) >= 50 ? 'green' : parseFloat(source.value.conversion_rate) >= 20 ? '#db4848' : 'grey'">
+                                        {{source.value.conversion_rate}}%
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="(analytics.sourceEffectiveness | keyvalue).length === 0" style="padding: 1em; color: grey;">
+                        No source data available
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Stage Duration -->
+        <h3>Time at Each Stage</h3>
+        <div class="clr-row">
+            <div class="card clr-col-12">
+                <h3 class="card-header">Average Days Per Step</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.5em;">
+                    <div *ngFor="let stage of analytics.stageDuration | keyvalue" 
+                         style="text-align: center; padding: 0.5em 1em; border-radius: 8px; background: #f5f5f5;">
+                        <span class="numeric" [ngStyle]="{color: stage.value.color}">
+                            {{stage.value.avg_days}} days
+                        </span>
+                        <app-badge [background]="stage.value.color">{{stage.key}}</app-badge>
+                    </div>
+                    <div *ngIf="(analytics.stageDuration | keyvalue).length === 0" style="padding: 0.5em; color: grey;">
+                        No stage duration data available
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Time Metrics -->
+        <h3>Time Metrics</h3>
+        <div class="clr-row">
+            <div class="card clr-col-12 clr-col-md-6">
+                <h3 class="card-header">Avg. Time Between Steps</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.5em;">
+                    <span *ngFor="let item of analytics.timeBetweenSteps | keyvalue" class="numeric">
+                        {{item.value}}
+                        <app-badge>{{item.key}}</app-badge>
                     </span>
-                    <span
-                        class="numeric"
-                        style="margin-left: 1em;"
-                    >
+                    <span class="numeric" style="margin-left: 0.5em; color: #aaa;">
                         {{analytics.nonRelevantDates}}
-                        <app-badge background="#aaa">non-relevant dates</app-badge>
+                        <app-badge background="#aaa">non-relevant</app-badge>
                     </span>
                 </div>
             </div>
 
-            <div class="card">
-                <h3 class="card-header">'Applied Through' Breakdown</h3>
-                <div class="card-block" style="display: flex;flex-direction:row;">
-                    <span *ngFor="let step of analytics.appliedThrough | keyvalue"
-                        class="numeric"
-                        style="margin-right:1em;"
-                    >
-                            {{step.value}}
-                            <app-badge>{{step.key}}</app-badge>
-                    </span>
-                </div>
-            </div>
-
-            <div class="card">
+            <div class="card clr-col-12 clr-col-md-6">
                 <h3 class="card-header">Avg. Time to Completion</h3>
-                <div class="card-block" style="display: flex;flex-direction:row;">
-                    <span
-                        *ngFor="let step of analytics.timeToCompletion | keyvalue"
-                        class="numeric"
-                        style="margin-right:1em;"
-                    >
-                        {{step.value}}
-                        <app-badge>{{step.key}}</app-badge>
+                <div class="card-block" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.5em;">
+                    <span *ngFor="let item of analytics.timeToCompletion | keyvalue" class="numeric">
+                        {{item.value}}
+                        <app-badge>{{item.key}}</app-badge>
                     </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Step Breakdown (Legacy) -->
+        <h3>Step Details</h3>
+        <div class="clr-row">
+            <div class="card clr-col-12 clr-col-md-6">
+                <h3 class="card-header">Step Breakdown</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.5em;">
+                    <span *ngFor="let step of analytics.stepBreakdown | keyvalue"
+                        class="numeric"
+                        [ngStyle]="{color: step.value.color}"
+                    >
+                        {{step.value.count}}
+                        <app-badge [background]="step.value.color">{{step.key}}</app-badge>
+                    </span>
+                </div>
+            </div>
+
+            <div class="card clr-col-12 clr-col-md-6">
+                <h3 class="card-header">'Applied Through' Breakdown</h3>
+                <div class="card-block" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 0.5em;">
+                    <span *ngFor="let item of analytics.appliedThrough | keyvalue" class="numeric">
+                        {{item.value}}
+                        <app-badge>{{item.key}}</app-badge>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Time Trends -->
+        <h3>Application Trends</h3>
+        <div class="clr-row">
+            <div class="card clr-col-12 clr-col-md-6">
+                <h3 class="card-header">Monthly Applications</h3>
+                <div class="card-block" style="max-height: 180px; overflow-y: auto;">
+                    <div *ngFor="let item of analytics.timeTrends.monthly" style="display: flex; justify-content: space-between; padding: 0.25em 0; border-bottom: 1px solid #eee;">
+                        <span>{{item.period}}</span>
+                        <span class="numeric">{{item.count}}</span>
+                    </div>
+                    <div *ngIf="analytics.timeTrends.monthly.length === 0" style="color: grey; padding: 0.5em;">
+                        No data available
+                    </div>
+                </div>
+            </div>
+
+            <div class="card clr-col-12 clr-col-md-6">
+                <h3 class="card-header">Weekly Applications</h3>
+                <div class="card-block" style="max-height: 180px; overflow-y: auto;">
+                    <div *ngFor="let item of analytics.timeTrends.weekly" style="display: flex; justify-content: space-between; padding: 0.25em 0; border-bottom: 1px solid #eee;">
+                        <span>{{item.period}}</span>
+                        <span class="numeric">{{item.count}}</span>
+                    </div>
+                    <div *ngIf="analytics.timeTrends.weekly.length === 0" style="color: grey; padding: 0.5em;">
+                        No data available
+                    </div>
                 </div>
             </div>
         </div>
