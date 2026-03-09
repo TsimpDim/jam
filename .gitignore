@@ -38,3 +38,5 @@ typings
 Thumbs.db
 .terraform
 variables.prod.tfvars
+__pycache__
+.tfstate
