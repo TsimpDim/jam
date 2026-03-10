@@ -13,6 +13,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     group_name = serializers.SerializerMethodField()
     last_step_color = serializers.SerializerMethodField()
+    lead = serializers.PrimaryKeyRelatedField(queryset=Lead.objects.all(), required=False, allow_null=True)
 
     def get_group_name(self, obj):
         return obj.group.name
@@ -50,9 +51,14 @@ class TimelineSerializer(serializers.ModelSerializer):
 
 class LeadSerializer(serializers.ModelSerializer):
     group_name = serializers.SerializerMethodField()
+    applications = serializers.SerializerMethodField()
 
     def get_group_name(self, obj):
         return obj.group.name if obj.group else None
+
+    def get_applications(self, obj):
+        apps = obj.applications.all()
+        return JobApplicationSerializer(apps, many=True).data
 
     class Meta:
         model = Lead

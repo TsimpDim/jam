@@ -23,6 +23,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   public loading: boolean = false;
   public initialSteps: any = null;
   public groups: any = null;
+  public leads: any = null;
 
   constructor(
     private jamService: JamService,
@@ -37,7 +38,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       'externalLink': new FormControl('', []),
       'notes': new FormControl('', []),
       'group': new FormControl('', [Validators.required]),
-      'initialStep': new FormControl('', [Validators.required])
+      'initialStep': new FormControl('', [Validators.required]),
+      'lead': new FormControl(null, [])
     });
   }
 
@@ -51,6 +53,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       let application = this.application;
       application.externalLink = application.external_link;
       application.appliedThrough = application.applied_through;
+      application.lead = application.lead || null;
       this.jobAppForm.reset(application);
     // if it has changed but has been nulled, make sure
     // to show default values in jobapp creation modal
@@ -90,6 +93,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getInitialSteps();
     this.getGroups();
+    this.getLeads();
   }
 
   submitJobAppForm() {
@@ -110,6 +114,15 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.jobAppForm.patchValue({
           'group': this.getDefaultGroup()
         })
+      }
+    })
+  }
+
+  getLeads() {
+    this.jamService.getLeads()
+    .subscribe({
+      next: (data) => {
+        this.leads = data;
       }
     })
   }
@@ -139,7 +152,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.notes,
       this.jobAppForm.value.date,
       this.jobAppForm.value.group,
-      this.jobAppForm.value.initialStep
+      this.jobAppForm.value.initialStep,
+      this.jobAppForm.value.lead
     ).subscribe({
       next: () => {
         this.onApplicationsNeedUpdate.emit();
@@ -165,7 +179,8 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.externalLink,
       this.jobAppForm.value.notes,
       this.jobAppForm.value.date,
-      this.jobAppForm.value.group
+      this.jobAppForm.value.group,
+      this.jobAppForm.value.lead
     ).subscribe({
       next: () => {
         this.application = null;

@@ -21,6 +21,17 @@
                 </div>
             </div>
 
+            <div class="clr-form-control">
+                <label for="lead" class="clr-control-label">
+                    <cds-icon shape="user-solid"></cds-icon>
+                    Lead
+                </label>
+                <select clrSelect name="lead" formControlName="lead">
+                    <option [ngValue]="null">No Lead</option>
+                    <option *ngFor="let lead of leads" [ngValue]="lead.id">{{ lead.company }} - {{ lead.role }}</option>
+                </select>
+            </div>
+
 
             <div class="clr-form-control">
                 <label for="role" class="clr-control-label">

@@ -16,6 +16,7 @@ export class LeadsComponent implements OnInit {
   modalIsOpen: boolean = false;
   selectedLead: any = null;
   viewingArchived: boolean = false;
+  applications: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -170,6 +171,8 @@ export class LeadsComponent implements OnInit {
 
   clearAndOpenModal() {
     this.leadForm.reset();
+    this.selectedLead = null;
+    this.applications = [];
     this.openModal();
   }
 
@@ -180,10 +183,12 @@ export class LeadsComponent implements OnInit {
   closeModal() {
     this.modalIsOpen = false;
     this.selectedLead = null;
+    this.applications = [];
   }
 
   selectLead(leadId: number) {
     this.selectedLead = this.leads.find((l: any) => l.id == leadId);
+    this.applications = this.selectedLead?.applications || [];
     const formData = {
       company: this.selectedLead.company,
       role: this.selectedLead.role,

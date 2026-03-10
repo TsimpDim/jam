@@ -166,6 +166,22 @@
               </div>
             </div>
           </form>
+
+          <div *ngIf="selectedLead !== null && applications.length > 0" class="applications-section">
+            <h4>Connected Applications</h4>
+            <div class="application-card" *ngFor="let app of applications">
+              <div class="application-header">
+                {{ app.company }} - {{ app.role }}
+                <span class="badge" [style.background-color]="app.last_step_color || '#8c8c8c'">
+                  {{ app.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedLead !== null && applications.length === 0" class="no-applications">
+            <p>No applications connected to this lead yet.</p>
+          </div>
         </div>
 
         <div class="modal-footer">

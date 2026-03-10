@@ -1,8 +1,11 @@
 .badge {
     font-size: .7em;
     font-weight: 500;
-    float:right;
     padding: .7em;
+}
+
+.card-header .badge {
+    float: right;
 }
 
 .empty-message {
@@ -13,4 +16,42 @@
     color: #cccc;
     user-select: none;
     text-align: center;
+}
+
+.applications-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+    
+    h4 {
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+}
+
+.application-card {
+    background: #f5f5f5;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    
+    .application-header {
+        font-weight: 500;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .application-details {
+        margin-top: 0.5rem;
+    }
+}
+
+.no-applications {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+    color: #666;
+    font-style: italic;
 }

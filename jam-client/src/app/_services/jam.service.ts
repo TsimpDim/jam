@@ -42,7 +42,8 @@ export class JamService {
     notes: string,
     date: string,
     group: number,
-    initialStep: number
+    initialStep: number,
+    lead: number | null = null
   ) {
     return this.runHttpCall('POST',
       environment.apiUrl + '/jam/jobapps/',
@@ -55,7 +56,8 @@ export class JamService {
         "notes": notes,
         "date": date ? date : undefined,
         "group": group,
-        "initial_step": initialStep
+        "initial_step": initialStep,
+        "lead": lead ? lead : undefined
       }
     );
   }
@@ -69,7 +71,8 @@ export class JamService {
     externalLink: string,
     notes: string,
     date: string,
-    group: number
+    group: number,
+    lead: number | null = null
   ) {
     return this.runHttpCall('PATCH',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
@@ -81,7 +84,8 @@ export class JamService {
         "external_link": externalLink,
         "notes": notes,
         "date": date ? date : undefined,
-        "group": group
+        "group": group,
+        "lead": lead ? lead : undefined
       }
     );
   }

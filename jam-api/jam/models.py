@@ -26,6 +26,16 @@ class Step(models.Model):
     def __str__(self):
         return f"{self.user}.{self.name}"
 
+class Lead(models.Model):
+    company = models.CharField(max_length=40, null=False)
+    role = models.CharField(max_length=255, null=False)
+    location = models.CharField(max_length=50, null=True, blank=True)
+    external_link = models.URLField(max_length=500, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    archived = models.BooleanField(default=False)
+    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 class JobApplication(models.Model):
     company = models.CharField(max_length=40, null=False)
@@ -38,6 +48,7 @@ class JobApplication(models.Model):
     initial_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    lead = models.ForeignKey(Lead, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='applications')
 
     def is_completed(self):
         tl = self.timeline_set.last()
@@ -67,14 +78,3 @@ class Timeline(models.Model):
             self.date = datetime.now()
 
         super().save(*args, **kwargs)
-
-class Lead(models.Model):
-    company = models.CharField(max_length=40, null=False)
-    role = models.CharField(max_length=255, null=False)
-    location = models.CharField(max_length=50, null=True, blank=True)
-    external_link = models.URLField(max_length=500, null=True, blank=True)
-    notes = models.TextField(null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    archived = models.BooleanField(default=False)
-    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, blank=True)
