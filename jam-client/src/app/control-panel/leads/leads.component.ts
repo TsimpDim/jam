@@ -57,7 +57,7 @@ export class LeadsComponent implements OnInit {
 
   getLeads() {
     this.loading = true;
-    this.jamService.getLeads(this.viewingArchived)
+    this.jamService.getLeads(this.viewingArchived ? 'true' : 'false')
     .subscribe({
       next: (data: any) => {
         this.leads = data;

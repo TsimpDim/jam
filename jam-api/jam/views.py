@@ -4,11 +4,12 @@ from django.db import models
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
+    JobAdSnapshotSerializer,
     StepSerializer,
     TimelineSerializer,
     LeadSerializer
 )
-from .models import Group, JobApplication, Step, Timeline, Lead
+from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -111,6 +112,19 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
             ).data
 
         return Response(groupped_job_apps)
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="ad-snapshot",
+        permission_classes=[IsAuthenticated],
+    )
+    def ad_snapshot(self, request, pk=None):
+        try:
+            snap = JobAdSnapshot.objects.get(job_application_id=pk)
+            return Response(JobAdSnapshotSerializer(snap).data)
+        except JobAdSnapshot.DoesNotExist:
+            return Response({'detail': 'Not found'}, status=404)
 
 
 class TimelineViewSet(viewsets.ModelViewSet):
@@ -399,8 +413,9 @@ class LeadViewSet(viewsets.ModelViewSet):
         archived = self.request.query_params.get('archived')
         if archived == 'true':
             queryset = queryset.filter(archived=True)
-        else:
+        elif archived == 'false':
             queryset = queryset.filter(archived=False)
+        # if archived == 'all' or not specified, return all leads
             
         return queryset
 

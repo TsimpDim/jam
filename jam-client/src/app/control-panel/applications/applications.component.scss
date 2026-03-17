@@ -49,3 +49,29 @@ a:hover {
         width: 1.2em;
     }
 }
+
+.snapshot-content {
+    .snapshot-date {
+        color: #666;
+        font-size: 0.85em;
+        margin-bottom: 1rem;
+    }
+    
+    .snapshot-text {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-height: 60vh;
+        overflow-y: auto;
+        background: #f5f5f5;
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+}
+
+.no-snapshot {
+    color: #666;
+    font-style: italic;
+}

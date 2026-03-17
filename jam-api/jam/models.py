@@ -62,6 +62,12 @@ class JobApplication(models.Model):
             return relativedelta(last.date, first.date)
 
 
+class JobAdSnapshot(models.Model):
+    job_application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='snapshot')
+    text = models.TextField()
+    fetched_at = models.DateTimeField(auto_now_add=True)
+
+
 class Timeline(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)

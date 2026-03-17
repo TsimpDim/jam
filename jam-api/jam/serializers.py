@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Group, JobApplication, Step, Timeline, Lead
+from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -14,6 +14,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     group_name = serializers.SerializerMethodField()
     last_step_color = serializers.SerializerMethodField()
     lead = serializers.PrimaryKeyRelatedField(queryset=Lead.objects.all(), required=False, allow_null=True)
+    snapshot = serializers.SerializerMethodField()
 
     def get_group_name(self, obj):
         return obj.group.name
@@ -27,6 +28,13 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     def get_last_step_color(self, obj):
         last_tl = Timeline.objects.filter(application_id=obj.id).last()
         return last_tl and last_tl.step.color
+
+    def get_snapshot(self, obj):
+        try:
+            snap = obj.snapshot
+            return {'id': snap.id, 'fetched_at': snap.fetched_at}
+        except JobAdSnapshot.DoesNotExist:
+            return None
 
     class Meta:
         model = JobApplication
@@ -62,4 +70,10 @@ class LeadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lead
+        fields = "__all__"
+
+
+class JobAdSnapshotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobAdSnapshot
         fields = "__all__"

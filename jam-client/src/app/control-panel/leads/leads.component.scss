@@ -8,6 +8,25 @@
     float: right;
 }
 
+.card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #eee;
+}
+
+.application-mini {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    
+    .app-company {
+        color: #666;
+    }
+}
+
 .empty-message {
     margin: auto;
     margin-top: 5em;

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { JamService } from 'src/app/_services/jam.service';
+import { ClarityIcons, detailsIcon, lightbulbIcon } from '@cds/core/icon';
+ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
 
 @Component({
   selector: 'app-applications',
   templateUrl: './applications.component.html',
-  styleUrls: ['./applications.component.scss']
+  styleUrls: ['./applications.component.scss'],
 })
 export class ApplicationsComponent implements OnInit {
   public applications: any;
@@ -20,10 +22,11 @@ export class ApplicationsComponent implements OnInit {
   public editTimelineModalIsOpen: boolean = false;
   public selectedTimelineStep: any = null;
   public groupToSelect: any = null;
+  public snapshotModalIsOpen: boolean = false;
+  public jobAdSnapshot: any = null;
+  public loadingSnapshot: boolean = false;
 
-  constructor (
-    private jamService: JamService
-  ) {}
+  constructor(private jamService: JamService) {}
 
   ngOnInit(): void {
     this.getApplications();
@@ -33,25 +36,28 @@ export class ApplicationsComponent implements OnInit {
   getApplications() {
     this.loadingApplications = true;
     this.loadingSelectedApplication = true;
-    this.jamService.getJobApplications(true)
-    .subscribe({
+    this.jamService.getJobApplications(true).subscribe({
       next: (data: any) => {
         this.loadingSelectedApplication = false;
         this.loadingApplications = false;
         this.applications = data;
 
         if (this.selectedApp !== null) {
-          this.selectApp({'groupName':this.selectedApp.group_name, 'jobAppId': this.selectedApp.id});
+          this.selectApp({
+            groupName: this.selectedApp.group_name,
+            jobAppId: this.selectedApp.id,
+          });
         }
       },
-      error: (error) => {
-      }
-    })
+      error: (error) => {},
+    });
   }
 
   selectApp(event: any) {
     let appsOfGroup = this.applications[event.groupName];
-    let selectedJobApp = appsOfGroup.find((app: any) => app.id == event.jobAppId);
+    let selectedJobApp = appsOfGroup.find(
+      (app: any) => app.id == event.jobAppId
+    );
 
     if (selectedJobApp !== undefined) {
       this.selectedApp = selectedJobApp;
@@ -63,42 +69,41 @@ export class ApplicationsComponent implements OnInit {
   }
 
   getSteps() {
-    this.jamService.getSteps()
-    .subscribe({
+    this.jamService.getSteps().subscribe({
       next: (data) => {
         this.steps = data;
-        this.nonStartingSteps = this.steps.filter((s: any) => s.type === 'D' || s.type == 'E');
-      }
-    })
+        this.nonStartingSteps = this.steps.filter(
+          (s: any) => s.type === 'D' || s.type == 'E'
+        );
+      },
+    });
   }
-  
+
   refreshSelectedJobApp() {
     this.loadingSelectedApplication = true;
-    this.jamService.getJobApplication(this.selectedApp.id)
-    .subscribe({
+    this.jamService.getJobApplication(this.selectedApp.id).subscribe({
       next: (data: any) => {
         this.loadingSelectedApplication = false;
         this.selectedApp = data;
-      }
-    })
+      },
+    });
   }
 
   getTimeline() {
     this.selectedAppTimeline = null;
     this.loadingTimeline = true;
-    this.jamService.getTimeline(this.selectedApp.id)
-    .subscribe({
+    this.jamService.getTimeline(this.selectedApp.id).subscribe({
       next: (data: any) => {
         this.loadingTimeline = false;
         this.selectedAppTimeline = data;
       },
       error: () => {
         this.loadingTimeline = true;
-      }
-    })
+      },
+    });
   }
 
-  openAndClearJobAppModal(emmited: {group: string} | undefined) {
+  openAndClearJobAppModal(emmited: { group: string } | undefined) {
     this.selectedApp = null;
     this.jobAppModalIsOpen = true;
     if (emmited) {
@@ -111,7 +116,7 @@ export class ApplicationsComponent implements OnInit {
   }
 
   closeAndClearJobAppModal() {
-    this.jobAppModalIsOpen = false
+    this.jobAppModalIsOpen = false;
     this.selectedApp = null;
   }
 
@@ -125,7 +130,29 @@ export class ApplicationsComponent implements OnInit {
   }
 
   openEditTimelineModal(timelineStepId: any) {
-    this.selectedTimelineStep = this.selectedAppTimeline.find((timelineSteps: any) => timelineSteps.id == timelineStepId);
+    this.selectedTimelineStep = this.selectedAppTimeline.find(
+      (timelineSteps: any) => timelineSteps.id == timelineStepId
+    );
     this.timelineStepModalIsOpen = true;
+  }
+
+  openSnapshotModal() {
+    this.loadingSnapshot = true;
+    this.snapshotModalIsOpen = true;
+    this.jamService.getJobAdSnapshot(this.selectedApp.id).subscribe({
+      next: (data: any) => {
+        this.loadingSnapshot = false;
+        this.jobAdSnapshot = data;
+      },
+      error: () => {
+        this.loadingSnapshot = false;
+        this.jobAdSnapshot = null;
+      },
+    });
+  }
+
+  closeSnapshotModal() {
+    this.snapshotModalIsOpen = false;
+    this.jobAdSnapshot = null;
   }
 }

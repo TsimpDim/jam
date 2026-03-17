@@ -32,6 +32,12 @@ export class JamService {
     );
   }
 
+  getJobAdSnapshot(jobAppId: number) {
+    return this.runHttpCall('GET',
+      environment.apiUrl + '/jam/jobapps/' + jobAppId + '/ad-snapshot/'
+    );
+  }
+
 
   createJobApplication(
     company: string,
@@ -213,7 +219,7 @@ export class JamService {
     )
   }
 
-  getLeads(archived: boolean = false) {
+  getLeads(archived: string = 'all') {
     return this.runHttpCall('GET',
       environment.apiUrl + '/jam/leads/?archived=' + archived
     );

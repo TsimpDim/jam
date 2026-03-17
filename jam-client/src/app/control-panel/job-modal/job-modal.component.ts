@@ -119,7 +119,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   getLeads() {
-    this.jamService.getLeads(true)
+    this.jamService.getLeads('all')
     .subscribe({
       next: (data) => {
         this.leads = data;

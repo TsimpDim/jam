@@ -9,9 +9,9 @@
         <button class="button btn btn-primary" (click)="clearAndOpenModal()">
           Create new
         </button>
-                <button class="button btn btn-outline" (click)="toggleViewMode()">
-                    {{ viewingArchived ? 'Show Active' : 'Show Archived' }}
-                </button>
+        <button class="button btn btn-outline" (click)="toggleViewMode()">
+          {{ viewingArchived ? "Show Active" : "Show Archived" }}
+        </button>
 
         <p class="empty-message" *ngIf="leads.length === 0">
           Nothing's here so far :(<br />Use the 'create new' button to get
@@ -49,6 +49,22 @@
           <div class="card-block" *ngIf="lead.notes">
             <div class="card-text">
               {{ lead.notes }}
+            </div>
+          </div>
+          <div
+            class="card-footer"
+            *ngIf="lead.applications && lead.applications.length > 0"
+          >
+            <div class="application-mini" *ngFor="let app of lead.applications">
+              <span class="app-company"
+                >{{ app.company }} - {{ app.role }}</span
+              >
+              <span
+                class="badge"
+                [style.background-color]="app.last_step_color || '#8c8c8c'"
+              >
+                {{ app.status }}
+              </span>
             </div>
           </div>
         </div>
@@ -166,22 +182,6 @@
               </div>
             </div>
           </form>
-
-          <div *ngIf="selectedLead !== null && applications.length > 0" class="applications-section">
-            <h4>Connected Applications</h4>
-            <div class="application-card" *ngFor="let app of applications">
-              <div class="application-header">
-                {{ app.company }} - {{ app.role }}
-                <span class="badge" [style.background-color]="app.last_step_color || '#8c8c8c'">
-                  {{ app.status }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="selectedLead !== null && applications.length === 0" class="no-applications">
-            <p>No applications connected to this lead yet.</p>
-          </div>
         </div>
 
         <div class="modal-footer">

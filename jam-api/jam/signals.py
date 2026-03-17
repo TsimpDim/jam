@@ -1,7 +1,9 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Group, JobApplication, Step, Timeline
+from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline
 from django.contrib.auth.models import User
+import threading
+from .utils import fetch_job_ad_snapshot
 
 
 @receiver(post_save, sender=JobApplication)
@@ -15,6 +17,23 @@ def create_first_hist(sender, instance, created, **kwargs):
             date=instance.date
         )
         t.save()
+
+
+@receiver(post_save, sender=JobApplication)
+def fetch_job_ad_snapshot(sender, instance, created, **kwargs):
+    if not instance.external_link:
+        return
+    
+    def fetch():
+        text = fetch_job_ad_snapshot(instance.external_link)
+        if text:
+            JobAdSnapshot.objects.update_or_create(
+                job_application=instance,
+                defaults={'text': text}
+            )
+    
+    thread = threading.Thread(target=fetch)
+    thread.start()
 
 
 @receiver(post_save, sender=User)

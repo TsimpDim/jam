@@ -1,104 +1,196 @@
 <div class="main-container">
-    <div class="content-container">
-        <app-job-nav
-            [applications]="applications"
-            [loadingApplications]="loadingApplications"
-            (onSelectApp)="selectApp($event)"
-            (onOpenAndClearJobAppModal)="openAndClearJobAppModal($event)"
-        >
-        </app-job-nav>
-    
-        <div class="content-area">
-            <h6 *ngIf="selectedApp == null">
-                Please create or select an application from the menu on the left.
-            </h6>
+  <div class="content-container">
+    <app-job-nav
+      [applications]="applications"
+      [loadingApplications]="loadingApplications"
+      (onSelectApp)="selectApp($event)"
+      (onOpenAndClearJobAppModal)="openAndClearJobAppModal($event)"
+    >
+    </app-job-nav>
 
-            <div class="clr-column" *ngIf="selectedApp != null">
-                <h4>Job Application</h4>
-                <div class="card">
-                    <div class="card-header">
-                        {{selectedApp.company}} <span *ngIf="selectedApp.location !== null && selectedApp.location !== ''">- {{selectedApp.location}}</span>
-                        <span class="badge">Created at {{selectedApp.date | date}}</span>
-                        <span class="badge" *ngIf="selectedApp.appliedThrough">
-                            Applied through: {{selectedApp.appliedThrough}}
-                        </span>
-                        <span [ngClass]="{'badge': true, 'badge-light-blue': selectedApp.status !== 'FNISHED', 'badge-success': selectedApp.status === 'FINISHED'}">{{selectedApp.status}}</span>
-                    </div>
-                    <div class="card-block">
-                        <div class="card-title">
-                            {{selectedApp.role}}
-                        </div>
-                        <div class="card-text">
-                            {{selectedApp.notes}}
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div *ngIf="loadingSelectedApplication"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+    <div class="content-area">
+      <h6 *ngIf="selectedApp == null">
+        Please create or select an application from the menu on the left.
+      </h6>
 
-                        <button class="btn btn-sm btn-link" (click)="openJobAppModal()">Edit <cds-icon shape="pencil"></cds-icon></button>
-
-                        <ng-container *ngIf="selectedApp.externalLink">
-                            <a target="_blank" href="{{selectedApp.externalLink}}">Link <cds-icon shape="link"></cds-icon></a>
-                        </ng-container>
-                    </div>
+      <div class="clr-column" *ngIf="selectedApp != null">
+        <h4>Job Application</h4>
+        <div class="card">
+          <div class="card-header">
+            {{ selectedApp.company }}
+            <span
+              *ngIf="
+                selectedApp.location !== null && selectedApp.location !== ''
+              "
+              >- {{ selectedApp.location }}</span
+            >
+            <span class="badge">Created at {{ selectedApp.date | date }}</span>
+            <span class="badge" *ngIf="selectedApp.appliedThrough">
+              Applied through: {{ selectedApp.appliedThrough }}
+            </span>
+            <span
+              [ngClass]="{
+                badge: true,
+                'badge-light-blue': selectedApp.status !== 'FNISHED',
+                'badge-success': selectedApp.status === 'FINISHED'
+              }"
+              >{{ selectedApp.status }}</span
+            >
+          </div>
+          <div class="card-block">
+            <div class="card-title">
+              {{ selectedApp.role }}
+            </div>
+            <div class="card-text">
+              {{ selectedApp.notes }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div
+              *ngIf="loadingSelectedApplication"
+              style="font-size: 1px"
+              class="progress loop"
+            >
+              <progress></progress>
             </div>
 
-            <h4>Timeline</h4>
-            <div style="display: flex; flex-direction:row">
-                <clr-spinner *ngIf="loadingTimeline" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+            <button class="btn btn-sm btn-link" (click)="openJobAppModal()">
+              Edit <cds-icon shape="pencil"></cds-icon>
+            </button>
 
-                <ul id="timeline" class="clr-timeline clr-timeline-horizontal">
-                    <ng-container *ngFor="let tl of selectedAppTimeline; index as i">
-                        <li
-                            class="clr-timeline-step"
-                            (click)="openEditTimelineModal(tl.id)"
-                            [ngStyle]="{width: selectedApp.status === 'IN PROGRESS' && i === selectedAppTimeline.length-1? '3em' : '15em'}"
-                            >
-                            <div class="clr-timeline-step-header" *ngIf="tl.date_relevant">{{tl.date | date}}</div>
-                            <div class="clr-timeline-step-header" *ngIf="!tl.date_relevant">?</div>
-                            <cds-icon shape="circle" [style.color]="tl.step.color" ></cds-icon>
-                            <div class="clr-timeline-step-body" (click)="openEditTimelineModal(tl.id)">
-                                <div class="clr-timeline-step-title">{{tl.step.name}}</div>
-                                <div class="clr-timeline-step-description">{{tl.notes}}</div>
-                            </div>
-                        </li>
-                    </ng-container>
+            <ng-container *ngIf="selectedApp.externalLink">
+              <a
+                target="_blank"
+                class="btn btn-sm btn-link"
+                href="{{ selectedApp.externalLink }}"
+                >Link <cds-icon shape="link"></cds-icon
+              ></a>
 
-                    <li class="clr-timeline-step" *ngIf="!loadingTimeline && selectedApp.status === 'IN PROGRESS'">
-                        <button
-                            class="btn btn-primary"
-                            id="add-step-btn"
-                            [disabled]="selectedApp.status == 'FINISHED'"
-                            (click)="openTimelineStepModal()"
-                        >
-                            <cds-icon shape="plus"></cds-icon>
-                        </button>
-                    </li>
-                </ul>
-            </div>
+              <button
+                *ngIf="selectedApp.snapshot"
+                class="btn btn-sm btn-link"
+                (click)="openSnapshotModal()"
+              >
+                View Job Ad <cds-icon shape="details"></cds-icon>
+              </button>
+            </ng-container>
+          </div>
         </div>
+
+        <h4>Timeline</h4>
+        <div style="display: flex; flex-direction: row">
+          <clr-spinner
+            *ngIf="loadingTimeline"
+            [clrMedium]="true"
+            [clrInline]="true"
+            [clrInverse]="true"
+          ></clr-spinner>
+
+          <ul id="timeline" class="clr-timeline clr-timeline-horizontal">
+            <ng-container *ngFor="let tl of selectedAppTimeline; index as i">
+              <li
+                class="clr-timeline-step"
+                (click)="openEditTimelineModal(tl.id)"
+                [ngStyle]="{
+                  width:
+                    selectedApp.status === 'IN PROGRESS' &&
+                    i === selectedAppTimeline.length - 1
+                      ? '3em'
+                      : '15em'
+                }"
+              >
+                <div class="clr-timeline-step-header" *ngIf="tl.date_relevant">
+                  {{ tl.date | date }}
+                </div>
+                <div class="clr-timeline-step-header" *ngIf="!tl.date_relevant">
+                  ?
+                </div>
+                <cds-icon
+                  shape="circle"
+                  [style.color]="tl.step.color"
+                ></cds-icon>
+                <div
+                  class="clr-timeline-step-body"
+                  (click)="openEditTimelineModal(tl.id)"
+                >
+                  <div class="clr-timeline-step-title">{{ tl.step.name }}</div>
+                  <div class="clr-timeline-step-description">
+                    {{ tl.notes }}
+                  </div>
+                </div>
+              </li>
+            </ng-container>
+
+            <li
+              class="clr-timeline-step"
+              *ngIf="!loadingTimeline && selectedApp.status === 'IN PROGRESS'"
+            >
+              <button
+                class="btn btn-primary"
+                id="add-step-btn"
+                [disabled]="selectedApp.status == 'FINISHED'"
+                (click)="openTimelineStepModal()"
+              >
+                <cds-icon shape="plus"></cds-icon>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-
-
     <app-job-modal
-        [isOpen]="jobAppModalIsOpen"
-        [application]="selectedApp"
-        [groupToSelect]="groupToSelect"
-        (onClose)="jobAppModalIsOpen = false"
-        (onApplicationsNeedUpdate)="getApplications()"
+      [isOpen]="jobAppModalIsOpen"
+      [application]="selectedApp"
+      [groupToSelect]="groupToSelect"
+      (onClose)="jobAppModalIsOpen = false"
+      (onApplicationsNeedUpdate)="getApplications()"
     >
     </app-job-modal>
 
     <app-timeline-modal
-        [isOpen]="timelineStepModalIsOpen"
-        [timelineStep]="selectedTimelineStep"
-        [application]="selectedApp"
-        (onClose)="timelineStepModalIsOpen = false"
-        (onApplicationNeedsUpdate)="refreshSelectedJobApp()"
-        (onTimelineNeedsUpdate)="getTimeline()"
-        (onAllApplicationsNeedUpdate)="getApplications()"
+      [isOpen]="timelineStepModalIsOpen"
+      [timelineStep]="selectedTimelineStep"
+      [application]="selectedApp"
+      (onClose)="timelineStepModalIsOpen = false"
+      (onApplicationNeedsUpdate)="refreshSelectedJobApp()"
+      (onTimelineNeedsUpdate)="getTimeline()"
+      (onAllApplicationsNeedUpdate)="getApplications()"
     >
     </app-timeline-modal>
 
+    <clr-modal [(clrModalOpen)]="snapshotModalIsOpen" [clrModalSize]="'lg'">
+      <h3 class="modal-title">Job Ad</h3>
+      <div class="modal-body">
+        <div
+          *ngIf="loadingSnapshot"
+          style="font-size: 1px"
+          class="progress loop"
+        >
+          <progress></progress>
+        </div>
+        <div *ngIf="!loadingSnapshot && jobAdSnapshot" class="snapshot-content">
+          <p class="snapshot-date">
+            Fetched at: {{ jobAdSnapshot.fetched_at | date : "medium" }}
+          </p>
+          <pre class="snapshot-text">{{ jobAdSnapshot.text }}</pre>
+        </div>
+        <div *ngIf="!loadingSnapshot && !jobAdSnapshot" class="no-snapshot">
+          <p>
+            No job ad snapshot available yet. It will be fetched automatically
+            when the job application is created.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="closeSnapshotModal()"
+        >
+          Close
+        </button>
+      </div>
+    </clr-modal>
+  </div>
 </div>
