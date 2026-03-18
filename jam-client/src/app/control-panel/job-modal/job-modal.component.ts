@@ -24,6 +24,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   public initialSteps: any = null;
   public groups: any = null;
   public leads: any = null;
+  public errorMessage: string = '';
 
   constructor(
     private jamService: JamService,
@@ -97,6 +98,13 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   submitJobAppForm() {
+    this.errorMessage = '';
+    
+    if (this.jobAppForm.invalid) {
+      this.jobAppForm.markAllAsTouched();
+      return;
+    }
+
     if (this.application === null) {
       this.createJobApplication();
     } else {

@@ -1,9 +1,12 @@
+import logging
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline
 from django.contrib.auth.models import User
 import threading
-from .utils import fetch_job_ad_snapshot
+import jam.utils as utils
+
+logger = logging.getLogger(__name__)
 
 
 @receiver(post_save, sender=JobApplication)
@@ -20,17 +23,23 @@ def create_first_hist(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=JobApplication)
-def fetch_job_ad_snapshot(sender, instance, created, **kwargs):
-    if not instance.external_link:
+def create_job_ad_snapshot(sender, instance, created, **kwargs):
+    logger.info(f"fetch_job_ad_snapshot signal fired: created={created}, external_link={instance.external_link}")
+    if instance.external_link is None:
         return
     
     def fetch():
-        text = fetch_job_ad_snapshot(instance.external_link)
-        if text:
-            JobAdSnapshot.objects.update_or_create(
-                job_application=instance,
-                defaults={'text': text}
-            )
+        try:
+            text = utils.fetch_job_ad_snapshot(instance.external_link)
+            logger.info(f"fetch result: {text[:100] if text else 'None'}")
+            if text:
+                JobAdSnapshot.objects.update_or_create(
+                    job_application=instance,
+                    defaults={'text': text}
+                )
+                logger.info(f"Snapshot created/updated for job app {instance.id}")
+        except Exception as e:
+            logger.error(f"Error creating snapshot: {e}")
     
     thread = threading.Thread(target=fetch)
     thread.start()
