@@ -17,6 +17,7 @@ export class LeadsComponent implements OnInit {
   selectedLead: any = null;
   viewingArchived: boolean = false;
   applications: any[] = [];
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,7 +25,7 @@ export class LeadsComponent implements OnInit {
   ) {
     this.leadForm = this.formBuilder.group({
       "company": new FormControl('', [Validators.required]),
-      "role": new FormControl('', []),
+      "role": new FormControl('', [Validators.required]),
       "location": new FormControl('', []),
       "externalLink": new FormControl('', []),
       "notes": new FormControl('', []),
@@ -48,6 +49,12 @@ export class LeadsComponent implements OnInit {
   }
 
   submitForm() {
+    this.errorMessage = '';
+    if (this.leadForm.invalid) {
+      this.leadForm.markAllAsTouched();
+      return;
+    }
+
     if (this.selectedLead === null) {
       this.createLead();
     } else {
@@ -131,13 +138,17 @@ export class LeadsComponent implements OnInit {
       next: () => {
         this.selectedLead = null;
         this.getLeads();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while creating the lead.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -158,13 +169,17 @@ export class LeadsComponent implements OnInit {
       next: () => {
         this.selectedLead = null;
         this.getLeads();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while updating the lead.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }

@@ -13,6 +13,7 @@ export class RegisterComponent implements OnInit {
   public form: FormGroup;
   public registered: Boolean | null = null;  
   public loading: Boolean = false;
+  public errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,6 +30,12 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {}
 
   register() {
+    this.errorMessage = '';
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     if (this.form.valid) {
       this.loading = true;
 
@@ -43,12 +50,22 @@ export class RegisterComponent implements OnInit {
         },
         error: (err) => {
           this.registered = false;
+          this.loading = false;
+          this.errorMessage = 'Registration failed. Please check your details.';
+          if (err.error) {
+            if (err.error.username) {
+              this.errorMessage = 'Username: ' + err.error.username[0];
+            } else if (err.error.password1) {
+              this.errorMessage = 'Password: ' + err.error.password1[0];
+            } else if (err.error.detail) {
+              this.errorMessage = err.error.detail;
+            } else {
+              this.errorMessage = JSON.stringify(err.error);
+            }
+          }
         },
         complete: () => this.loading = false
       })
-
-
-      this.loading = false;
     }
   }
 

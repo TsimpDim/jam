@@ -5,6 +5,14 @@
           <h3 class="welcome">Welcome back to JAM!</h3>
         </section>
         <div class="login-group">
+          <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+            <clr-alert-item>
+              <span class="alert-text">
+                {{ errorMessage }}
+              </span>
+            </clr-alert-item>
+          </clr-alert>
+
           <clr-input-container>
             <label>Username</label>
             <input
@@ -27,32 +35,6 @@
             />
             <clr-control-error>Make sure your password is filled in properly</clr-control-error>
           </clr-password-container>
-
-          <!-- <div class="alert alert-success" role="alert" *ngIf="loggedIn">
-            <div class="alert-items">
-              <div class="alert-item static">
-                <div class="alert-icon-wrapper">
-                  <cds-icon class="alert-icon" shape="check-circle"></cds-icon>
-                </div>
-                <span class="alert-text">
-                  Logged in successfully!
-                </span>
-              </div>
-            </div>
-        </div> -->
-
-        <!-- <div class="alert alert-danger" role="alert" *ngIf="loggedIn == false">
-            <div class="alert-items">
-              <div class="alert-item static">
-                <div class="alert-icon-wrapper">
-                  <cds-icon class="alert-icon" shape="error-standard"></cds-icon>
-                </div>
-                <span class="alert-text">
-                  Could not login.
-                </span>
-              </div>
-            </div>
-        </div> -->
 
         <div class="column" style="margin-left: auto;">
           <div class="row">

@@ -5,6 +5,14 @@
             <h3 class="welcome">Welcome to JAM!</h3>
           </section>
           <div class="login-group">
+            <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+              <clr-alert-item>
+                <span class="alert-text">
+                  {{ errorMessage }}
+                </span>
+              </clr-alert-item>
+            </clr-alert>
+
             <clr-input-container>
               <label>Username</label>
               <input clrInput  name="username" type="text" placeholder="JohnDoe" formControlName="username"/>
@@ -14,41 +22,15 @@
             <clr-password-container>
               <label>Password</label>
               <input clrPassword placeholder="Password" name="password1" formControlName="password1"/>
-              <clr-control-error>Make sure your password is filled in properly</clr-control-error>
+              <clr-control-error *clrIfError="'minlength'">Password must be at least 8 characters</clr-control-error>
+              <clr-control-error *clrIfError="'required'">Make sure your password is filled in properly</clr-control-error>
             </clr-password-container>
   
             <clr-password-container>
                 <label>Confirm Password</label>
                 <input clrPassword placeholder="Password" name="password2" formControlName="password2"/>
-                <clr-control-error>Make sure your password is filled in properly</clr-control-error>
-                <div *ngIf="form.errors?.['notSame']">Make sure your passwords match</div>
+                <clr-control-error *clrIfError="'notSame'">Passwords do not match</clr-control-error>
             </clr-password-container>
-<!-- 
-            <div class="alert alert-success" role="alert" *ngIf="registered">
-                <div class="alert-items">
-                  <div class="alert-item static">
-                    <div class="alert-icon-wrapper">
-                      <cds-icon class="alert-icon" shape="check-circle"></cds-icon>
-                    </div>
-                    <span class="alert-text">
-                      Registered successfully!
-                    </span>
-                  </div>
-                </div>
-            </div>
-
-            <div class="alert alert-danger" role="alert" *ngIf="registered == false">
-                <div class="alert-items">
-                  <div class="alert-item static">
-                    <div class="alert-icon-wrapper">
-                      <cds-icon class="alert-icon" shape="error-standard"></cds-icon>
-                    </div>
-                    <span class="alert-text">
-                      Could not register.
-                    </span>
-                  </div>
-                </div>
-            </div> -->
 
             <div class="column" style="margin-left: auto;">
               <div class="row">

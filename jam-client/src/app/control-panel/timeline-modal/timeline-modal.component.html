@@ -3,53 +3,64 @@
     <h3 class="modal-title" *ngIf="timelineStep !== null">Edit Step</h3>
   
     <div class="modal-body">
+      <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+        <clr-alert-item>
+          <span class="alert-text">
+            {{ errorMessage }}
+          </span>
+        </clr-alert-item>
+      </clr-alert>
+
       <form class="clr-form clr-form-horizontal" [formGroup]="timelineStepForm">
-        <div class="clr-form-control">
-            <label for="step" class="clr-control-label">
-                <cds-icon shape="node"></cds-icon>
-                Step *
-            </label>
-            <select clrSelect name="step" formControlName="step" *ngIf="timelineStep === null">
+        <div class="clr-form-control" *ngIf="timelineStep === null">
+          <clr-select-container>
+            <label><cds-icon shape="node"></cds-icon> Step *</label>
+            <select clrSelect name="step" formControlName="step">
                 <option *ngFor="let step of nonInitialSteps" [value]="step.id">{{step.name}}</option>
             </select>
-
-            <input
-            clrInput
-            type="text"
-            disabled
-            *ngIf="timelineStep !== null"
-            value="{{timelineStep.step.name}}"
-            >
+            <clr-control-error>Step is required</clr-control-error>
+          </clr-select-container>
         </div>
 
-        <div class="clr-form-control">
-            <label for="notes" class="clr-control-label">
-                <cds-icon shape="note"></cds-icon>
-                Notes</label>
+        <div class="clr-form-control" *ngIf="timelineStep !== null">
+            <label class="clr-control-label">
+                <cds-icon shape="node"></cds-icon>
+                Step
+            </label>
             <div class="clr-control-container">
-                <div class="clr-textarea-wrapper">
-                    <textarea
-                    class="clr-textarea"
-                    name="notes"
-                    formControlName="notes"
-                    [placeholder]="timelineStep === null ? 'Had xyz interview with Mr. ABC, was asked about DEF. Went well.' : ''"
-                    ></textarea>
-                </div>
+              <input
+              clrInput
+              type="text"
+              disabled
+              [value]="timelineStep.step.name"
+              >
             </div>
         </div>
 
         <div class="clr-form-control">
-            <label for="date" class="clr-control-label">
-                <cds-icon shape="calendar"></cds-icon>
-                Date
-                <a href="..." role="tooltip" aria-haspopup="true" class="tooltip tooltip-sm">
-                    <cds-icon shape="info-circle" size="24"></cds-icon>
-                    <span class="tooltip-content">Enter a single question mark '?' if the date is not relevant for this step.</span>
-                </a>
-            </label>
-            <clr-date-container>
-                <input clrDate type="date" name="date" formControlName="date"/>
-            </clr-date-container>
+          <clr-textarea-container>
+              <label><cds-icon shape="note"></cds-icon> Notes</label>
+              <textarea
+              clrTextarea
+              name="notes"
+              formControlName="notes"
+              placeholder="Had xyz interview with Mr. ABC, was asked about DEF. Went well."
+              ></textarea>
+          </clr-textarea-container>
+        </div>
+
+        <div class="clr-form-control">
+          <clr-date-container>
+              <label>
+                  <cds-icon shape="calendar"></cds-icon>
+                  Date
+                  <a href="..." role="tooltip" aria-haspopup="true" class="tooltip tooltip-sm">
+                      <cds-icon shape="info-circle" size="24"></cds-icon>
+                      <span class="tooltip-content">Enter a single question mark '?' if the date is not relevant for this step.</span>
+                  </a>
+              </label>
+              <input clrDate type="date" name="date" formControlName="date"/>
+          </clr-date-container>
         </div>
       </form>
     </div>

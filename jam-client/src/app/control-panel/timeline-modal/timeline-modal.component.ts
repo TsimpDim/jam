@@ -25,6 +25,7 @@ export class TimelineModalComponent implements OnInit {
 
   public timelineStepForm: FormGroup;
   public loading: boolean = false;
+  public errorMessage: string = '';
   public nonInitialSteps: any = null;
 
   constructor(
@@ -76,6 +77,12 @@ export class TimelineModalComponent implements OnInit {
   }
 
   submitTimelineStepForm() {
+    this.errorMessage = '';
+    if (this.timelineStepForm.invalid) {
+      this.timelineStepForm.markAllAsTouched();
+      return;
+    }
+
     if (this.timelineStep === null) {
       this.addStepToTimeline();
     } else {
@@ -96,14 +103,18 @@ export class TimelineModalComponent implements OnInit {
       next: (data: any) => {
         this.onTimelineNeedsUpdate.emit();
         this.onApplicationNeedsUpdate.emit();
-        this.onAllApplicationsNeedUpdate.emit()
+        this.onAllApplicationsNeedUpdate.emit();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while adding the step.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -117,13 +128,17 @@ export class TimelineModalComponent implements OnInit {
     ).subscribe({
       next: (data: any) => {
         this.onTimelineNeedsUpdate.emit();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while updating the step.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -138,13 +153,17 @@ export class TimelineModalComponent implements OnInit {
         this.onApplicationNeedsUpdate.emit();
         this.onAllApplicationsNeedUpdate.emit();
         this.onTimelineNeedsUpdate.emit();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while deleting the step.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }

@@ -25,38 +25,38 @@
         <h3 class="modal-title" *ngIf="selectedGroup === null">Add Group</h3>
       
         <div class="modal-body">
+          <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+            <clr-alert-item>
+              <span class="alert-text">
+                {{ errorMessage }}
+              </span>
+            </clr-alert-item>
+          </clr-alert>
+
           <form class="clr-form clr-form-horizontal" [formGroup]="groupForm">
             <div class="clr-form-control">
-              <label for="name" class="clr-control-label">
-                <cds-icon shape="blocks-group"></cds-icon>
-                Name *
-              </label>
-              <div class="clr-control-container">
-                <div class="clr-input-wrapper">
-                  <input clrInput
-                  type="text"
-                  name="name"
-                  formControlName="name"
-                  [placeholder]="selectedGroup === null ? 'JH2022' : ''"
-                  />
-                </div>
-              </div>
+              <clr-input-container>
+                <label><cds-icon shape="blocks-group"></cds-icon> Name *</label>
+                <input clrInput
+                type="text"
+                name="name"
+                formControlName="name"
+                placeholder="JH2022"
+                />
+                <clr-control-error>Name is required</clr-control-error>
+              </clr-input-container>
             </div>
 
             <div class="clr-form-control">
-              <label for="description" class="clr-control-label">
-                <cds-icon shape="note"></cds-icon>
-                Description</label>
-              <div class="clr-control-container">
-                <div class="clr-textarea-wrapper">
-                  <textarea
-                  class="clr-textarea"
-                  name="description"
-                  formControlName="description"
-                  [placeholder]="selectedGroup === null ? 'Group for 2022 job hunt as XYZ' : ''"
-                  ></textarea>
-                </div>
-              </div>
+              <clr-textarea-container>
+                <label><cds-icon shape="note"></cds-icon> Description</label>
+                <textarea
+                clrTextarea
+                name="description"
+                formControlName="description"
+                placeholder="Group for 2022 job hunt as XYZ"
+                ></textarea>
+              </clr-textarea-container>
             </div>
           </form>
         </div>

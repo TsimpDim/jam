@@ -26,41 +26,42 @@
         <h3 class="modal-title" *ngIf="selectedStep === null">Add Step</h3>
       
         <div class="modal-body">
+          <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+            <clr-alert-item>
+              <span class="alert-text">
+                {{ errorMessage }}
+              </span>
+            </clr-alert-item>
+          </clr-alert>
+
           <form class="clr-form clr-form-horizontal" [formGroup]="stepForm">
             <div class="clr-form-control">
-              <label for="name" class="clr-control-label">
-                <cds-icon shape="blocks-group"></cds-icon>
-                Name *</label>
-              <div class="clr-control-container">
-                <div class="clr-input-wrapper">
-                  <input clrInput
-                  type="text"
-                  name="name"
-                  formControlName="name"
-                  [placeholder]="selectedStep === null ? 'Take Home Assignment' : ''"
-                  />
-                </div>
-              </div>
+              <clr-input-container>
+                <label><cds-icon shape="blocks-group"></cds-icon> Name *</label>
+                <input clrInput
+                type="text"
+                name="name"
+                formControlName="name"
+                placeholder="Take Home Assignment"
+                />
+                <clr-control-error>Name is required</clr-control-error>
+              </clr-input-container>
             </div>
 
             <div class="clr-form-control">
-              <label for="notes" class="clr-control-label">
-                <cds-icon shape="note"></cds-icon>
-                Notes</label>
-              <div class="clr-control-container">
-                <div class="clr-textarea-wrapper">
-                  <textarea
-                  class="clr-textarea"
-                  name="notes"
-                  formControlName="notes"
-                  [placeholder]="selectedStep === null ? 'A coding task given a candidate to complete on their own time' : ''"
-                  ></textarea>
-                </div>
-              </div>
+              <clr-textarea-container>
+                <label><cds-icon shape="note"></cds-icon> Notes</label>
+                <textarea
+                clrTextarea
+                name="notes"
+                formControlName="notes"
+                placeholder="A coding task given a candidate to complete on their own time"
+                ></textarea>
+              </clr-textarea-container>
             </div>
 
             <div class="clr-form-control">
-              <label  class="clr-control-label">
+              <label class="clr-control-label">
                 <cds-icon shape="color-palette"></cds-icon>
                 Color
               </label>
@@ -74,24 +75,31 @@
               </div>
             </div>
           
-            <div class="clr-form-control">
-              <label for="type" class="clr-control-label">
+            <div class="clr-form-control" *ngIf="selectedStep === null">
+              <label class="clr-control-label">
                 <cds-icon shape="flag"></cds-icon>
                 Type *
               </label>
-              <div class="clr-control-container">
-                <select clrSelect name="type" formControlName="type" *ngIf="selectedStep === null">
+              <clr-select-container>
+                <select clrSelect name="type" formControlName="type">
                   <option value="S">{{getStepTypeDisplayText('S')}}</option>
                   <option value="D">{{getStepTypeDisplayText('D')}}</option>
                   <option value="E">{{getStepTypeDisplayText('E')}}</option>
                 </select>
-                
+              </clr-select-container>
+            </div>
+
+            <div class="clr-form-control" *ngIf="selectedStep !== null">
+              <label class="clr-control-label">
+                <cds-icon shape="flag"></cds-icon>
+                Type
+              </label>
+              <div class="clr-control-container">
                 <input
                 clrInput
                 type="text"
                 disabled
-                *ngIf="selectedStep !== null"
-                value="{{getStepTypeDisplayText()}}">
+                [value]="getStepTypeDisplayText()">
               </div>
             </div>
           </form>

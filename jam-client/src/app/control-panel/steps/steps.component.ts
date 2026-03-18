@@ -12,6 +12,7 @@ export class StepsComponent implements OnInit {
   public selectedStep: any = null;
   public stepForm: FormGroup;
   public modalIsOpen: boolean = false;
+  public errorMessage: string = '';
   public loading: boolean = false;
   public loadingSteps: boolean = true;
   public steps: any;
@@ -96,6 +97,12 @@ export class StepsComponent implements OnInit {
   }
 
   submitForm() {
+    this.errorMessage = '';
+    if (this.stepForm.invalid) {
+      this.stepForm.markAllAsTouched();
+      return;
+    }
+
     if (this.selectedStep == null) {
       this.createStep();
     } else {
@@ -118,13 +125,17 @@ export class StepsComponent implements OnInit {
       next: () => {
         this.selectedStep = null;
         this.getSteps();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while deleting the step.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -140,13 +151,17 @@ export class StepsComponent implements OnInit {
       next: () => {
         this.selectedStep = null;
         this.getSteps();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while creating the step.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -162,13 +177,17 @@ export class StepsComponent implements OnInit {
       next: () => {
         this.selectedStep = null;
         this.getSteps();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while updating the step.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }

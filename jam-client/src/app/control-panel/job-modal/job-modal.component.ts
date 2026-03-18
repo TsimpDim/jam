@@ -33,7 +33,7 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.jobAppForm = this.formBuilder.group({
       'company': new FormControl('', [Validators.required]),
       'role': new FormControl('', [Validators.required]),
-      'date': new FormControl('', [Validators.required]),
+      'date': new FormControl('', []),
       'location': new FormControl('', []),
       'appliedThrough': new FormControl('', []),
       'externalLink': new FormControl('', []),
@@ -164,14 +164,16 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.value.lead
     ).subscribe({
       next: () => {
-        this.onApplicationsNeedUpdate.emit();
-      },
-      error: () => {
-        this.loading = false;
-      },
-      complete: () => {
         this.closeModal();
+        this.onApplicationsNeedUpdate.emit();
         this.loading = false;
+      },
+      error: (e) => {
+        this.loading = false;
+        this.errorMessage = 'An error occurred while creating the job application.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       }
     })
   }
@@ -192,14 +194,16 @@ export class JobModalComponent implements OnInit, OnChanges {
     ).subscribe({
       next: () => {
         this.application = null;
-        this.onApplicationsNeedUpdate.emit();
-      },
-      error: () => {
-        this.loading = false;
-      },
-      complete: () => {
         this.closeModal();
+        this.onApplicationsNeedUpdate.emit();
         this.loading = false;
+      },
+      error: (e) => {
+        this.loading = false;
+        this.errorMessage = 'An error occurred while updating the job application.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       }
     })
   }

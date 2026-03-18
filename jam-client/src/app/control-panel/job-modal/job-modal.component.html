@@ -3,167 +3,141 @@
   <h3 class="modal-title" *ngIf="application !== null">Edit Job Application</h3>
 
   <div class="modal-body">
+    <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+      <clr-alert-item>
+        <span class="alert-text">
+          {{ errorMessage }}
+        </span>
+      </clr-alert-item>
+    </clr-alert>
+
     <form class="clr-form clr-form-horizontal" [formGroup]="jobAppForm">
       <div class="clr-form-control">
-        <label for="company" class="clr-control-label">
-          <cds-icon shape="organization"></cds-icon>
-          Company *
-        </label>
-        <div class="clr-control-container">
-          <div class="clr-input-wrapper">
-            <input
-              clrInput
-              type="text"
-              name="company"
-              formControlName="company"
-              placeholder="Hooli"
-            />
-          </div>
-        </div>
+        <clr-input-container>
+          <label><cds-icon shape="organization"></cds-icon> Company *</label>
+          <input
+            clrInput
+            type="text"
+            name="company"
+            formControlName="company"
+            placeholder="Hooli"
+          />
+          <clr-control-error>Company is required</clr-control-error>
+        </clr-input-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="lead" class="clr-control-label">
-          <cds-icon shape="lightbulb"></cds-icon>
-          Lead
-        </label>
-        <select clrSelect name="lead" formControlName="lead">
-          <option [ngValue]="null">No Lead</option>
-          <option *ngFor="let lead of leads" [ngValue]="lead.id">
-            {{ lead.company }} - {{ lead.role }}
-          </option>
-        </select>
+        <clr-select-container>
+          <label><cds-icon shape="lightbulb"></cds-icon> Lead</label>
+          <select clrSelect name="lead" formControlName="lead">
+            <option [ngValue]="null">No Lead</option>
+            <option *ngFor="let lead of leads" [ngValue]="lead.id">
+              {{ lead.company }} - {{ lead.role }}
+            </option>
+          </select>
+        </clr-select-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="role" class="clr-control-label">
-          <cds-icon shape="id-badge"></cds-icon>
-          Role *
-        </label>
-        <div class="clr-control-container">
-          <div class="clr-textarea-wrapper">
-            <input
-              clrInput
-              type="text"
-              name="role"
-              formControlName="role"
-              placeholder="Software Engineer"
-            />
-          </div>
-        </div>
+        <clr-input-container>
+          <label><cds-icon shape="id-badge"></cds-icon> Role *</label>
+          <input
+            clrInput
+            type="text"
+            name="role"
+            formControlName="role"
+            placeholder="Software Engineer"
+          />
+          <clr-control-error>Role is required</clr-control-error>
+        </clr-input-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="location" class="clr-control-label">
-          <cds-icon shape="map-marker"></cds-icon>
-          Location
-        </label>
-        <div class="clr-control-container">
-          <div class="clr-textarea-wrapper">
-            <input
-              clrInput
-              type="text"
-              name="location"
-              formControlName="location"
-              [placeholder]="application === null ? 'San Francisco' : ''"
-            />
-          </div>
-        </div>
+        <clr-input-container>
+          <label><cds-icon shape="map-marker"></cds-icon> Location</label>
+          <input
+            clrInput
+            type="text"
+            name="location"
+            formControlName="location"
+            placeholder="San Francisco"
+          />
+        </clr-input-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="appliedThrough" class="clr-control-label">
-          <cds-icon shape="info-standard"></cds-icon>
-          Applied Through
-        </label>
-        <div class="clr-control-container">
-          <div class="clr-textarea-wrapper">
-            <input
-              clrInput
-              type="text"
-              name="appliedThrough"
-              formControlName="appliedThrough"
-              [placeholder]="application === null ? 'LinkedIn' : ''"
-            />
-          </div>
-        </div>
+        <clr-input-container>
+          <label><cds-icon shape="info-standard"></cds-icon> Applied Through</label>
+          <input
+            clrInput
+            type="text"
+            name="appliedThrough"
+            formControlName="appliedThrough"
+            placeholder="LinkedIn"
+          />
+        </clr-input-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="externalLink" class="clr-control-label">
-          <cds-icon shape="link"></cds-icon>
-          External Link
-        </label>
-        <div class="clr-control-container">
-          <div class="clr-textarea-wrapper">
-            <input
-              clrInput
-              type="text"
-              name="externalLink"
-              formControlName="externalLink"
-              [placeholder]="application === null ? 'https://...' : ''"
-            />
-          </div>
-        </div>
+        <clr-input-container>
+          <label><cds-icon shape="link"></cds-icon> External Link</label>
+          <input
+            clrInput
+            type="text"
+            name="externalLink"
+            formControlName="externalLink"
+            placeholder="https://..."
+          />
+        </clr-input-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="notes" class="clr-control-label">
-          <cds-icon shape="note"></cds-icon>
-          Notes
-        </label>
-        <div class="clr-control-container">
-          <div class="clr-textarea-wrapper">
-            <textarea
-              class="clr-textarea"
-              name="notes"
-              formControlName="notes"
-              [placeholder]="
-                application === null ? 'Great first impression.' : ''
-              "
-            ></textarea>
-          </div>
-        </div>
+        <clr-textarea-container>
+          <label><cds-icon shape="note"></cds-icon> Notes</label>
+          <textarea
+            clrTextarea
+            name="notes"
+            formControlName="notes"
+            placeholder="Great first impression."
+          ></textarea>
+        </clr-textarea-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="date" class="clr-control-label">
-          <cds-icon shape="calendar"></cds-icon>
-          Date
-        </label>
         <clr-date-container>
+          <label><cds-icon shape="calendar"></cds-icon> Date</label>
           <input clrDate type="date" name="date" formControlName="date" />
         </clr-date-container>
       </div>
 
       <div class="clr-form-control">
-        <label for="group" class="clr-control-label">
-          <cds-icon shape="block"></cds-icon>
-          Group *
-        </label>
-        <select clrSelect name="group" formControlName="group">
-          <option
-            *ngFor="let group of groups; let i = index"
-            [value]="group.id"
-          >
-            {{ group.name }}
-          </option>
-        </select>
+        <clr-select-container>
+          <label><cds-icon shape="block"></cds-icon> Group *</label>
+          <select clrSelect name="group" formControlName="group">
+            <option
+              *ngFor="let group of groups; let i = index"
+              [value]="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+          <clr-control-error>Group is required</clr-control-error>
+        </clr-select-container>
       </div>
 
       <div class="clr-form-control" *ngIf="application === null">
-        <label for="initialStep" class="clr-control-label">
-          <cds-icon shape="flag"></cds-icon>
-          Initial Step *
-        </label>
-        <select clrSelect name="initialStep" formControlName="initialStep">
-          <option
-            *ngFor="let step of initialSteps; let i = index"
-            [value]="step.id"
-          >
-            {{ step.name }}
-          </option>
-        </select>
+        <clr-select-container>
+          <label><cds-icon shape="flag"></cds-icon> Initial Step *</label>
+          <select clrSelect name="initialStep" formControlName="initialStep">
+            <option
+              *ngFor="let step of initialSteps; let i = index"
+              [value]="step.id"
+            >
+              {{ step.name }}
+            </option>
+          </select>
+          <clr-control-error>Initial Step is required</clr-control-error>
+        </clr-select-container>
       </div>
     </form>
   </div>

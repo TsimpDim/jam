@@ -14,6 +14,7 @@ export class GroupsComponent implements OnInit {
   public modalIsOpen: boolean = false;
   public selectedGroup: any = null;
   public groupForm: FormGroup;
+  public errorMessage: string = '';
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
@@ -70,6 +71,12 @@ export class GroupsComponent implements OnInit {
   }
 
   submitForm() {
+    this.errorMessage = '';
+    if (this.groupForm.invalid) {
+      this.groupForm.markAllAsTouched();
+      return;
+    }
+    
     if (this.selectedGroup == null) {
       this.createGroup();
     } else {
@@ -85,13 +92,17 @@ export class GroupsComponent implements OnInit {
       next: () => {
         this.selectedGroup = null;
         this.getGroups();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while deleting the group.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -105,13 +116,17 @@ export class GroupsComponent implements OnInit {
       next: () => {
         this.selectedGroup = null;
         this.getGroups();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while creating the group.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }
@@ -126,13 +141,17 @@ export class GroupsComponent implements OnInit {
       next: () => {
         this.selectedGroup = null;
         this.getGroups();
+        this.closeModal();
       },
-      error: () => {
+      error: (e) => {
         this.loading = false;
+        this.errorMessage = 'An error occurred while updating the group.';
+        if (e.error) {
+          this.errorMessage = JSON.stringify(e.error);
+        }
       },
       complete: () => {
         this.loading = false;
-        this.closeModal();
       }
     })
   }

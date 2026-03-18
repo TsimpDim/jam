@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit{
   public form: FormGroup;
   public loading: Boolean = false;
   public loggedIn: Boolean | null = null;
+  public errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,6 +33,12 @@ export class LoginComponent implements OnInit{
   ngOnInit(): void { }
 
   login() {
+    this.errorMessage = '';
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     if (this.form.valid) {
       this.loading = true;
       this.loggedIn = false;
@@ -40,15 +47,25 @@ export class LoginComponent implements OnInit{
       .subscribe({
         next: (resp: any) => {
           this.loading = false;
-          this.loggedIn = 'key' in resp;
-          if (this.loggedIn) {
+          // check if key is in resp
+          if ('key' in resp) {
+            this.loggedIn = true;
             this.authService.storeSessionToken(resp['key']);
             this.router.navigate(['control-panel/applications']);
+          } else {
+            this.loggedIn = false;
+            this.errorMessage = 'Login failed.';
           }
         },
         error: (err) => {
           this.loading = false;
           this.loggedIn = false;
+          this.errorMessage = 'Invalid username or password.';
+          if (err.error && err.error.non_field_errors) {
+            this.errorMessage = err.error.non_field_errors[0];
+          } else if (err.error && err.error.detail) {
+            this.errorMessage = err.error.detail;
+          }
         },
         complete: () => this.loading = false
       });
