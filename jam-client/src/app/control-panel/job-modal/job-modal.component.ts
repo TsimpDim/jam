@@ -39,7 +39,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       'externalLink': new FormControl('', []),
       'notes': new FormControl('', []),
       'group': new FormControl('', [Validators.required]),
-      'initialStep': new FormControl('', [Validators.required]),
+      'initialStep': new FormControl('', []),
       'lead': new FormControl(null, [])
     });
   }
@@ -52,12 +52,20 @@ export class JobModalComponent implements OnInit, OnChanges {
       changes['application'].currentValue !== null)
     ) {
       let application = this.application;
-      application.externalLink = application.external_link;
-      application.appliedThrough = application.applied_through;
-      application.lead = application.lead || null;
-      this.jobAppForm.reset(application);
-    // if it has changed but has been nulled, make sure
-    // to show default values in jobapp creation modal
+      this.jobAppForm.patchValue({
+        'company': application.company,
+        'role': application.role,
+        'location': application.location || '',
+        'appliedThrough': application.applied_through || '',
+        'externalLink': application.external_link || '',
+        'notes': application.notes || '',
+        'date': application.date || '',
+        'group': application.group,
+        'lead': application.lead || null
+      });
+      this.jobAppForm.get('initialStep')?.clearValidators();
+    } else if (this.application === null) {
+      this.jobAppForm.get('initialStep')?.setValidators([Validators.required]);
     } else if (
       ('application' in changes &&
       (changes['application'].currentValue == undefined ||
