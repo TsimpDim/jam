@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
@@ -33,6 +34,12 @@ export class GroupsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getGroups();
+  }
+
+  dropGroup(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.groups, event.previousIndex, event.currentIndex);
+    const positions = this.groups.map((g: any, i: number) => ({ id: g.id, position: i }));
+    this.jamService.reorderGroups(positions).subscribe();
   }
 
   getGroups() {

@@ -2,6 +2,7 @@ import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClarityModule } from '@clr/angular';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import localeEnCa from '@angular/common/locales/en-CA';
@@ -23,7 +24,8 @@ import { ClarityIcons,
    infoStandardIcon,
    linkIcon,
    helpIcon,
-   colorPaletteIcon} from '@cds/core/icon';
+   colorPaletteIcon,
+   dragHandleIcon} from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -58,7 +60,8 @@ ClarityIcons.addIcons(
   blocksGroupIcon,
   colorPaletteIcon,
   linkIcon,
-  infoStandardIcon
+  infoStandardIcon,
+  dragHandleIcon
 );
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity
@@ -87,6 +90,7 @@ registerLocaleData(localeEnCa);
     BrowserModule,
     BrowserAnimationsModule,
     ClarityModule,
+    DragDropModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,

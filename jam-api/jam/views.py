@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404
 from django.db import models
+from django.db.models import Max
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -26,6 +27,8 @@ class GroupsViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         data["user"] = self.request.user.id
+        max_pos = Group.objects.filter(user=request.user).aggregate(Max('position'))['position__max'] or 0
+        data["position"] = max_pos + 1
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -35,7 +38,14 @@ class GroupsViewSet(viewsets.ModelViewSet):
         )
 
     def get_queryset(self):
-        return Group.objects.filter(user_id=self.request.user).order_by('-id')
+        return Group.objects.filter(user_id=self.request.user).order_by('position', 'id')
+
+    @action(detail=False, methods=['patch'])
+    def reorder(self, request):
+        groups_data = request.data.get('groups', [])
+        for item in groups_data:
+            Group.objects.filter(id=item['id'], user=request.user).update(position=item['position'])
+        return Response({'status': 'ok'})
 
 
 class StepViewSet(viewsets.ModelViewSet):
@@ -105,7 +115,7 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     )
     def group(self, request):
         groupped_job_apps = {}
-        groups = Group.objects.filter(user_id=self.request.user).order_by('-id')
+        groups = Group.objects.filter(user_id=self.request.user).order_by('position', '-id')
         for group in groups.iterator():
             groupped_job_apps[group.name] = JobApplicationSerializer(
                 JobApplication.objects.filter(group__id=group.id), many=True

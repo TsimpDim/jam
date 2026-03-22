@@ -8,14 +8,20 @@
 
         <p class="empty-message" *ngIf="groups.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
 
-        <div class="card clickable" (click)="selectGroup(group.id)" *ngFor="let group of groups">
-          <div class="card-header">
-            {{group.name}}
-          </div>
-          <div class="card-block">
-            <div class="card-text">
-              {{group.description}}
+        <p class="drag-hint" *ngIf="groups.length > 0">Drag cards to reorder</p>
+
+        <div class="group-list" cdkDropList (cdkDropListDropped)="dropGroup($event)">
+          <div class="card clickable" cdkDrag (click)="selectGroup(group.id)" *ngFor="let group of groups">
+            <div class="card-header card-drag-header">
+              <cds-icon shape="drag-handle" class="drag-icon"></cds-icon>
+              <span class="card-title">{{group.name}}</span>
             </div>
+            <div class="card-block">
+              <div class="card-text">
+                {{group.description}}
+              </div>
+            </div>
+            <div *cdkDragPlaceholder class="card-drag-placeholder"></div>
           </div>
         </div>
       </div>

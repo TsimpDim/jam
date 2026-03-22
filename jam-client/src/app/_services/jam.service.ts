@@ -168,6 +168,13 @@ export class JamService {
     );
   }
 
+  reorderGroups(groups: {id: number, position: number}[]): Observable<any> {
+    return this.runHttpCall('PATCH',
+      environment.apiUrl + '/jam/groups/reorder/',
+      { groups }
+    );
+  }
+
   getTimeline(jobAppId: number) {
     return this.runHttpCall('GET',
       environment.apiUrl + '/jam/timeline/jobapp/' + jobAppId + '/'
