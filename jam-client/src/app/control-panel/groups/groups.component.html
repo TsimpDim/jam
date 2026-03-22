@@ -1,24 +1,38 @@
 <div class="main-container">
   <div class="content-container">
-    <div *ngIf="loadingGroups"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+    <div *ngIf="loadingGroups" style="font-size: 1px" class="progress loop">
+      <progress></progress>
+    </div>
 
     <div class="content-area">
       <div class="clr-column">
-        <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
+        <button class="button btn btn-primary" (click)="clearAndOpenModal()">
+          Create new
+        </button>
 
-        <p class="empty-message" *ngIf="groups.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
+        <p class="empty-message" *ngIf="groups.length === 0">
+          Nothing's here so far :(<br />Use the 'create new' button to get
+          started!
+        </p>
 
-        <p class="drag-hint" *ngIf="groups.length > 0">Drag cards to reorder</p>
-
-        <div class="group-list" cdkDropList (cdkDropListDropped)="dropGroup($event)">
-          <div class="card clickable" cdkDrag (click)="selectGroup(group.id)" *ngFor="let group of groups">
+        <div
+          class="group-list"
+          cdkDropList
+          (cdkDropListDropped)="dropGroup($event)"
+        >
+          <div
+            class="card clickable"
+            cdkDrag
+            (click)="selectGroup(group.id)"
+            *ngFor="let group of groups"
+          >
             <div class="card-header card-drag-header">
               <cds-icon shape="drag-handle" class="drag-icon"></cds-icon>
-              <span class="card-title">{{group.name}}</span>
+              <span class="card-title">{{ group.name }}</span>
             </div>
             <div class="card-block">
               <div class="card-text">
-                {{group.description}}
+                {{ group.description }}
               </div>
             </div>
             <div *cdkDragPlaceholder class="card-drag-placeholder"></div>
@@ -29,9 +43,13 @@
       <clr-modal [(clrModalOpen)]="modalIsOpen">
         <h3 class="modal-title" *ngIf="selectedGroup !== null">Edit Group</h3>
         <h3 class="modal-title" *ngIf="selectedGroup === null">Add Group</h3>
-      
+
         <div class="modal-body">
-          <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+          <clr-alert
+            [clrAlertClosable]="false"
+            [clrAlertType]="'danger'"
+            *ngIf="errorMessage"
+          >
             <clr-alert-item>
               <span class="alert-text">
                 {{ errorMessage }}
@@ -43,11 +61,12 @@
             <div class="clr-form-control">
               <clr-input-container>
                 <label><cds-icon shape="blocks-group"></cds-icon> Name *</label>
-                <input clrInput
-                type="text"
-                name="name"
-                formControlName="name"
-                placeholder="JH2022"
+                <input
+                  clrInput
+                  type="text"
+                  name="name"
+                  formControlName="name"
+                  placeholder="JH2022"
                 />
                 <clr-control-error>Name is required</clr-control-error>
               </clr-input-container>
@@ -57,24 +76,37 @@
               <clr-textarea-container>
                 <label><cds-icon shape="note"></cds-icon> Description</label>
                 <textarea
-                clrTextarea
-                name="description"
-                formControlName="description"
-                placeholder="Group for 2022 job hunt as XYZ"
+                  clrTextarea
+                  name="description"
+                  formControlName="description"
+                  placeholder="Group for 2022 job hunt as XYZ"
                 ></textarea>
               </clr-textarea-container>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <clr-spinner *ngIf="loading" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+          <clr-spinner
+            *ngIf="loading"
+            [clrMedium]="true"
+            [clrInline]="true"
+            [clrInverse]="true"
+          ></clr-spinner>
 
-          <button type="button" class="btn btn-danger-outline"
-          (click)="deleteGroup(selectedGroup.id)"
-          *ngIf="selectedGroup !== null"
-          >Delete</button>
-          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" (click)="submitForm()">Submit</button>
+          <button
+            type="button"
+            class="btn btn-danger-outline"
+            (click)="deleteGroup(selectedGroup.id)"
+            *ngIf="selectedGroup !== null"
+          >
+            Delete
+          </button>
+          <button type="button" class="btn btn-outline" (click)="closeModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" (click)="submitForm()">
+            Submit
+          </button>
         </div>
       </clr-modal>
     </div>
