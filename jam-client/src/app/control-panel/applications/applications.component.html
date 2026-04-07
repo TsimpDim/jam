@@ -85,18 +85,11 @@
             [clrInverse]="true"
           ></clr-spinner>
 
-          <ul id="timeline" class="clr-timeline clr-timeline-horizontal">
+          <ul id="timeline" class="clr-timeline" [class.clr-timeline-vertical]="timelineLayout === 'vertical'" [class.clr-timeline-horizontal]="timelineLayout === 'horizontal'">
             <ng-container *ngFor="let tl of selectedAppTimeline; index as i">
               <li
                 class="clr-timeline-step"
                 (click)="openEditTimelineModal(tl.id)"
-                [ngStyle]="{
-                  width:
-                    selectedApp.status === 'IN PROGRESS' &&
-                    i === selectedAppTimeline.length - 1
-                      ? '3em'
-                      : '15em'
-                }"
               >
                 <div class="clr-timeline-step-header" *ngIf="tl.date_relevant">
                   {{ tl.date | date }}

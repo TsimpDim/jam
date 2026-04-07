@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { JamService } from 'src/app/_services/jam.service';
 import { ClarityIcons, detailsIcon, lightbulbIcon } from '@cds/core/icon';
 ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
@@ -25,12 +25,23 @@ export class ApplicationsComponent implements OnInit {
   public snapshotModalIsOpen: boolean = false;
   public jobAdSnapshot: any = null;
   public loadingSnapshot: boolean = false;
+  public timelineLayout: string = 'horizontal';
 
   constructor(private jamService: JamService) {}
 
   ngOnInit(): void {
     this.getApplications();
     this.getSteps();
+    this.updateTimelineLayout();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.updateTimelineLayout();
+  }
+
+  updateTimelineLayout() {
+    this.timelineLayout = window.innerWidth < 768 ? 'vertical' : 'horizontal';
   }
 
   getApplications() {

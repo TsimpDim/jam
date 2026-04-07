@@ -82,44 +82,24 @@ a:hover {
         padding: 1rem;
     }
 
-    #timeline {
-        overflow-x: auto;
+    .clr-timeline-vertical .clr-timeline-step {
         display: flex;
-        flex-direction: column;
+        flex-direction: row !important;
+        align-items: flex-start !important;
     }
 
-    .clr-timeline.clr-timeline-horizontal {
-        flex-direction: column;
-        
-        &::before {
-            display: none;
-        }
+    .clr-timeline-vertical .clr-timeline-step-header {
+        min-width: 70px;
+        padding-right: 8px;
     }
 
-    .clr-timeline-step {
-        width: 100%;
+    .clr-timeline-vertical .clr-timeline-step-body {
+        flex: 1;
         min-width: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        padding: 0.5rem 0;
-
-        &::before {
-            display: none;
-        }
-
-        .clr-timeline-step-header {
-            display: none;
-        }
-
-        .clr-timeline-step-body {
-            display: flex;
-            flex-direction: column;
-        }
     }
 
-    #add-step-btn {
+    .clr-timeline-vertical #add-step-btn {
         margin-top: 0;
-        margin-left: 0;
+        margin-left: 7.4em;
     }
 }
