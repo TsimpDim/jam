@@ -75,3 +75,51 @@ a:hover {
     color: #666;
     font-style: italic;
 }
+
+@media (max-width: 768px) {
+    .content-area {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    #timeline {
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .clr-timeline.clr-timeline-horizontal {
+        flex-direction: column;
+        
+        &::before {
+            display: none;
+        }
+    }
+
+    .clr-timeline-step {
+        width: 100%;
+        min-width: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+
+        &::before {
+            display: none;
+        }
+
+        .clr-timeline-step-header {
+            display: none;
+        }
+
+        .clr-timeline-step-body {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    #add-step-btn {
+        margin-top: 0;
+        margin-left: 0;
+    }
+}

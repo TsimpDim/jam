@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   public isLoggedIn: Boolean | null = null;
   routerSubscription: Subscription | undefined;
+  mobileMenuOpen = false;
 
   constructor(private authService: AuthService, private router: Router) {}
   ngAfterViewInit(): void {
@@ -35,5 +36,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
   }
 }

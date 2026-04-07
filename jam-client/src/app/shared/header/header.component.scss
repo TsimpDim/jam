@@ -1,0 +1,80 @@
+.jam::after {
+    content: "JAM!";
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1.5em;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .header-3 > .header-nav {
+        display: none;
+    }
+
+    .header-3 > .header-nav.mobile-open {
+        display: flex;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        padding: 0;
+        z-index: 1000;
+    }
+
+    .header-3 > .header-nav.mobile-open::before {
+        content: '';
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ffffff;
+        z-index: -1;
+    }
+
+    .header-3 > .header-nav.mobile-open .nav-link {
+        display: block;
+        padding: 1rem;
+        background-color: #ffffff;
+        border-bottom: 1px solid #eee;
+        color: #333333;
+    }
+
+    .header-3 > .header-nav.mobile-open .nav-link.active {
+        background-color: #f4f4f4;
+        color: #0072a3;
+    }
+
+    .header-3 > .branding {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-3 > .branding .mobile-menu-toggle {
+        display: flex;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        color: #333333;
+    }
+}
+
+@media (min-width: 769px) {
+    .header-3 > .branding .mobile-menu-toggle {
+        display: none;
+    }
+}

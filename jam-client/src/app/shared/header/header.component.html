@@ -1,16 +1,19 @@
 <header class="header header-3">
     <div class="branding">
+        <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+            <cds-icon [shape]="mobileMenuOpen ? 'close' : 'menu'" size="md"></cds-icon>
+        </button>
         <a class="nav-link" routerLink="/">
             <div class="title jam"></div>
         </a>
     </div>
-    <div class="header-nav">
+    <div class="header-nav" [class.mobile-open]="mobileMenuOpen">
         <ng-container *ngIf="isLoggedIn">
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/applications">Applications</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/groups">Groups</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/steps">Steps</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/leads">Leads</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/analytics">Analytics</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/applications" (click)="closeMobileMenu()">Applications</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/groups" (click)="closeMobileMenu()">Groups</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/steps" (click)="closeMobileMenu()">Steps</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/leads" (click)="closeMobileMenu()">Leads</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/analytics" (click)="closeMobileMenu()">Analytics</a>
         </ng-container>
     </div>
     <div class="header-actions">
