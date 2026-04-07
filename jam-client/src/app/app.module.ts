@@ -8,24 +8,27 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import localeEnCa from '@angular/common/locales/en-CA';
 
 import '@cds/core/icon/register.js';
-import { ClarityIcons,
-   cogIcon,
-   idBadgeIcon,
-   plusIcon,
-   organizationIcon,
-   noteIcon,
-   calendarIcon,
-   mapMarkerIcon,
-   blockIcon,
-   flagIcon, 
-   nodeIcon, 
-   blocksGroupIcon,
-   pencilIcon,
-   infoStandardIcon,
-   linkIcon,
-   helpIcon,
-   colorPaletteIcon,
-   dragHandleIcon} from '@cds/core/icon';
+import {
+  ClarityIcons,
+  cogIcon,
+  idBadgeIcon,
+  plusIcon,
+  organizationIcon,
+  noteIcon,
+  calendarIcon,
+  mapMarkerIcon,
+  blockIcon,
+  flagIcon,
+  nodeIcon,
+  blocksGroupIcon,
+  pencilIcon,
+  infoStandardIcon,
+  linkIcon,
+  helpIcon,
+  colorPaletteIcon,
+  dragHandleIcon,
+  barsIcon,
+} from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -61,7 +64,8 @@ ClarityIcons.addIcons(
   colorPaletteIcon,
   linkIcon,
   infoStandardIcon,
-  dragHandleIcon
+  dragHandleIcon,
+  barsIcon
 );
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity
@@ -84,7 +88,7 @@ registerLocaleData(localeEnCa);
     JobNavComponent,
     AnalyticsComponent,
     BadgeComponent,
-    LeadsComponent
+    LeadsComponent,
   ],
   imports: [
     BrowserModule,
@@ -94,12 +98,10 @@ registerLocaleData(localeEnCa);
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'en-ca' }
-  ],
+  providers: [{ provide: LOCALE_ID, useValue: 'en-ca' }],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}

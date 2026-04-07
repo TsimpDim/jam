@@ -1,36 +1,74 @@
 <header class="header header-3">
-    <div class="branding">
-        <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" aria-label="Toggle menu">
-            <cds-icon [shape]="mobileMenuOpen ? 'close' : 'menu'" size="md"></cds-icon>
-        </button>
-        <a class="nav-link" routerLink="/">
-            <div class="title jam"></div>
-        </a>
-    </div>
-    <div class="header-nav" [class.mobile-open]="mobileMenuOpen">
-        <ng-container *ngIf="isLoggedIn">
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/applications" (click)="closeMobileMenu()">Applications</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/groups" (click)="closeMobileMenu()">Groups</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/steps" (click)="closeMobileMenu()">Steps</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/leads" (click)="closeMobileMenu()">Leads</a>
-            <a class="nav-link" routerLinkActive="active" routerLink="/control-panel/analytics" (click)="closeMobileMenu()">Analytics</a>
-        </ng-container>
-    </div>
-    <div class="header-actions">
-        <clr-dropdown>
-            <button clrDropdownTrigger class="dropdown-toggle" type="button">
-                <cds-icon size="md" shape="cog"></cds-icon>
-            </button> 
-            <clr-dropdown-menu clrPosition="bottom-right">
-                <h4 class="dropdown-header">Options</h4>
-                <div *ngIf="isLoggedIn">
-                    <button class="dropdown-item" (click)="logout()">Logout</button>
-                </div>
-                <div *ngIf="!isLoggedIn">
-                    <a class="dropdown-item" routerLink="/auth/login">Login</a>
-                    <a class="dropdown-item" routerLink="/auth/register">Register</a>
-                </div>
-            </clr-dropdown-menu>
-        </clr-dropdown>
-    </div>
+  <div class="branding">
+    <button
+      class="mobile-menu-toggle"
+      (click)="toggleMobileMenu()"
+      aria-label="Toggle menu"
+    >
+      <cds-icon
+        [shape]="mobileMenuOpen ? 'close' : 'bars'"
+        size="xs"
+        style="color: rgb(199, 199, 199)"
+      ></cds-icon>
+    </button>
+    <a class="nav-link" routerLink="/">
+      <div class="title jam"></div>
+    </a>
+  </div>
+  <div class="header-nav" [class.mobile-open]="mobileMenuOpen">
+    <ng-container *ngIf="isLoggedIn">
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        routerLink="/control-panel/applications"
+        (click)="closeMobileMenu()"
+        >Applications</a
+      >
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        routerLink="/control-panel/groups"
+        (click)="closeMobileMenu()"
+        >Groups</a
+      >
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        routerLink="/control-panel/steps"
+        (click)="closeMobileMenu()"
+        >Steps</a
+      >
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        routerLink="/control-panel/leads"
+        (click)="closeMobileMenu()"
+        >Leads</a
+      >
+      <a
+        class="nav-link"
+        routerLinkActive="active"
+        routerLink="/control-panel/analytics"
+        (click)="closeMobileMenu()"
+        >Analytics</a
+      >
+    </ng-container>
+  </div>
+  <div class="header-actions">
+    <clr-dropdown>
+      <button clrDropdownTrigger class="dropdown-toggle" type="button">
+        <cds-icon size="md" shape="cog"></cds-icon>
+      </button>
+      <clr-dropdown-menu clrPosition="bottom-right">
+        <h4 class="dropdown-header">Options</h4>
+        <div *ngIf="isLoggedIn">
+          <button class="dropdown-item" (click)="logout()">Logout</button>
+        </div>
+        <div *ngIf="!isLoggedIn">
+          <a class="dropdown-item" routerLink="/auth/login">Login</a>
+          <a class="dropdown-item" routerLink="/auth/register">Register</a>
+        </div>
+      </clr-dropdown-menu>
+    </clr-dropdown>
+  </div>
 </header>
