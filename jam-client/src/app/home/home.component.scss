@@ -53,3 +53,44 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    #intro-title {
+        flex-direction: column;
+    }
+
+    .intro-text {
+        width: 100%;
+        padding: 1.5em;
+        background-color: #320047;
+        color: white;
+
+        & h1 {
+            font-size: 2em;
+            color: white;
+        }
+
+        & p {
+            font-size: 1em;
+            color: white;
+        }
+
+        & .action {
+            height: 3em;
+            width: 100%;
+            margin-top: 1em;
+            float: none;
+            line-height: 3em;
+        }
+    }
+
+    #intro-title img {
+        display: none;
+    }
+
+    .action-cont {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+}
