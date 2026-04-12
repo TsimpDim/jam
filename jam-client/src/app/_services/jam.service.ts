@@ -1,43 +1,37 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment'
+import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class JamService {
-
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) { }
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getJobApplications(groupped: Boolean = false) {
     let endpoint = '/jam/jobapps/';
     if (groupped) {
-      endpoint += "group/";
+      endpoint += 'group/';
     }
 
-    return this.runHttpCall('GET',
-      environment.apiUrl + endpoint
-    );
+    return this.runHttpCall('GET', environment.apiUrl + endpoint);
   }
 
-
   getJobApplication(jobAppId: number) {
-    return this.runHttpCall('GET',
+    return this.runHttpCall(
+      'GET',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/'
     );
   }
 
   getJobAdSnapshot(jobAppId: number) {
-    return this.runHttpCall('GET',
+    return this.runHttpCall(
+      'GET',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/ad-snapshot/'
     );
   }
-
 
   createJobApplication(
     company: string,
@@ -51,21 +45,18 @@ export class JamService {
     initialStep: number,
     lead: number | null = null
   ) {
-    return this.runHttpCall('POST',
-      environment.apiUrl + '/jam/jobapps/',
-      { 
-        "company": company,
-        "role": role,
-        "location": location,
-        "applied_through": appliedThrough,
-        "external_link": externalLink,
-        "notes": notes,
-        "date": date ? date : undefined,
-        "group": group,
-        "initial_step": initialStep,
-        "lead": lead ? lead : undefined
-      }
-    );
+    return this.runHttpCall('POST', environment.apiUrl + '/jam/jobapps/', {
+      company: company,
+      role: role,
+      location: location,
+      applied_through: appliedThrough,
+      external_link: externalLink,
+      notes: notes,
+      date: date ? date : undefined,
+      group: group,
+      initial_step: initialStep,
+      lead: lead ? lead : undefined,
+    });
   }
 
   updateJobApplication(
@@ -80,111 +71,120 @@ export class JamService {
     group: number,
     lead: number | null = null
   ) {
-    return this.runHttpCall('PATCH',
+    return this.runHttpCall(
+      'PATCH',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/',
-      { 
-        "company": company,
-        "role": role,
-        "location": location,
-        "applied_through": appliedThrough,
-        "external_link": externalLink,
-        "notes": notes,
-        "date": date ? date : undefined,
-        "group": group,
-        "lead": lead ? lead : undefined
+      {
+        company: company,
+        role: role,
+        location: location,
+        applied_through: appliedThrough,
+        external_link: externalLink,
+        notes: notes,
+        date: date ? date : undefined,
+        group: group,
+        lead: lead ? lead : undefined,
       }
     );
   }
 
   deleteJobApplication(jobAppId: number) {
-    return this.runHttpCall('DELETE',
+    return this.runHttpCall(
+      'DELETE',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/'
     );
   }
 
   getGroups() {
-    return this.runHttpCall('GET',
-      environment.apiUrl + '/jam/groups/'
-    );
+    return this.runHttpCall('GET', environment.apiUrl + '/jam/groups/');
   }
 
   getSteps(initial: boolean = false) {
     let endpoint = '/jam/steps/';
     if (initial) {
-      endpoint += 'initial/'
+      endpoint += 'initial/';
     }
 
-    return this.runHttpCall('GET',
-      environment.apiUrl + endpoint
-    );
+    return this.runHttpCall('GET', environment.apiUrl + endpoint);
   }
 
-  updateStep(stepId: number, stepName: string, stepNotes: string, color: string) {
-    return this.runHttpCall('PATCH',
-      environment.apiUrl + '/jam/steps/' + stepId +'/',
-      { 
-        "name": stepName,
-        "notes": stepNotes ? stepNotes : undefined,
-        "color": color ? color : undefined
+  updateStep(
+    stepId: number,
+    stepName: string,
+    stepNotes: string,
+    color: string
+  ) {
+    return this.runHttpCall(
+      'PATCH',
+      environment.apiUrl + '/jam/steps/' + stepId + '/',
+      {
+        name: stepName,
+        notes: stepNotes ? stepNotes : undefined,
+        color: color ? color : undefined,
       }
     );
   }
 
-  createStep(stepName: string, stepNotes: string, stepType: string, color: string) {
-    return this.runHttpCall('POST',
-      environment.apiUrl + '/jam/steps/',
-      { 
-        "name": stepName,
-        "notes": stepNotes ? stepNotes : undefined,
-        "type": stepType,
-        "color": color ? color : undefined
-      }
-    );
+  createStep(
+    stepName: string,
+    stepNotes: string,
+    stepType: string,
+    color: string
+  ) {
+    return this.runHttpCall('POST', environment.apiUrl + '/jam/steps/', {
+      name: stepName,
+      notes: stepNotes ? stepNotes : undefined,
+      type: stepType,
+      color: color ? color : undefined,
+    });
   }
-  
+
   deleteStep(stepId: number) {
-    return this.runHttpCall('DELETE',
+    return this.runHttpCall(
+      'DELETE',
       environment.apiUrl + '/jam/steps/' + stepId + '/'
     );
   }
 
   updateGroup(groupId: number, groupName: string, groupDesc: string) {
-    return this.runHttpCall('PATCH',
-      environment.apiUrl + '/jam/groups/' + groupId +'/',
-      { "name": groupName, "description": groupDesc }
+    return this.runHttpCall(
+      'PATCH',
+      environment.apiUrl + '/jam/groups/' + groupId + '/',
+      { name: groupName, description: groupDesc }
     );
   }
 
   createGroup(groupName: string, groupDesc: string) {
-    return this.runHttpCall('POST',
-      environment.apiUrl + '/jam/groups/',
-      { "name": groupName, "description": groupDesc }
-    );
+    return this.runHttpCall('POST', environment.apiUrl + '/jam/groups/', {
+      name: groupName,
+      description: groupDesc,
+    });
   }
 
   deleteGroup(groupId: number) {
-    return this.runHttpCall('DELETE',
+    return this.runHttpCall(
+      'DELETE',
       environment.apiUrl + '/jam/groups/' + groupId + '/'
     );
   }
 
-  reorderGroups(groups: {id: number, position: number}[]): Observable<any> {
-    return this.runHttpCall('PATCH',
+  reorderGroups(groups: { id: number; position: number }[]): Observable<any> {
+    return this.runHttpCall(
+      'PATCH',
       environment.apiUrl + '/jam/groups/reorder/',
       { groups }
     );
   }
 
   getTimeline(jobAppId: number) {
-    return this.runHttpCall('GET',
+    return this.runHttpCall(
+      'GET',
       environment.apiUrl + '/jam/timeline/jobapp/' + jobAppId + '/'
     );
   }
 
   getAnalytics() {
-    return this.runHttpCall('GET',
-      environment.apiUrl + '/jam/analytics/'
-    );
+    return this.runHttpCall('GET', environment.apiUrl + '/jam/analytics/');
   }
 
   addStepToTimeline(
@@ -194,100 +194,112 @@ export class JamService {
     timelineNotes: string,
     date: string
   ) {
-    return this.runHttpCall('POST',
-      environment.apiUrl + '/jam/timeline/',
-      {
-        "group": jobAppGroup,
-        "step": nextStep,
-        "notes": timelineNotes ? timelineNotes : undefined,
-        "jobapp": jobAppId,
-        "date": date ? date : undefined
-      }
-    );
+    return this.runHttpCall('POST', environment.apiUrl + '/jam/timeline/', {
+      group: jobAppGroup,
+      step: nextStep,
+      notes: timelineNotes ? timelineNotes : undefined,
+      jobapp: jobAppId,
+      date: date ? date : undefined,
+    });
   }
 
-  updateTimelineStep(
-    timelineStepId: number,
-    notes: string,
-    date: string,
-  ) {
-    return this.runHttpCall('PATCH',
+  updateTimelineStep(timelineStepId: number, notes: string, date: string) {
+    return this.runHttpCall(
+      'PATCH',
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
       {
-        "notes": notes,
-        "date": date ? date : undefined,
+        notes: notes,
+        date: date ? date : undefined,
       }
     );
   }
 
   deleteTimelineStep(timelineStepId: number) {
-    return this.runHttpCall('DELETE',
+    return this.runHttpCall(
+      'DELETE',
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/'
-    )
+    );
   }
 
   getLeads(archived: string = 'all') {
-    return this.runHttpCall('GET',
+    return this.runHttpCall(
+      'GET',
       environment.apiUrl + '/jam/leads/?archived=' + archived
     );
   }
 
   deleteLead(leadId: number) {
-    return this.runHttpCall('DELETE',
+    return this.runHttpCall(
+      'DELETE',
       environment.apiUrl + '/jam/leads/' + leadId + '/'
     );
   }
 
-  updateLead(leadId: number, location: string, notes: string, externalLink: string, role: string, company: string, archived: boolean = false, group: number | null = null) {
-    return this.runHttpCall('PATCH',
-      environment.apiUrl + '/jam/leads/' + leadId +'/',
+  updateLead(
+    leadId: number,
+    location: string,
+    notes: string,
+    externalLink: string,
+    role: string,
+    company: string,
+    archived: boolean = false,
+    group: number | null = null
+  ) {
+    return this.runHttpCall(
+      'PATCH',
+      environment.apiUrl + '/jam/leads/' + leadId + '/',
       {
-        "company": company,
-        "notes": notes,
-        "role": role,
-        "external_link": externalLink,
-        "location": location,
-        "archived": archived,
-        "group": group
+        company: company,
+        notes: notes,
+        role: role,
+        external_link: externalLink,
+        location: location,
+        archived: archived,
+        group: group,
       }
     );
   }
 
-  createLead(location: string, notes: string, externalLink: string, role: string, company: string, group: number | null = null) {
-    return this.runHttpCall('POST',
-      environment.apiUrl + '/jam/leads/',
-      {
-        "company": company,
-        "notes": notes,
-        "role": role,
-        "external_link": externalLink,
-        "location": location,
-        "group": group
-      }
-    );
+  createLead(
+    location: string,
+    notes: string,
+    externalLink: string,
+    role: string,
+    company: string,
+    group: number | null = null
+  ) {
+    return this.runHttpCall('POST', environment.apiUrl + '/jam/leads/', {
+      company: company,
+      notes: notes,
+      role: role,
+      external_link: externalLink,
+      location: location,
+      group: group,
+    });
   }
 
   archiveLead(leadId: number, archived: boolean = true) {
-    return this.runHttpCall('PATCH',
-      environment.apiUrl + '/jam/leads/' + leadId +'/',
+    return this.runHttpCall(
+      'PATCH',
+      environment.apiUrl + '/jam/leads/' + leadId + '/',
       {
-        "archived": archived
+        archived: archived,
       }
     );
   }
 
   runHttpCall(method: string, url: string, payload: any = null) {
-    let authHeader = { headers: {"Authorization": "Token " + this.authService.getSessionToken()} };
+    let options = { withCredentials: true };
 
     switch (method) {
       case 'GET':
-        return this.http.get(url, authHeader);
+        return this.http.get(url, options);
       case 'POST':
-        return this.http.post(url, payload, authHeader);
+        return this.http.post(url, payload, options);
       case 'PATCH':
-        return this.http.patch(url, payload, authHeader);
+        return this.http.patch(url, payload, options);
       case 'DELETE':
-        return this.http.delete(url, authHeader);
+        return this.http.delete(url, options);
       default:
         return new Observable();
     }
