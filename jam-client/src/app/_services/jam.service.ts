@@ -289,17 +289,19 @@ export class JamService {
   }
 
   runHttpCall(method: string, url: string, payload: any = null) {
-    let options = { withCredentials: true };
+    let authHeader = {
+      headers: { Authorization: 'Token ' + this.authService.getSessionToken() },
+    };
 
     switch (method) {
       case 'GET':
-        return this.http.get(url, options);
+        return this.http.get(url, authHeader);
       case 'POST':
-        return this.http.post(url, payload, options);
+        return this.http.post(url, payload, authHeader);
       case 'PATCH':
-        return this.http.patch(url, payload, options);
+        return this.http.patch(url, payload, authHeader);
       case 'DELETE':
-        return this.http.delete(url, options);
+        return this.http.delete(url, authHeader);
       default:
         return new Observable();
     }
