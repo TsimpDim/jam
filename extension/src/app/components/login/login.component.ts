@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -20,7 +21,7 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -48,7 +49,7 @@ export class LoginComponent {
 
   onRegisterClick(event: Event): void {
     event.preventDefault();
-    window.open('http://localhost:4200/auth/register', '_blank');
+    window.open(`${environment.clientUrl}/auth/register`, '_blank');
   }
 
   onPasswordKeyPress(event: KeyboardEvent): void {

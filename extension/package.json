@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "prep-ext": "ng build;web-ext build --source-dir ./dist/extension"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "@angular/router": "^14.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "web-ext": "^10.1.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

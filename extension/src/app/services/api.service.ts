@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 
-const API_URL = environment.apiUrl;
-
 export interface Group {
   id: number;
   name: string;
@@ -44,36 +42,41 @@ export interface TimelineEntry {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
   constructor(private authService: AuthService) {}
 
-  private async makeRequest<T>(endpoint: string, method: string = 'GET', body?: any): Promise<T> {
-    const token = this.authService.getToken();
-    const options: RequestInit = {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      }
+  private async makeRequest<T>(
+    endpoint: string,
+    method: string = 'GET',
+    body?: any
+  ): Promise<T> {
+    const authKey = this.authService.getAuthKey();
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
     };
 
-    if (token) {
-      options.headers = {
-        ...options.headers,
-        'Authorization': `Token ${token}`
-      };
+    if (authKey) {
+      headers['Authorization'] = `Token ${authKey}`;
     }
+
+    const options: RequestInit = { method, headers };
 
     if (body) {
       options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(`${API_URL}${endpoint}`, options);
+    const response = await fetch(`${environment.apiUrl}${endpoint}`, options);
+
+    if (response.status === 401) {
+      this.authService.logout();
+      throw new Error('Unauthorized');
+    }
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      
+      let errorData: any = await response.json();
       if (Object.keys(errorData).length > 0) {
         const messages: string[] = [];
         for (const [field, errors] of Object.entries(errorData)) {
@@ -85,19 +88,11 @@ export class ApiService {
         }
         throw new Error(messages.join('; '));
       }
-      throw new Error(errorData.detail || `Request failed with status ${response.status}`);
+
+      throw new Error(`Request failed with status ${response.status}`);
     }
 
-    const text = await response.text();
-    if (!text) {
-      return {} as T;
-    }
-
-    try {
-      return JSON.parse(text);
-    } catch {
-      return {} as T;
-    }
+    return (await response.json()) as T;
   }
 
   async getGroups(): Promise<Group[]> {
@@ -112,11 +107,18 @@ export class ApiService {
     return this.makeRequest<Lead[]>('/jam/leads/?all=true');
   }
 
-  async createJobApplication(data: Partial<JobApplication>): Promise<JobApplication> {
+  async createJobApplication(
+    data: Partial<JobApplication>
+  ): Promise<JobApplication> {
     return this.makeRequest<JobApplication>('/jam/jobapps/', 'POST', data);
   }
 
-  async createTimelineEntry(data: { group: number; step: number; jobapp: number; notes?: string | null }): Promise<TimelineEntry> {
+  async createTimelineEntry(data: {
+    group: number;
+    step: number;
+    jobapp: number;
+    notes?: string | null;
+  }): Promise<TimelineEntry> {
     return this.makeRequest<TimelineEntry>('/jam/timeline/', 'POST', data);
   }
 }

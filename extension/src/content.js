@@ -114,10 +114,15 @@ function extractPageData() {
   return pageData;
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'extractPageData' || message.action === 'getPageData') {
-    const pageData = extractPageData();
-    sendResponse({ pageData });
-  }
-  return true;
-});
+// Check if the script has already been injected to prevent duplicates
+if (typeof window.jamHasRun === 'undefined') {
+  window.jamHasRun = true;
+
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'extractPageData') {
+      const pageData = extractPageData();
+      sendResponse({ pageData });
+    }      
+    return true;
+  });
+}

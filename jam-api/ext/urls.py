@@ -7,4 +7,5 @@ router = DefaultRouter()
 urlpatterns = [
     path("", include(router.urls)),
     path('login', ExtensionLoginView.as_view(), name="login"),
+    path('logout', ExtensionLogoutView.as_view(), name="logout"),
 ]
