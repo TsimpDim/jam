@@ -1,0 +1,14 @@
+<div class="popup-container">
+  <header class="jam-header">
+    <h1 class="logo"><i>JAM!</i></h1>
+  </header>
+
+  <main class="view">
+    <div class="loading" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+
+    <router-outlet *ngIf="!loading"></router-outlet>
+  </main>
+</div>

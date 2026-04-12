@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["localhost", "api.jam.local", "jam-api.tsdim.net"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:81",
     "http://127.0.0.1:8000",
+    "http://localhost:8001",
     "http://client.jam.local:81",
     "http://jam.tsdim.net",
     "https://jam.tsdim.net",
@@ -151,6 +152,5 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
     ),
 }

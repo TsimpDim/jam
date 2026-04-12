@@ -1,4 +1,4 @@
-from .views import GroupsViewSet, JobApplicationViewSet, StepViewSet, TimelineViewSet, AnalyticsView, LeadViewSet
+from .views import *
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 
@@ -11,5 +11,5 @@ router.register(r"leads", LeadViewSet, basename="leads")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path('analytics/', AnalyticsView.as_view(), name="analytics")
+    path('analytics/', AnalyticsView.as_view(), name="analytics"),
 ]

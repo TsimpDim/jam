@@ -1,0 +1,34 @@
+<div class="login-form">
+  <h2>Sign in to <i>JAM!</i></h2>
+  
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <input
+        type="text"
+        formControlName="username"
+        placeholder="Username"
+        autocomplete="username"
+      />
+    </div>
+    
+    <div class="form-group">
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        (keypress)="onPasswordKeyPress($event)"
+      />
+    </div>
+    
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      LOG IN
+    </button>
+  </form>
+  
+  <p class="register-link">
+    or <a href="#" (click)="onRegisterClick($event)">register</a>
+  </p>
+</div>
