@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.jam.tsdim.net',
+  apiUrl: 'https://jam-api.tsdim.net',
   clientUrl: 'https://jam.tsdim.net',
 };

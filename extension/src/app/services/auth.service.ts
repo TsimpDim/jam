@@ -6,74 +6,77 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly TOKEN_KEY = 'authToken';
+  private readonly AUTH_TOKEN_STORAGE_KEY = 'authToken';
 
-  private authKeySubject = new BehaviorSubject<string | null>(null);
-  public authToken$ = this.authKeySubject.asObservable();
+  private authTokenSubject = new BehaviorSubject<string | null>(null);
+  public authToken$ = this.authTokenSubject.asObservable();
 
   constructor() {
     this.checkLoginStatus();
   }
 
   checkLoginStatus() {
-    const authKey = localStorage.getItem(this.TOKEN_KEY);
-    if (authKey) {
-      this.authKeySubject.next(authKey);
+    const authToken = localStorage.getItem(this.AUTH_TOKEN_STORAGE_KEY);
+    if (authToken) {
+      this.authTokenSubject.next(authToken);
       return true;
     }
 
-    this.authKeySubject.next(null);
+    this.authTokenSubject.next(null);
     return false;
   }
 
-  login(username: string, password: string) {
-    fetch(`${environment.apiUrl}/ext/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    })
-      .then((response) => {
-        response.json().then((json) => {
-          const authKey = json.key;
-
-          if (!authKey) {
-            throw new Error('No token received from server.');
-          }
-
-          localStorage.setItem(this.TOKEN_KEY, authKey);
-
-          this.authKeySubject.next(authKey);
-        });
-      })
-      .catch((error) => {
-        throw new Error(
-          error.detail || 'Login failed. Please check your credentials.'
-        );
+  async login(username: string, password: string): Promise<void> {
+    try {
+      const response = await fetch(`${environment.apiUrl}/auth/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.detail || 'Login failed. Please check your credentials.'
+        );
+      }
+
+      const json = await response.json();
+      const authToken = json.token;
+
+      if (!authToken) {
+        throw new Error('No token received from server.');
+      }
+
+      localStorage.setItem(this.AUTH_TOKEN_STORAGE_KEY, authToken);
+      this.authTokenSubject.next(authToken);
+    } catch (error) {
+      throw error;
+    }
   }
 
   logout() {
-    const authKey = this.authKeySubject.value;
-    if (authKey) {
-      fetch(`${environment.apiUrl}/ext/logout`, {
+    const authToken = this.authTokenSubject.value;
+    if (authToken) {
+      fetch(`${environment.apiUrl}/auth/logout/`, {
         method: 'POST',
         headers: {
-          Authorization: `Token ${authKey}`,
+          Authorization: `Token ${authToken}`,
         },
       });
     }
 
-    localStorage.removeItem(this.TOKEN_KEY);
-    this.authKeySubject.next(null);
+    localStorage.removeItem(this.AUTH_TOKEN_STORAGE_KEY);
+    this.authTokenSubject.next(null);
   }
 
-  getAuthKey(): string | null {
-    return this.authKeySubject.value;
+  getAuthToken(): string | null {
+    return this.authTokenSubject.value;
   }
 
   isLoggedIn(): boolean {
-    return !!this.authKeySubject.value;
+    return !!this.authTokenSubject.value;
   }
 }

@@ -52,17 +52,17 @@ export class ApiService {
     method: string = 'GET',
     body?: any
   ): Promise<T> {
-    const authKey = this.authService.getAuthKey();
+    const authToken = this.authService.getAuthToken();
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
 
-    if (authKey) {
-      headers['Authorization'] = `Token ${authKey}`;
+    if (authToken) {
+      headers['Authorization'] = `Token ${authToken}`;
     }
 
-    const options: RequestInit = { method, headers };
+    const options: RequestInit = { method, headers, credentials: 'omit' };
 
     if (body) {
       options.body = JSON.stringify(body);

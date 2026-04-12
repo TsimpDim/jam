@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken",
     "knox",
     "core",
     "jam",
@@ -150,7 +149,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
+        "knox.auth.TokenAuthentication",
     ),
 }
 
@@ -159,4 +158,10 @@ REST_KNOX = {
     'AUTO_REFRESH': True,
     'AUTO_REFRESH_MAX_TTL': timedelta(days=30),
     'TOKEN_LIMIT_PER_USER': 5,
+}
+
+REST_AUTH_TOKEN_MODEL = 'knox.models.AuthToken'
+REST_AUTH_TOKEN_CREATOR = 'jam.knox.create_knox_token'
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'jam.serializers.KnoxSerializer',
 }
