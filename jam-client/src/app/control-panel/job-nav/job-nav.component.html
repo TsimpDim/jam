@@ -1,5 +1,5 @@
-<clr-vertical-nav [clrVerticalNavCollapsible]="true" style="height: 100%">
-  <div class="nav-header">
+<clr-vertical-nav [clrVerticalNavCollapsible]="true" [clrVerticalNavCollapsed]="navCollapsed" (clrVerticalNavCollapsedChange)="navCollapsed = $event" style="height: 100%">
+  <div class="nav-header" [class.collapsed]="navCollapsed">
     <a
       id="add-new-app"
       clrVerticalNavLink

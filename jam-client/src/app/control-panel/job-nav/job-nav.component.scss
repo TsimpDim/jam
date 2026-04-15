@@ -4,6 +4,12 @@
     align-items: stretch;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
+    transition: opacity 0.2s ease;
+
+    :host-context(.is-collapsed) &,
+    &.collapsed {
+        display: none;
+    }
 
     #add-new-app {
         background-color: var(--clr-btn-primary-bg-color, #0072a3);

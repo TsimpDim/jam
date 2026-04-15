@@ -16,6 +16,7 @@ export class JobNavComponent implements OnInit {
   sortBy: string = 'id';
   searchQuery: string = '';
   filteredApps: any = null;
+  navCollapsed: boolean = false;
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
