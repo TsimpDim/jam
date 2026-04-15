@@ -26,6 +26,7 @@ export class ApplicationsComponent implements OnInit {
   public jobAdSnapshot: any = null;
   public loadingSnapshot: boolean = false;
   public timelineLayout: string = 'horizontal';
+  public currentSort: string = 'id';
 
   constructor(private jamService: JamService) {}
 
@@ -33,6 +34,10 @@ export class ApplicationsComponent implements OnInit {
     this.getApplications();
     this.getSteps();
     this.updateTimelineLayout();
+  }
+
+  onSortChange(sort: string) {
+    this.getApplications(sort);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -44,10 +49,11 @@ export class ApplicationsComponent implements OnInit {
     this.timelineLayout = window.innerWidth < 768 ? 'vertical' : 'horizontal';
   }
 
-  getApplications() {
+  getApplications(sort: string = 'id') {
+    this.currentSort = sort;
     this.loadingApplications = true;
     this.loadingSelectedApplication = true;
-    this.jamService.getJobApplications(true).subscribe({
+    this.jamService.getJobApplications(true, sort).subscribe({
       next: (data: any) => {
         this.loadingSelectedApplication = false;
         this.loadingApplications = false;

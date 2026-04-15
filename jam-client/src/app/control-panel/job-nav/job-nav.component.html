@@ -1,29 +1,66 @@
-<clr-vertical-nav [clrVerticalNavCollapsible]="true" style="height: 100%;">
+<clr-vertical-nav [clrVerticalNavCollapsible]="true" style="height: 100%">
+  <div class="nav-header">
     <a
-        id="add-new-app"
-        clrVerticalNavLink
-        (click)="onOpenAndClearJobAppModal.emit({'group': undefined})"
-    >ADD NEW APPLICATION</a>
-    <div *ngIf="loadingApplications" style="font-size: 1px" class="progress loop"><progress></progress></div>
-    <clr-vertical-nav-group
-        *ngFor="let group of applications | keyvalue:keepOriginalOrder"
-        [clrVerticalNavGroupExpanded]="getNavState(group.key)"
+      id="add-new-app"
+      clrVerticalNavLink
+      (click)="onOpenAndClearJobAppModal.emit({ group: undefined })"
+      >ADD NEW APPLICATION</a
     >
-        <div (click)="toggleNavState($event, group.key)">    
-            {{group.key}} <span class="badge" style="margin-left: .5em;">{{$any(group).value.length}}</span> 
-        </div>
-        <clr-vertical-nav-group-children>
-            <a
-                class="action"
-                clrVerticalNavLink
-                (click)="onOpenAndClearJobAppModal.emit({'group': group.key})"
-            >ADD NEW IN GROUP</a>
-        </clr-vertical-nav-group-children>
-        <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
-            <a class="group-item-app" clrVerticalNavLink (click)="onSelectApp.emit({'groupName':group.key, 'jobAppId':app.id})">
-              <span class="badge" [style.background-color]="app.last_step_color"></span>
-              {{app.company}} / {{app.role}}
-            </a>
-        </clr-vertical-nav-group-children>
-    </clr-vertical-nav-group>
+    <clr-dropdown id="filter">
+      <button clrDropdownTrigger class="nav-link">
+        <cds-icon shape="filter-2"></cds-icon>
+      </button>
+      <clr-dropdown-menu clrPosition="bottom-left">
+        <button
+          class="dropdown-item"
+          (click)="handleSortChange('id')"
+          [class.active]="sortBy === 'id'"
+        >
+          Recent -> Old
+        </button>
+        <button
+          class="dropdown-item"
+          (click)="handleSortChange('date')"
+          [class.active]="sortBy === 'date'"
+        >
+          Old -> Recent
+        </button>
+      </clr-dropdown-menu>
+    </clr-dropdown>
+  </div>
+  <div *ngIf="loadingApplications" style="font-size: 1px" class="progress loop">
+    <progress></progress>
+  </div>
+  <clr-vertical-nav-group
+    *ngFor="let group of applications | keyvalue : keepOriginalOrder"
+    [clrVerticalNavGroupExpanded]="getNavState(group.key)"
+  >
+    <div (click)="toggleNavState($event, group.key)">
+      {{ group.key }}
+      <span class="badge" style="margin-left: 0.5em">{{
+        $any(group).value.length
+      }}</span>
+    </div>
+    <clr-vertical-nav-group-children>
+      <a
+        class="action"
+        clrVerticalNavLink
+        (click)="onOpenAndClearJobAppModal.emit({ group: group.key })"
+        >ADD NEW IN GROUP</a
+      >
+    </clr-vertical-nav-group-children>
+    <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
+      <a
+        class="group-item-app"
+        clrVerticalNavLink
+        (click)="onSelectApp.emit({ groupName: group.key, jobAppId: app.id })"
+      >
+        <span
+          class="badge"
+          [style.background-color]="app.last_step_color"
+        ></span>
+        {{ app.company }} / {{ app.role }}
+      </a>
+    </clr-vertical-nav-group-children>
+  </clr-vertical-nav-group>
 </clr-vertical-nav>

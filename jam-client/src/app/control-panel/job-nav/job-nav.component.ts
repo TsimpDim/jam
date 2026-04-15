@@ -10,16 +10,21 @@ export class JobNavComponent implements OnInit {
   @Input() loadingApplications: boolean = false;
   @Output() onSelectApp = new EventEmitter();
   @Output() onOpenAndClearJobAppModal = new EventEmitter();
+  @Output() onSortChange = new EventEmitter<string>();
   static lastOpenedGroup: string | null = null;
+
+  sortBy: string = 'id';
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
   ngOnInit() {
-    const saved = localStorage.getItem('jam_last_opened_group');
-    if (saved && this.applications && saved in this.applications) {
-      JobNavComponent.lastOpenedGroup = saved;
-    } else if (this.applications) {
-      JobNavComponent.lastOpenedGroup = Object.keys(this.applications)[0] || null;
+    if (JobNavComponent.lastOpenedGroup === null) {
+      const saved = localStorage.getItem('jam_last_opened_group');
+      if (saved && this.applications && saved in this.applications) {
+        JobNavComponent.lastOpenedGroup = saved;
+      } else if (this.applications) {
+        JobNavComponent.lastOpenedGroup = Object.keys(this.applications)[0] || null;
+      }
     }
   }
 
@@ -36,5 +41,11 @@ export class JobNavComponent implements OnInit {
 
   getNavState(groupName: any) {
     return JobNavComponent.lastOpenedGroup === groupName;
+  }
+
+  handleSortChange(value: any) {
+    const sortValue = typeof value === 'string' ? value : value.target.value;
+    this.sortBy = sortValue;
+    this.onSortChange.emit(this.sortBy);
   }
 }

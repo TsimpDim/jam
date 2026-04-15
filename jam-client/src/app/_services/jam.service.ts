@@ -10,13 +10,19 @@ import { AuthService } from './auth.service';
 export class JamService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getJobApplications(groupped: Boolean = false) {
+  getJobApplications(groupped: Boolean = false, sort: string = 'id') {
     let endpoint = '/jam/jobapps/';
     if (groupped) {
       endpoint += 'group/';
     }
-
-    return this.runHttpCall('GET', environment.apiUrl + endpoint);
+    const params = new URLSearchParams();
+    if (sort && sort !== 'id') {
+      params.set('sort', sort);
+    }
+    const queryString = params.toString();
+    const url = environment.apiUrl + endpoint + (queryString ? '?' + queryString : '');
+    
+    return this.runHttpCall('GET', url);
   }
 
   getJobApplication(jobAppId: number) {
