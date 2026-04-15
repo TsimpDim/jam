@@ -6,33 +6,45 @@
       (click)="onOpenAndClearJobAppModal.emit({ group: undefined })"
       >ADD NEW APPLICATION</a
     >
-    <clr-dropdown id="filter">
-      <button clrDropdownTrigger class="nav-link">
-        <cds-icon shape="filter-2"></cds-icon>
-      </button>
-      <clr-dropdown-menu clrPosition="bottom-left">
-        <button
-          class="dropdown-item"
-          (click)="handleSortChange('id')"
-          [class.active]="sortBy === 'id'"
-        >
-          Recent -> Old
+    <div class="header-actions">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search..."
+          [value]="searchQuery"
+          (keyup)="onSearchKeyup($event)"
+          class="search-input"
+        />
+        <cds-icon shape="search" class="search-icon"></cds-icon>
+      </div>
+      <clr-dropdown id="filter">
+        <button clrDropdownTrigger class="nav-link">
+          <cds-icon shape="filter-2"></cds-icon>
         </button>
-        <button
-          class="dropdown-item"
-          (click)="handleSortChange('date')"
-          [class.active]="sortBy === 'date'"
-        >
-          Old -> Recent
-        </button>
-      </clr-dropdown-menu>
-    </clr-dropdown>
+        <clr-dropdown-menu clrPosition="bottom-left">
+          <button
+            class="dropdown-item"
+            (click)="handleSortChange('id')"
+            [class.active]="sortBy === 'id'"
+          >
+            Recent -> Old
+          </button>
+          <button
+            class="dropdown-item"
+            (click)="handleSortChange('date')"
+            [class.active]="sortBy === 'date'"
+          >
+            Old -> Recent
+          </button>
+        </clr-dropdown-menu>
+      </clr-dropdown>
+    </div>
   </div>
   <div *ngIf="loadingApplications" style="font-size: 1px" class="progress loop">
     <progress></progress>
   </div>
   <clr-vertical-nav-group
-    *ngFor="let group of applications | keyvalue : keepOriginalOrder"
+    *ngFor="let group of filteredApps | keyvalue : keepOriginalOrder"
     [clrVerticalNavGroupExpanded]="getNavState(group.key)"
   >
     <div (click)="toggleNavState($event, group.key)">
@@ -63,4 +75,7 @@
       </a>
     </clr-vertical-nav-group-children>
   </clr-vertical-nav-group>
+  <div *ngIf="filteredApps === null && searchQuery && !loadingApplications" class="no-results">
+    No results found
+  </div>
 </clr-vertical-nav>

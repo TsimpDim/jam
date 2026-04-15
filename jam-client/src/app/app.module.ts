@@ -29,6 +29,7 @@ import {
   dragHandleIcon,
   barsIcon,
   filter2Icon,
+  searchIcon,
 } from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
@@ -67,7 +68,8 @@ ClarityIcons.addIcons(
   infoStandardIcon,
   dragHandleIcon,
   barsIcon,
-  filter2Icon
+  filter2Icon,
+  searchIcon
 );
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity

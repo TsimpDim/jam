@@ -14,6 +14,8 @@ export class JobNavComponent implements OnInit {
   static lastOpenedGroup: string | null = null;
 
   sortBy: string = 'id';
+  searchQuery: string = '';
+  filteredApps: any = null;
 
   keepOriginalOrder = (a: any, b: any) => a.key;
 
@@ -26,6 +28,42 @@ export class JobNavComponent implements OnInit {
         JobNavComponent.lastOpenedGroup = Object.keys(this.applications)[0] || null;
       }
     }
+    this.updateFilteredApps();
+  }
+
+  ngOnChanges() {
+    this.updateFilteredApps();
+  }
+
+  updateFilteredApps() {
+    if (!this.applications) {
+      this.filteredApps = null;
+      return;
+    }
+    if (!this.searchQuery.trim()) {
+      this.filteredApps = this.applications;
+      return;
+    }
+    
+    const query = this.searchQuery.toLowerCase();
+    const filtered: any = {};
+    
+    for (const [groupName, apps] of Object.entries(this.applications)) {
+      const matchingApps = (apps as any[]).filter((app: any) => 
+        app.company.toLowerCase().includes(query) || 
+        app.role.toLowerCase().includes(query)
+      );
+      if (matchingApps.length > 0) {
+        filtered[groupName] = matchingApps;
+      }
+    }
+    
+    this.filteredApps = Object.keys(filtered).length > 0 ? filtered : null;
+  }
+
+  onSearchKeyup(event: Event) {
+    this.searchQuery = (event.target as HTMLInputElement).value;
+    this.updateFilteredApps();
   }
 
   toggleNavState(event: any, groupName: any) {
