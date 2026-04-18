@@ -21,6 +21,7 @@ export class JobNavComponent implements OnInit {
   keepOriginalOrder = (a: any, b: any) => a.key;
 
   ngOnInit() {
+    this.initLastOpenedGroup();
     const savedSort = localStorage.getItem('jam_job_nav_sort');
     if (savedSort === 'date') {
       this.sortBy = '-id';
@@ -31,19 +32,23 @@ export class JobNavComponent implements OnInit {
       this.sortBy = '-id';
       localStorage.setItem('jam_job_nav_sort', this.sortBy);
     }
-    if (JobNavComponent.lastOpenedGroup === null) {
-      const saved = localStorage.getItem('jam_last_opened_group');
-      if (saved && this.applications && saved in this.applications) {
-        JobNavComponent.lastOpenedGroup = saved;
-      } else if (this.applications) {
-        JobNavComponent.lastOpenedGroup = Object.keys(this.applications)[0] || null;
-      }
-    }
     this.updateFilteredApps();
   }
 
   ngOnChanges() {
+    this.initLastOpenedGroup();
     this.updateFilteredApps();
+  }
+
+  initLastOpenedGroup() {
+    if (this.applications) {
+      const saved = localStorage.getItem('jam_last_opened_group');
+      if (saved && saved in this.applications) {
+        JobNavComponent.lastOpenedGroup = saved;
+      } else {
+        JobNavComponent.lastOpenedGroup = Object.keys(this.applications)[0] || null;
+      }
+    }
   }
 
   updateFilteredApps() {
