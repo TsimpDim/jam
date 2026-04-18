@@ -47,20 +47,17 @@
     *ngFor="let group of filteredApps | keyvalue : keepOriginalOrder"
     [clrVerticalNavGroupExpanded]="getNavState(group.key)"
   >
-    <div (click)="toggleNavState($event, group.key)">
-      {{ group.key }}
+    <div class="group-header" (click)="toggleNavState($event, group.key)">
+      <span class="group-name">{{ group.key }}</span>
       <span class="badge" style="margin-left: 0.5em">{{
         $any(group).value.length
       }}</span>
-    </div>
-    <clr-vertical-nav-group-children>
-      <a
-        class="action"
-        clrVerticalNavLink
+      <cds-icon
+        shape="plus"
+        class="add-icon"
         (click)="onOpenAndClearJobAppModal.emit({ group: group.key })"
-        >ADD NEW IN GROUP</a
-      >
-    </clr-vertical-nav-group-children>
+      ></cds-icon>
+    </div>
     <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
       <a
         class="group-item-app"
