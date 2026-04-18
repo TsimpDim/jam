@@ -138,6 +138,7 @@
       [groupToSelect]="groupToSelect"
       (onClose)="jobAppModalIsOpen = false"
       (onApplicationsNeedUpdate)="getApplications()"
+      (onApplicationCreated)="onApplicationCreated($event)"
     >
     </app-job-modal>
 

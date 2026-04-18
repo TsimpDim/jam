@@ -139,6 +139,13 @@ export class ApplicationsComponent implements OnInit {
     this.selectedApp = null;
   }
 
+  onApplicationCreated(app: any) {
+    if (this.applications && app.group_name in this.applications) {
+      this.applications[app.group_name].unshift(app);
+    }
+    this.selectedApp = app;
+  }
+
   openTimelineStepModal() {
     this.timelineStepModalIsOpen = true;
     this.selectedTimelineStep = null;
