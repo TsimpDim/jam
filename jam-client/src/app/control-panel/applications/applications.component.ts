@@ -31,7 +31,9 @@ export class ApplicationsComponent implements OnInit {
   constructor(private jamService: JamService) {}
 
   ngOnInit(): void {
-    this.getApplications();
+    const savedSort = localStorage.getItem('jam_job_nav_sort') || '-id';
+    this.currentSort = savedSort;
+    this.getApplications(savedSort);
     this.getSteps();
     this.updateTimelineLayout();
   }
