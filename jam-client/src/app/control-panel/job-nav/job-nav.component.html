@@ -24,17 +24,17 @@
         <clr-dropdown-menu clrPosition="bottom-left">
           <button
             class="dropdown-item"
-            (click)="handleSortChange('id')"
-            [class.active]="sortBy === 'id'"
+            (click)="handleSortChange('-id')"
+            [class.active]="sortBy === '-id'"
           >
-            Recent -> Old
+            New -> Old
           </button>
           <button
             class="dropdown-item"
-            (click)="handleSortChange('date')"
-            [class.active]="sortBy === 'date'"
+            (click)="handleSortChange('id')"
+            [class.active]="sortBy === 'id'"
           >
-            Old -> Recent
+            Old -> New
           </button>
         </clr-dropdown-menu>
       </clr-dropdown>

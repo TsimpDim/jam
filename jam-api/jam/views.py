@@ -117,8 +117,13 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
         groupped_job_apps = {}
         groups = Group.objects.filter(user_id=self.request.user).order_by('position', '-id')
         
-        sort_by = request.query_params.get('sort', None)
-        order = '-date' if sort_by == 'date' else 'id'
+        sort_by = request.query_params.get('sort', 'id')
+        if sort_by == '-id':
+            order = '-id'
+        elif sort_by == 'id':
+            order = 'id'
+        else:
+            order = '-id'
         
         for group in groups.iterator():
             groupped_job_apps[group.name] = JobApplicationSerializer(
