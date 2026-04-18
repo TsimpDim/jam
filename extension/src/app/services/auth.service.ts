@@ -15,8 +15,21 @@ export class AuthService {
     this.checkLoginStatus();
   }
 
-  checkLoginStatus() {
-    const authToken = localStorage.getItem(this.AUTH_TOKEN_STORAGE_KEY);
+  private async getStorage(key: string): Promise<string | null> {
+    const result = await browser.storage.local.get(key);
+    return result[key] || null;
+  }
+
+  private async setStorage(key: string, value: string): Promise<void> {
+    await browser.storage.local.set({ [key]: value });
+  }
+
+  private async removeStorage(key: string): Promise<void> {
+    await browser.storage.local.remove(key);
+  }
+
+  async checkLoginStatus() {
+    const authToken = await this.getStorage(this.AUTH_TOKEN_STORAGE_KEY);
     if (authToken) {
       this.authTokenSubject.next(authToken);
       return true;
@@ -50,14 +63,14 @@ export class AuthService {
         throw new Error('No token received from server.');
       }
 
-      localStorage.setItem(this.AUTH_TOKEN_STORAGE_KEY, authToken);
+      await this.setStorage(this.AUTH_TOKEN_STORAGE_KEY, authToken);
       this.authTokenSubject.next(authToken);
     } catch (error) {
       throw error;
     }
   }
 
-  logout() {
+  async logout() {
     const authToken = this.authTokenSubject.value;
     if (authToken) {
       fetch(`${environment.apiUrl}/auth/logout/`, {
@@ -68,7 +81,7 @@ export class AuthService {
       });
     }
 
-    localStorage.removeItem(this.AUTH_TOKEN_STORAGE_KEY);
+    await this.removeStorage(this.AUTH_TOKEN_STORAGE_KEY);
     this.authTokenSubject.next(null);
   }
 

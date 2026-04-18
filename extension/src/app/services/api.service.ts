@@ -69,12 +69,6 @@ export class ApiService {
     }
 
     const response = await fetch(`${environment.apiUrl}${endpoint}`, options);
-
-    if (response.status === 401) {
-      this.authService.logout();
-      throw new Error('Unauthorized');
-    }
-
     if (!response.ok) {
       let errorData: any = await response.json();
       if (Object.keys(errorData).length > 0) {
@@ -86,10 +80,7 @@ export class ApiService {
             messages.push(`${field}: ${errors}`);
           }
         }
-        throw new Error(messages.join('; '));
       }
-
-      throw new Error(`Request failed with status ${response.status}`);
     }
 
     return (await response.json()) as T;
