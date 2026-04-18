@@ -36,7 +36,8 @@ import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { HeaderComponent } from './shared/header/header.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './_services/auth.interceptor';
 import { ApplicationsComponent } from './control-panel/applications/applications.component';
 import { GroupsComponent } from './control-panel/groups/groups.component';
 import { StepsComponent } from './control-panel/steps/steps.component';
@@ -104,7 +105,10 @@ registerLocaleData(localeEnCa);
     AppRoutingModule,
     HttpClientModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'en-ca' }],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'en-ca' },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
