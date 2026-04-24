@@ -1,78 +1,100 @@
-<clr-vertical-nav [clrVerticalNavCollapsible]="true" [clrVerticalNavCollapsed]="navCollapsed" (clrVerticalNavCollapsedChange)="navCollapsed = $event" style="height: 100%">
-  <div class="nav-header" [class.collapsed]="navCollapsed">
-    <a
-      id="add-new-app"
-      clrVerticalNavLink
-      (click)="onOpenAndClearJobAppModal.emit({ group: undefined })"
-      >ADD NEW APPLICATION</a
-    >
-    <div class="header-actions">
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="Search..."
-          [value]="searchQuery"
-          (keyup)="onSearchKeyup($event)"
-          class="search-input"
-        />
-        <cds-icon shape="search" class="search-icon"></cds-icon>
-      </div>
-      <clr-dropdown id="filter">
-        <button clrDropdownTrigger class="nav-link">
-          <cds-icon shape="filter-2"></cds-icon>
-        </button>
-        <clr-dropdown-menu clrPosition="bottom-left">
-          <button
-            class="dropdown-item"
-            (click)="handleSortChange('-id')"
-            [class.active]="sortBy === '-id'"
-          >
-            New -> Old
-          </button>
-          <button
-            class="dropdown-item"
-            (click)="handleSortChange('id')"
-            [class.active]="sortBy === 'id'"
-          >
-            Old -> New
-          </button>
-        </clr-dropdown-menu>
-      </clr-dropdown>
-    </div>
-  </div>
-  <div *ngIf="loadingApplications" style="font-size: 1px" class="progress loop">
-    <progress></progress>
-  </div>
-  <clr-vertical-nav-group
-    *ngFor="let group of filteredApps | keyvalue : keepOriginalOrder"
-    [clrVerticalNavGroupExpanded]="getNavState(group.key)"
+<div
+  class="job-nav-container"
+  [style.width.px]="effectiveWidth"
+  [class.is-collapsed]="navCollapsed"
+  [class.is-dragging]="isDragging"
+>
+  <clr-vertical-nav
+    [clrVerticalNavCollapsible]="true"
+    [clrVerticalNavCollapsed]="navCollapsed"
+    (clrVerticalNavCollapsedChange)="navCollapsed = $event"
+    style="height: 100%"
   >
-    <div class="group-header" (click)="toggleNavState($event, group.key)">
-      <span class="group-name">{{ group.key }}</span>
-      <span class="badge" style="margin-left: 0.5em">{{
-        $any(group).value.length
-      }}</span>
-      <cds-icon
-        shape="plus"
-        class="add-icon"
-        (click)="onOpenAndClearJobAppModal.emit({ group: group.key })"
-      ></cds-icon>
-    </div>
-    <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
+    <div class="nav-header" [class.collapsed]="navCollapsed">
       <a
-        class="group-item-app"
+        id="add-new-app"
         clrVerticalNavLink
-        (click)="onSelectApp.emit({ groupName: group.key, jobAppId: app.id })"
+        (click)="onOpenAndClearJobAppModal.emit({ group: undefined })"
+        >ADD NEW APPLICATION</a
       >
-        <span
-          class="badge"
-          [style.background-color]="app.last_step_color"
-        ></span>
-        {{ app.company }} / {{ app.role }}
-      </a>
-    </clr-vertical-nav-group-children>
-  </clr-vertical-nav-group>
-  <div *ngIf="filteredApps === null && searchQuery && !loadingApplications" class="no-results">
-    No results found
+      <div class="header-actions">
+        <div class="search-container">
+          <input
+            type="text"
+            placeholder="Search..."
+            [value]="searchQuery"
+            (keyup)="onSearchKeyup($event)"
+            class="search-input"
+          />
+          <cds-icon shape="search" class="search-icon"></cds-icon>
+        </div>
+        <clr-dropdown id="filter">
+          <button clrDropdownTrigger class="nav-link">
+            <cds-icon shape="filter-2"></cds-icon>
+          </button>
+          <clr-dropdown-menu clrPosition="bottom-left">
+            <button
+              class="dropdown-item"
+              (click)="handleSortChange('-id')"
+              [class.active]="sortBy === '-id'"
+            >
+              New -> Old
+            </button>
+            <button
+              class="dropdown-item"
+              (click)="handleSortChange('id')"
+              [class.active]="sortBy === 'id'"
+            >
+              Old -> New
+            </button>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+      </div>
+    </div>
+    <div
+      *ngIf="loadingApplications"
+      style="font-size: 1px"
+      class="progress loop"
+    >
+      <progress></progress>
+    </div>
+    <clr-vertical-nav-group
+      *ngFor="let group of filteredApps | keyvalue : keepOriginalOrder"
+      [clrVerticalNavGroupExpanded]="getNavState(group.key)"
+    >
+      <div class="group-header" (click)="toggleNavState($event, group.key)">
+        <span class="group-name">{{ group.key }}</span>
+        <span class="badge" style="margin-left: 0.5em">{{
+          $any(group).value.length
+        }}</span>
+        <cds-icon
+          shape="plus"
+          class="add-icon"
+          (click)="onOpenAndClearJobAppModal.emit({ group: group.key })"
+        ></cds-icon>
+      </div>
+      <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
+        <a
+          class="group-item-app"
+          clrVerticalNavLink
+          (click)="onSelectApp.emit({ groupName: group.key, jobAppId: app.id })"
+        >
+          <span
+            class="badge"
+            [style.background-color]="app.last_step_color"
+          ></span>
+          {{ app.company }} / {{ app.role }}
+        </a>
+      </clr-vertical-nav-group-children>
+    </clr-vertical-nav-group>
+    <div
+      *ngIf="filteredApps === null && searchQuery && !loadingApplications"
+      class="no-results"
+    >
+      No results found
+    </div>
+  </clr-vertical-nav>
+  <div class="drag-handle" (mousedown)="onDragHandleMouseDown($event)">
+    <cds-icon shape="grip-vertical"></cds-icon>
   </div>
-</clr-vertical-nav>
+</div>
