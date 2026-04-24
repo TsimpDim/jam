@@ -2,6 +2,7 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404
 from django.db import models
 from django.db.models import Max
+from django.db.models.functions import TruncWeek, TruncMonth
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
@@ -11,12 +12,12 @@ from .serializers import (
     LeadSerializer
 )
 from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead
+from .utils import remove_circular_links
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 
 class GroupsViewSet(viewsets.ModelViewSet):
@@ -258,104 +259,68 @@ class AnalyticsView(APIView):
 
     def get(self, request, format=None):
         user = self.request.user
+        
+        # Get group filter from query params
+        group_id = request.query_params.get('group', None)
+        
+        # Base querysets
+        total_jobapps = JobApplication.objects.filter(user=user)
+        timelines = Timeline.objects.filter(user=user)
+        leads = Lead.objects.filter(user=user)
+        
+        # Apply group filter if specified
+        if group_id and group_id != 'all':
+            total_jobapps = total_jobapps.filter(group_id=group_id)
+            timelines = timelines.filter(application__group_id=group_id)
+            leads = leads.filter(group_id=group_id)
 
         # Basic JobApps
-        total_jobapps = JobApplication.objects.filter(user=user)
-        completed_jobapps = [jap for jap in total_jobapps if jap.is_completed()]
+        completed_jobapps = [jap for jap in total_jobapps.select_related('initial_step') if jap.is_completed()]
         completed_jobapps_count = len(completed_jobapps)
         pending_jobapps = total_jobapps.count() - completed_jobapps_count
 
-        # Break-down by Steps
-        timelines = Timeline.objects.filter(user=user)
-        step_breakdown = {}
-        for timeline in timelines:
-            if timeline.step.name in step_breakdown:
-                step_breakdown[timeline.step.name]['count'] += 1
-            else:
-                step_breakdown[timeline.step.name] = {
-                    'count': 1,
-                    'color': timeline.step.color
-                }
-
         # Avg Steps per Application
-        steps_per_apps = len(total_jobapps) / len(timelines) if timelines.count() > 0 else 0
+        unique_applications_with_timelines = timelines.values('application_id').distinct().count()
+        steps_per_app = timelines.count() / unique_applications_with_timelines if unique_applications_with_timelines > 0 else 0
 
-        # Avg Time in-between Steps
-        non_relevant_dates = len(timelines.filter(date_relevant=False))
+        # Avg Time in-between Steps (days only)
+        timelines_ordered = timelines.order_by('application_id', 'date')
+        timelines_list = list(timelines_ordered)
+        total_days_between = 0
         count_dates_used = 0
-        year_delta_sum = 0
-        month_delta_sum = 0
-        day_delta_sum = 0
-        hour_delta_sum = 0
-        for idx, timeline in enumerate(list(timelines)[:-1]):
-            next_tl = timelines[idx+1]
-            # don't take non-date-relevant timelines into consideration
-            if timeline.date_relevant and next_tl.date_relevant:
-                time_delta = relativedelta(next_tl.date, timeline.date)
-                year_delta_sum += time_delta.years
-                month_delta_sum += time_delta.months
-                day_delta_sum += time_delta.days
-                hour_delta_sum += time_delta.hours
-                count_dates_used += 1
-
-        time_between_steps = {
-            'years': f'{year_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-            'months': f'{month_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-            'days': f'{day_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-            'hours': f'{hour_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-        }
+        for idx in range(len(timelines_list) - 1):
+            timeline = timelines_list[idx]
+            next_tl = timelines_list[idx + 1]
+            # Only compare timelines within the same application
+            if timeline.application_id == next_tl.application_id and timeline.date_relevant and next_tl.date_relevant:
+                delta = (next_tl.date - timeline.date).days
+                if delta >= 0:
+                    total_days_between += delta
+                    count_dates_used += 1
+        
+        avg_days_between_steps = f'{total_days_between / count_dates_used:.1f}' if count_dates_used > 0 else '0.0'
 
         # Applied Through breakdown
-        all_applied_through = [i['applied_through'] for i in total_jobapps.values('applied_through').distinct()]
-        all_applied_through_count = {} 
-        for at in all_applied_through:
-            stored_key = at
-            if at == '' or not at:
-                stored_key = 'empty'
+        all_applied_through_count = {}
+        for at in total_jobapps.values_list('applied_through', flat=True).distinct():
+            stored_key = at if at else 'empty'
+            all_applied_through_count[stored_key] = total_jobapps.filter(applied_through=at).count()
 
-            if stored_key not in all_applied_through_count:
-                all_applied_through_count[stored_key] = 0
-            all_applied_through_count[stored_key] += total_jobapps.filter(applied_through=at).count()
-
-        # Avg. time until completion
-        count_dates_used = 0
-        month_delta_sum = 0
-        day_delta_sum = 0
-        hour_delta_sum = 0
-        year_delta_sum = 0
+        # Avg. time until completion (days only)
+        total_days_to_completion = 0
+        completed_count = 0
         for app in completed_jobapps:
             time_delta = app.time_took()
-
-            month_delta_sum += time_delta.months
-            day_delta_sum += time_delta.days
-            hour_delta_sum += time_delta.hours
-            year_delta_sum += time_delta.years
-            count_dates_used += 1
+            total_days = time_delta.years * 365 + time_delta.months * 30 + time_delta.days
+            total_days_to_completion += total_days
+            completed_count += 1
         
-        time_to_completion = {
-            'months': f'{month_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-            'days': f'{day_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-            'hours': f'{hour_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00',
-            'years': f'{year_delta_sum/count_dates_used:.2f}' if count_dates_used > 0 else '0.00'
-        }
-
-        # ============ NEW METRICS ============
-
-        # 1. Conversion Funnel (by step type: S -> D -> E)
-        step_types = {'S': 'Started', 'D': 'In Progress', 'E': 'Completed'}
-        conversion_funnel = {}
-        for stype, sname in step_types.items():
-            step_timelines = timelines.filter(step__type=stype)
-            apps_with_step = step_timelines.values('application_id').distinct().count()
-            conversion_funnel[sname] = {
-                'count': apps_with_step,
-                'percentage': f'{(apps_with_step / total_jobapps.count() * 100):.1f}' if total_jobapps.count() > 0 else '0.0'
-            }
+        avg_days_to_completion = f'{total_days_to_completion / completed_count:.1f}' if completed_count > 0 else '0.0'
 
         # 2. Source Effectiveness (which sources lead to completion)
         source_effectiveness = {}
-        for at in all_applied_through:
-            stored_key = at if at and at != '' else 'empty'
+        for at in total_jobapps.values_list('applied_through', flat=True).distinct():
+            stored_key = at if at else 'empty'
             apps_with_source = total_jobapps.filter(applied_through=at)
             completed_count = len([a for a in apps_with_source if a.is_completed()])
             source_effectiveness[stored_key] = {
@@ -364,10 +329,10 @@ class AnalyticsView(APIView):
                 'conversion_rate': f'{(completed_count / apps_with_source.count() * 100):.1f}' if apps_with_source.count() > 0 else '0.0'
             }
 
-        # 3. Lead to Application Conversion
-        total_leads = Lead.objects.filter(user=user).count()
+        # 3. Total Leads
+        total_leads = leads.count()
         
-        # 4. Stage Duration (avg time spent at each step)
+        # 4. Stage Duration (avg time spent at each step, in days)
         stage_duration = {}
         all_steps = Step.objects.filter(user=user)
         for step in all_steps:
@@ -381,9 +346,10 @@ class AnalyticsView(APIView):
             for idx, tl in enumerate(step_timeline_list[:-1]):
                 next_tl = step_timeline_list[idx + 1]
                 if tl.date_relevant and next_tl.date_relevant:
-                    delta = relativedelta(next_tl.date, tl.date)
-                    total_duration += delta.days + delta.months * 30 + delta.years * 365
-                    count += 1
+                    delta = (next_tl.date - tl.date).days
+                    if delta >= 0:
+                        total_duration += delta
+                        count += 1
             
             if count > 0:
                 avg_days = total_duration / count
@@ -393,33 +359,143 @@ class AnalyticsView(APIView):
                 }
 
         # 5. Time Trends (applications per week/month)
-        from datetime import timedelta
-        from django.db.models.functions import TruncWeek, TruncMonth
         
-        apps_by_week = total_jobapps.annotate(week=TruncWeek('date')).values('week').annotate(count=models.Count('id')).order_by('-week')[:12]
-        apps_by_month = total_jobapps.annotate(month=TruncMonth('date')).values('month').annotate(count=models.Count('id')).order_by('-month')[:12]
+        apps_by_week = total_jobapps.annotate(week=TruncWeek('date')).values('week').annotate(count=models.Count('id')).order_by('week')[:12]
+        apps_by_month = total_jobapps.annotate(month=TruncMonth('date')).values('month').annotate(count=models.Count('id')).order_by('month')[:12]
         
         time_trends = {
-            'weekly': [{'period': str(item['week']), 'count': item['count']} for item in apps_by_week if item['week']],
-            'monthly': [{'period': str(item['month']), 'count': item['count']} for item in apps_by_month if item['month']]
+            'weekly': [{'period': item['week'].strftime('%Y-%m-%d') if item['week'] else '', 'count': item['count']} for item in apps_by_week],
+            'monthly': [{'period': item['month'].strftime('%Y-%m') if item['month'] else '', 'count': item['count']} for item in apps_by_month]
         }
 
         return Response({
             'totalJobApps': total_jobapps.count(),
             'completedJobApps': completed_jobapps_count,
             'pendingJobApps': pending_jobapps,
-            'stepBreakdown': step_breakdown,
-            'stepsPerApp': f'{steps_per_apps:.2f}',
-            'timeBetweenSteps': time_between_steps,
-            'nonRelevantDates': non_relevant_dates,
-            'appliedThrough':  all_applied_through_count,
-            'timeToCompletion': time_to_completion,
-            'conversionFunnel': conversion_funnel,
+            'stepsPerApp': f'{steps_per_app:.1f}',
+            'avgDaysBetweenSteps': avg_days_between_steps,
+            'avgDaysToCompletion': avg_days_to_completion,
+            'appliedThrough': all_applied_through_count,
             'sourceEffectiveness': source_effectiveness,
             'totalLeads': total_leads,
             'stageDuration': stage_duration,
             'timeTrends': time_trends
         }, status=200)
+
+
+class SankeyView(APIView):
+    """API view for Sankey diagram data - separate from general analytics."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = self.request.user
+        
+        # Get group filter from query params
+        group_id = request.query_params.get('group', None)
+        
+        # Base queryset
+        total_jobapps = JobApplication.objects.filter(user=user)
+        
+        # Apply group filter if specified
+        if group_id and group_id != 'all':
+            total_jobapps = total_jobapps.filter(group_id=group_id)
+        
+        # Get all steps ordered by their position in the pipeline
+        all_user_steps = Step.objects.filter(user=user).order_by('id')
+        step_list = list(all_user_steps)
+        
+        # Build node list for Sankey
+        sankey_nodes = []
+        step_name_to_id = {}
+        for idx, step in enumerate(step_list):
+            sankey_nodes.append({'name': step.name, 'color': step.color})
+            step_name_to_id[step.name] = idx
+        
+        # Add "Drop-off" node
+        dropoff_node_id = len(sankey_nodes)
+        sankey_nodes.append({'name': 'Drop-off', 'color': '#db4848'})
+        
+        # Prefetch all timelines in a single query to avoid N+1
+        from collections import defaultdict
+        all_timelines = list(
+            Timeline.objects.filter(
+                application__in=total_jobapps, date_relevant=True
+            )
+            .select_related('step')
+            .order_by('application_id', 'date')
+        )
+        
+        # Group timelines by application_id
+        timelines_by_app = defaultdict(list)
+        for tl in all_timelines:
+            timelines_by_app[tl.application_id].append(tl)
+        
+        # Calculate flows between steps
+        sankey_links = []
+        applications = list(total_jobapps.all())
+        
+        for app in applications:
+            app_timelines = timelines_by_app.get(app.id, [])
+            
+            if not app_timelines:
+                # Application with no timelines - flows to drop-off
+                if app.initial_step:
+                    sankey_links.append({
+                        'source': step_name_to_id.get(app.initial_step.name, 0),
+                        'target': dropoff_node_id,
+                        'value': 1
+                    })
+                continue
+            
+            # Track flows between consecutive steps
+            for i in range(len(app_timelines)):
+                current_step_name = app_timelines[i].step.name
+                source_id = step_name_to_id.get(current_step_name)
+                
+                if source_id is None:
+                    continue
+                
+                if i == len(app_timelines) - 1:
+                    # Last step - check if it's an end step or if application dropped off
+                    if app_timelines[i].step.type == 'E':
+                        # Completed - no further flow needed
+                        pass
+                    else:
+                        # Not completed - flows to drop-off
+                        sankey_links.append({
+                            'source': source_id,
+                            'target': dropoff_node_id,
+                            'value': 1
+                        })
+                else:
+                    # Flow to next step
+                    next_step_name = app_timelines[i + 1].step.name
+                    target_id = step_name_to_id.get(next_step_name)
+                    if target_id is not None:
+                        sankey_links.append({
+                            'source': source_id,
+                            'target': target_id,
+                            'value': 1
+                        })
+        
+        # Aggregate links (combine duplicate source->target pairs)
+        aggregated_links = {}
+        for link in sankey_links:
+            key = f"{link['source']}->{link['target']}"
+            if key in aggregated_links:
+                aggregated_links[key]['value'] += 1
+            else:
+                aggregated_links[key] = link
+        
+        # Remove circular links using topological sort (Kahn's algorithm)
+        aggregated_links = remove_circular_links(aggregated_links)
+        
+        sankey_data = {
+            'nodes': sankey_nodes,
+            'links': list(aggregated_links.values())
+        }
+        
+        return Response(sankey_data, status=200)
 
 class LeadViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

@@ -12,4 +12,5 @@ router.register(r"leads", LeadViewSet, basename="leads")
 urlpatterns = [
     path("", include(router.urls)),
     path('analytics/', AnalyticsView.as_view(), name="analytics"),
+    path('analytics/sankey/', SankeyView.as_view(), name="analytics-sankey"),
 ]

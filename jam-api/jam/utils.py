@@ -3,9 +3,9 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import logging
+from collections import deque
 
 logger = logging.getLogger(__name__)
-
 
 def fetch_job_ad_snapshot(url: str):
     """
@@ -143,3 +143,50 @@ def fetch_job_ad_snapshot(url: str):
     except Exception as e:
         logger.error(f"Error fetching job ad snapshot from {url}: {e}")
         return None
+
+
+def remove_circular_links(aggregated_links):
+    """Remove circular links using topological sort (Kahn's algorithm)."""
+    links = list(aggregated_links.values())
+    
+    # Get all unique node indices involved in links
+    all_nodes = set()
+    for link in links:
+        all_nodes.add(link['source'])
+        all_nodes.add(link['target'])
+    
+    # Build adjacency list and in-degree count
+    in_degree = {node: 0 for node in all_nodes}
+    adj_list = {node: [] for node in all_nodes}
+    
+    for link in links:
+        in_degree[link['target']] = in_degree.get(link['target'], 0) + 1
+        adj_list[link['source']].append(link['target'])
+    
+    # Process nodes in topological order (BFS via deque for O(V+E) performance)
+    queue = deque(node for node, degree in in_degree.items() if degree == 0)
+    order = {}
+    current_order = 0
+    
+    while queue:
+        current = queue.popleft()
+        order[current] = current_order
+        current_order += 1
+        
+        for neighbor in adj_list.get(current, []):
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # Assign order to remaining nodes (those in cycles)
+    for node in all_nodes:
+        if node not in order:
+            order[node] = current_order
+            current_order += 1
+    
+    # Keep only links that go forward in the topological order
+    return {
+        f"{link['source']}->{link['target']}": link
+        for link in links
+        if order.get(link['source'], 0) < order.get(link['target'], 0)
+    }

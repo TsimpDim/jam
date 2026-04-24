@@ -1,0 +1,29 @@
+.sankey-container {
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .links path {
+    transition: stroke-opacity 0.15s ease;
+  }
+
+  .nodes text {
+    pointer-events: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}

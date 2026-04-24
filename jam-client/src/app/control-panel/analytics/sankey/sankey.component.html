@@ -1,0 +1,9 @@
+<div *ngIf="loading" style="font-size: 1px" class="progress loop">
+  <progress></progress>
+</div>
+
+<div class="sankey-container" #sankeyContainer>
+  <div *ngIf="!loading && !hasData" class="empty-state">
+    No flow data available
+  </div>
+</div>

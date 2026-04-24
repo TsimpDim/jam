@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
+import { GroupReorderPayload } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +21,9 @@ export class JamService {
       params.set('sort', sort);
     }
     const queryString = params.toString();
-    const url = environment.apiUrl + endpoint + (queryString ? '?' + queryString : '');
-    
+    const url =
+      environment.apiUrl + endpoint + (queryString ? '?' + queryString : '');
+
     return this.runHttpCall('GET', url);
   }
 
@@ -174,7 +176,7 @@ export class JamService {
     );
   }
 
-  reorderGroups(groups: { id: number; position: number }[]): Observable<any> {
+  reorderGroups(groups: GroupReorderPayload[]): Observable<any> {
     return this.runHttpCall(
       'PATCH',
       environment.apiUrl + '/jam/groups/reorder/',
@@ -189,8 +191,20 @@ export class JamService {
     );
   }
 
-  getAnalytics() {
-    return this.runHttpCall('GET', environment.apiUrl + '/jam/analytics/');
+  getAnalytics(groupId: string | null = null) {
+    let endpoint = environment.apiUrl + '/jam/analytics/';
+    if (groupId && groupId !== 'all') {
+      endpoint += '?group=' + groupId;
+    }
+    return this.runHttpCall('GET', endpoint);
+  }
+
+  getSankeyData(groupId: string | null = null) {
+    let endpoint = environment.apiUrl + '/jam/analytics/sankey/';
+    if (groupId && groupId !== 'all') {
+      endpoint += '?group=' + groupId;
+    }
+    return this.runHttpCall('GET', endpoint);
   }
 
   addStepToTimeline(

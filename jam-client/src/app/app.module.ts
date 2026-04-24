@@ -30,6 +30,8 @@ import {
   barsIcon,
   filter2Icon,
   searchIcon,
+  clockIcon,
+  clipboardIcon,
 } from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
@@ -49,6 +51,7 @@ import { registerLocaleData } from '@angular/common';
 import { AnalyticsComponent } from './control-panel/analytics/analytics.component';
 import { BadgeComponent } from './shared/badge/badge.component';
 import { LeadsComponent } from './control-panel/leads/leads.component';
+import { SankeyComponent } from './control-panel/analytics/sankey/sankey.component';
 
 ClarityIcons.addIcons(
   idBadgeIcon,
@@ -70,7 +73,9 @@ ClarityIcons.addIcons(
   dragHandleIcon,
   barsIcon,
   filter2Icon,
-  searchIcon
+  searchIcon,
+  clockIcon,
+  clipboardIcon
 );
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity
@@ -94,6 +99,7 @@ registerLocaleData(localeEnCa);
     AnalyticsComponent,
     BadgeComponent,
     LeadsComponent,
+    SankeyComponent,
   ],
   imports: [
     BrowserModule,
