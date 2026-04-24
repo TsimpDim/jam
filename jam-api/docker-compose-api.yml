@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   api:
     build: .
@@ -24,9 +23,9 @@ services:
     networks:
       jam:
         aliases:
-          - 'api.jam.local'
+          - "api.jam.local"
 
 networks:
   jam:
-    external:
-      name: jam
+    name: jam
+    external: true

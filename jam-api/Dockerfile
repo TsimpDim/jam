@@ -7,4 +7,5 @@ COPY requirements.txt /jobappman/
 
 WORKDIR /jobappman
 
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
