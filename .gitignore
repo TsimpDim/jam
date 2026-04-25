@@ -41,3 +41,6 @@ variables.prod.tfvars
 __pycache__
 .tfstate
 web-ext-artifacts
+
+# Misc
+plans/

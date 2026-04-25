@@ -1,4 +1,9 @@
-import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  LOCALE_ID,
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA,
+  APP_INITIALIZER,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClarityModule } from '@clr/angular';
@@ -52,6 +57,7 @@ import { AnalyticsComponent } from './control-panel/analytics/analytics.componen
 import { BadgeComponent } from './shared/badge/badge.component';
 import { LeadsComponent } from './control-panel/leads/leads.component';
 import { SankeyComponent } from './control-panel/analytics/sankey/sankey.component';
+import { AuthService } from './_services/auth.service';
 
 ClarityIcons.addIcons(
   idBadgeIcon,
@@ -80,6 +86,10 @@ ClarityIcons.addIcons(
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity
 registerLocaleData(localeEnCa);
+
+export function initializeAuth(authService: AuthService): () => Promise<void> {
+  return () => authService.checkAuthStatus();
+}
 
 @NgModule({
   declarations: [
@@ -114,6 +124,12 @@ registerLocaleData(localeEnCa);
   providers: [
     { provide: LOCALE_ID, useValue: 'en-ca' },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAuth,
+      deps: [AuthService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

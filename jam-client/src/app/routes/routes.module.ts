@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router'; // CLI imports router
+import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from '../auth/login/login.component';
 import { RegisterComponent } from '../auth/register/register.component';
 import { AnalyticsComponent } from '../control-panel/analytics/analytics.component';
@@ -8,53 +8,50 @@ import { GroupsComponent } from '../control-panel/groups/groups.component';
 import { LeadsComponent } from '../control-panel/leads/leads.component';
 import { StepsComponent } from '../control-panel/steps/steps.component';
 import { HomeComponent } from '../home/home.component';
-import { AuthGuardService as AuthGuard } from '../_services/auth-guard.service';
-import { LoggedInGuardService as LoggedInGuard } from '../_services/logged-in-guard.service';
-
+import { AuthGuard, NoAuthGuard } from '../_services/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent},
-  { 
+  { path: '', component: HomeComponent },
+  {
     path: 'control-panel/applications',
     component: ApplicationsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'control-panel/groups',
     component: GroupsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'control-panel/steps',
     component: StepsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'control-panel/analytics',
     component: AnalyticsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'control-panel/leads',
     component: LeadsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'auth/login',
     component: LoginComponent,
-    canActivate: [LoggedInGuard]
+    canActivate: [NoAuthGuard],
   },
   {
     path: 'auth/register',
     component: RegisterComponent,
-    canActivate: [LoggedInGuard]
+    canActivate: [NoAuthGuard],
   },
-  { path: '**', component: ApplicationsComponent },  // Wildcard route for a 404 page
+  { path: '**', component: ApplicationsComponent },
 ];
 
-// configures NgModule imports and exports
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

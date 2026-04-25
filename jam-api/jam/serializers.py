@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead
-from dj_rest_auth.serializers import UserDetailsSerializer
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -77,7 +76,3 @@ class JobAdSnapshotSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobAdSnapshot
         fields = "__all__"
-
-class KnoxSerializer(serializers.Serializer):
-    token = serializers.CharField()
-    user = UserDetailsSerializer(read_only=True)

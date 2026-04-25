@@ -34,12 +34,22 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8001",
     "http://client.jam.local:81",
-    "http://jam.tsdim.net",
     "https://jam.tsdim.net",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_CREDENTIALS = False
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:81",
+    "https://jam.tsdim.net",
+]
+
+# Allow extension origins (chrome-extension:// and moz-extension://)
+# Extension IDs are dynamic, so we allow all origins in development
+# or use CORS_ALLOWED_ORIGIN_REGEXS for more granular control
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     "corsheaders",
@@ -53,15 +63,7 @@ INSTALLED_APPS = [
     "knox",
     "core",
     "jam",
-    "django.contrib.sites",
-    "allauth",
-    "allauth.account",
-    "dj_rest_auth.registration",
-    "dj_rest_auth",
 ]
-
-# required by djrest_auth for registration
-SITE_ID = 1
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -115,7 +117,13 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
@@ -148,6 +156,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
         "knox.auth.TokenAuthentication",
     ),
 }
@@ -157,10 +166,4 @@ REST_KNOX = {
     'AUTO_REFRESH': True,
     'AUTO_REFRESH_MAX_TTL': timedelta(days=30),
     'TOKEN_LIMIT_PER_USER': 5,
-}
-
-REST_AUTH_TOKEN_MODEL = 'knox.models.AuthToken'
-REST_AUTH_TOKEN_CREATOR = 'jam.knox.create_knox_token'
-REST_AUTH_SERIALIZERS = {
-    'TOKEN_SERIALIZER': 'jam.serializers.KnoxSerializer',
 }

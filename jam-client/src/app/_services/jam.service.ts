@@ -2,16 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 import { GroupReorderPayload } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JamService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
-  getJobApplications(groupped: Boolean = false, sort: string = 'id') {
+  getJobApplications(groupped: boolean = false, sort: string = 'id') {
     let endpoint = '/jam/jobapps/';
     if (groupped) {
       endpoint += 'group/';
@@ -308,20 +307,20 @@ export class JamService {
     );
   }
 
-  runHttpCall(method: string, url: string, payload: any = null) {
-    let authHeader = {
-      headers: { Authorization: 'Token ' + this.authService.getSessionToken() },
-    };
-
+  runHttpCall(
+    method: string,
+    url: string,
+    payload: any = null
+  ): Observable<any> {
     switch (method) {
       case 'GET':
-        return this.http.get(url, authHeader);
+        return this.http.get(url);
       case 'POST':
-        return this.http.post(url, payload, authHeader);
+        return this.http.post(url, payload);
       case 'PATCH':
-        return this.http.patch(url, payload, authHeader);
+        return this.http.patch(url, payload);
       case 'DELETE':
-        return this.http.delete(url, authHeader);
+        return this.http.delete(url);
       default:
         return new Observable();
     }

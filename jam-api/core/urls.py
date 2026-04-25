@@ -1,26 +1,18 @@
-"""core URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import include, path
-from knox import views as knox_views
+from jam.auth_views import LoginView, LogoutView, RegisterView, TokenView, TokenLogoutView, MeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
-    path('auth/',  include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('jam/', include('jam.urls')),
+    # Web client (Django session)
+    path('auth/login/',        LoginView.as_view(),       name='auth_login'),
+    path('auth/logout/',       LogoutView.as_view(),      name='auth_logout'),
+    # Extension (Knox token)
+    path('auth/token/',        TokenView.as_view(),       name='auth_token'),
+    path('auth/token/logout/', TokenLogoutView.as_view(), name='auth_token_logout'),
+    # Shared
+    path('auth/register/',     RegisterView.as_view(),    name='auth_register'),
+    path('auth/me/',           MeView.as_view(),          name='auth_me'),
+    # JAM
+    path('jam/',               include('jam.urls')),
 ]

@@ -8,10 +8,6 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
 
-interface IAuth {
-  key: string;
-}
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,9 +15,8 @@ interface IAuth {
 })
 export class LoginComponent implements OnInit {
   public form: FormGroup;
-  public loading: Boolean = false;
-  public loggedIn: Boolean | null = null;
-  public errorMessage: string = '';
+  public loading = false;
+  public errorMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,36 +38,32 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    if (this.form.valid) {
-      this.loading = true;
-      this.loggedIn = false;
+    this.loading = true;
 
-      this.authService
-        .login(this.form.value.username, this.form.value.password)
-        .subscribe({
-          next: (resp: any) => {
-            this.loading = false;
-            if ('token' in resp) {
-              this.loggedIn = true;
-              this.authService.storeSessionToken(resp['token']);
-              this.router.navigate(['control-panel/applications']);
-            } else {
-              this.loggedIn = false;
-              this.errorMessage = 'Login failed.';
-            }
-          },
-          error: (err) => {
-            this.loading = false;
-            this.loggedIn = false;
-            this.errorMessage = 'Invalid username or password.';
-            if (err.error && err.error.non_field_errors) {
-              this.errorMessage = err.error.non_field_errors[0];
-            } else if (err.error && err.error.detail) {
-              this.errorMessage = err.error.detail;
-            }
-          },
-          complete: () => (this.loading = false),
-        });
-    }
+    this.authService
+      .login(this.form.value.username, this.form.value.password)
+      .subscribe({
+        next: (resp) => {
+          this.loading = false;
+          if (resp && resp.user) {
+            this.authService.setStatusLoggedIn();
+            this.router.navigate(['control-panel/applications']);
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = this.parseError(err.error);
+        },
+      });
+  }
+
+  private parseError(error: any): string {
+    if (!error) return 'Login failed.';
+    if (error.non_field_errors) return error.non_field_errors[0];
+    if (error.username) return 'Username: ' + error.username[0];
+    if (error.password) return 'Password: ' + error.password[0];
+    if (error.detail) return error.detail;
+    if (error.error) return error.error;
+    return 'Invalid username or password.';
   }
 }

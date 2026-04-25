@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss', '../shared.scss']
+  styleUrls: ['./header.component.scss', '../shared.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   public isLoggedIn: Boolean | null = null;
@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   checkIsLoggedIn() {
-    this.isLoggedIn = this.authService.getSessionToken() ? true : false;
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   logout() {

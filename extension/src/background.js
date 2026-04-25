@@ -37,6 +37,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Return true to tell Chrome we will send the response asynchronously
     return true; 
   }
+
+  if (message.action === 'startRegistrationListener') {
+    // Check if a listener is already active to prevent duplicates
+    chrome.storage.local.get('registrationListenerActive', (result) => {
+      if (result.registrationListenerActive) {
+        sendResponse({ success: false, alreadyActive: true });
+        return;
+      }
+
+      // Start listening for tab updates to detect registration completion
+      const listener = function(tabId, changeInfo, tab) {
+        if (changeInfo.url && changeInfo.url.includes('/control-panel/')) {
+          // User navigated to control panel after registration
+          chrome.tabs.onUpdated.removeListener(listener);
+          chrome.storage.local.set({ registrationListenerActive: false });
+          chrome.runtime.sendMessage({ action: 'registrationComplete' });
+        }
+      };
+      chrome.tabs.onUpdated.addListener(listener);
+      
+      // Store the listener reference for cleanup
+      chrome.storage.local.set({ registrationListenerActive: true });
+      sendResponse({ success: true });
+    });
+    return true;
+  }
+
+  if (message.action === 'stopRegistrationListener') {
+    chrome.storage.local.set({ registrationListenerActive: false });
+    sendResponse({ success: true });
+    return true;
+  }
 });
 
 chrome.runtime.onInstalled.addListener(() => {

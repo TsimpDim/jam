@@ -2,44 +2,79 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, firstValueFrom, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+export interface AuthUserResponse {
+  pk: number;
+  username: string;
+}
+
+export interface AuthTokenResponse {
+  user: AuthUserResponse;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private statusLoggedIn = new BehaviorSubject<boolean | null>(null);
+  loggedIn$ = this.statusLoggedIn.asObservable();
+
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(username: String, password: String) {
-    return this.http.post(environment.apiUrl + '/auth/login/', {
-      username: username,
-      password: password,
-    });
+  async checkAuthStatus(): Promise<void> {
+    const user = await firstValueFrom(
+      this.http
+        .get<AuthUserResponse>(environment.apiUrl + '/auth/me/')
+        .pipe(catchError(() => of(null)))
+    );
+    this.statusLoggedIn.next(user !== null);
   }
 
-  register(username: String, password1: String, password2: String) {
-    return this.http.post(environment.apiUrl + '/auth/registration/', {
-      username: username,
-      password1: password1,
-      password2: password2,
-    });
+  login(username: string, password: string): Observable<AuthTokenResponse> {
+    return this.http.post<AuthTokenResponse>(
+      environment.apiUrl + '/auth/login/',
+      { username, password }
+    );
   }
 
-  logout() {
-    if (this.getSessionToken()) {
-      this.deleteSessionToken();
-      this.router.navigate(['/auth/login']);
+  register(
+    username: string,
+    password1: string,
+    password2: string
+  ): Observable<AuthTokenResponse> {
+    return this.http.post<AuthTokenResponse>(
+      environment.apiUrl + '/auth/register/',
+      { username, password1, password2 }
+    );
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await firstValueFrom(
+        this.http.post(environment.apiUrl + '/auth/logout/', {})
+      );
+    } catch {
+      // Catch error but continue with clearing session
     }
+    this.clearSession();
+    this.router.navigate(['/auth/login']);
   }
 
-  deleteSessionToken() {
-    localStorage.removeItem('authToken');
+  setStatusLoggedIn(): void {
+    this.statusLoggedIn.next(true);
   }
 
-  storeSessionToken(token: string) {
-    localStorage.setItem('authToken', token);
+  isLoggedIn(): boolean {
+    return !!this.statusLoggedIn.value;
   }
 
-  getSessionToken() {
-    return localStorage.getItem('authToken');
+  isAuthStatusPending(): boolean {
+    return this.statusLoggedIn.value === null;
+  }
+
+  clearSession(): void {
+    this.statusLoggedIn.next(false);
   }
 }

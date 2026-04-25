@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Group {
@@ -45,71 +46,31 @@ export interface TimelineEntry {
   providedIn: 'root',
 })
 export class ApiService {
-  constructor(private authService: AuthService) {}
+  private baseUrl = environment.apiUrl;
 
-  private async makeRequest<T>(
-    endpoint: string,
-    method: string = 'GET',
-    body?: any
-  ): Promise<T> {
-    const authToken = this.authService.getAuthToken();
-
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    if (authToken) {
-      headers['Authorization'] = `Token ${authToken}`;
-    }
-
-    const options: RequestInit = { method, headers, credentials: 'omit' };
-
-    if (body) {
-      options.body = JSON.stringify(body);
-    }
-
-    const response = await fetch(`${environment.apiUrl}${endpoint}`, options);
-    if (!response.ok) {
-      let errorData: any = await response.json();
-      if (Object.keys(errorData).length > 0) {
-        const messages: string[] = [];
-        for (const [field, errors] of Object.entries(errorData)) {
-          if (Array.isArray(errors)) {
-            messages.push(`${field}: ${errors.join(', ')}`);
-          } else if (typeof errors === 'string') {
-            messages.push(`${field}: ${errors}`);
-          }
-        }
-      }
-    }
-
-    return (await response.json()) as T;
-  }
+  constructor(private http: HttpClient) {}
 
   async getGroups(): Promise<Group[]> {
-    return this.makeRequest<Group[]>('/jam/groups/');
+    return firstValueFrom(
+      this.http.get<Group[]>(`${this.baseUrl}/jam/groups/`)
+    );
   }
 
   async getSteps(): Promise<Step[]> {
-    return this.makeRequest<Step[]>('/jam/steps/');
+    return firstValueFrom(this.http.get<Step[]>(`${this.baseUrl}/jam/steps/`));
   }
 
   async getLeads(): Promise<Lead[]> {
-    return this.makeRequest<Lead[]>('/jam/leads/?all=true');
+    return firstValueFrom(
+      this.http.get<Lead[]>(`${this.baseUrl}/jam/leads/?all=true`)
+    );
   }
 
   async createJobApplication(
     data: Partial<JobApplication>
   ): Promise<JobApplication> {
-    return this.makeRequest<JobApplication>('/jam/jobapps/', 'POST', data);
-  }
-
-  async createTimelineEntry(data: {
-    group: number;
-    step: number;
-    jobapp: number;
-    notes?: string | null;
-  }): Promise<TimelineEntry> {
-    return this.makeRequest<TimelineEntry>('/jam/timeline/', 'POST', data);
+    return firstValueFrom(
+      this.http.post<JobApplication>(`${this.baseUrl}/jam/jobapps/`, data)
+    );
   }
 }
