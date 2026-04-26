@@ -46,6 +46,7 @@ def _authenticate_or_error(request):
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(generics.GenericAPIView):
     """Web client: create a Django session. No Knox token issued."""
+    authentication_classes = []
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -64,6 +65,7 @@ class LogoutView(generics.GenericAPIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):
     """Shared: create a user, start a session, and return a Knox token."""
+    authentication_classes = []
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
 
