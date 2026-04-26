@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -41,6 +43,7 @@ def _authenticate_or_error(request):
 
 
 # Web-client views (Django session)
+@method_decorator(csrf_exempt, name='dispatch')
 class LoginView(generics.GenericAPIView):
     """Web client: create a Django session. No Knox token issued."""
     permission_classes = [permissions.AllowAny]
@@ -58,6 +61,7 @@ class LogoutView(generics.GenericAPIView):
         logout(request)
         return Response({"detail": "Successfully logged out."})
 
+@method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(generics.CreateAPIView):
     """Shared: create a user, start a session, and return a Knox token."""
     permission_classes = [permissions.AllowAny]
