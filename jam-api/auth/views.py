@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.middleware.csrf import get_token
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
@@ -66,6 +67,8 @@ class LoginView(generics.GenericAPIView):
     def post(self, request):
         user = _authenticate_or_error(request)
         login(request, user)
+        # Ensure CSRF cookie is set for subsequent requests
+        get_token(request)
         return Response({"user": {"pk": user.pk, "username": user.username}})
 
 
@@ -90,6 +93,8 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         login(request, user)
+        # Ensure CSRF cookie is set for subsequent requests
+        get_token(request)
         return Response(
             {"user": {"pk": user.pk, "username": user.username}},
             status=status.HTTP_201_CREATED,
