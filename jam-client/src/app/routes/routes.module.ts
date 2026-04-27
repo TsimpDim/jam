@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from '../auth/login/login.component';
 import { RegisterComponent } from '../auth/register/register.component';
+import { ForgotPasswordComponent } from '../auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from '../auth/reset-password/reset-password.component';
 import { AnalyticsComponent } from '../control-panel/analytics/analytics.component';
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
 import { GroupsComponent } from '../control-panel/groups/groups.component';
@@ -45,6 +47,16 @@ const routes: Routes = [
   {
     path: 'auth/register',
     component: RegisterComponent,
+    canActivate: [NoAuthGuard],
+  },
+  {
+    path: 'auth/forgot-password',
+    component: ForgotPasswordComponent,
+    canActivate: [NoAuthGuard],
+  },
+  {
+    path: 'auth/reset-password/:uid/:token',
+    component: ResetPasswordComponent,
     canActivate: [NoAuthGuard],
   },
   { path: '**', component: ApplicationsComponent },

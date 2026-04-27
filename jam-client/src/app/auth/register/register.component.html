@@ -31,6 +31,23 @@
           >
         </clr-input-container>
 
+        <clr-input-container>
+          <label>Email</label>
+          <input
+            clrInput
+            name="email"
+            type="email"
+            placeholder="john@example.com"
+            formControlName="email"
+          />
+          <clr-control-error *clrIfError="'required'"
+            >Email is required</clr-control-error
+          >
+          <clr-control-error *clrIfError="'email'"
+            >Please enter a valid email address</clr-control-error
+          >
+        </clr-input-container>
+
         <clr-password-container>
           <label>Password</label>
           <input

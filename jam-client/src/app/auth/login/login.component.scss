@@ -71,6 +71,10 @@
     object-fit: cover;
 }
 
+.alert-text {
+    color: black !important;
+}
+
 .action {
     background-color: white;
     font-size: var(--clr-btn-appearance-form-font-size, 0.6rem);

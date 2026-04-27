@@ -42,6 +42,8 @@ import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './_services/auth.interceptor';
@@ -98,6 +100,8 @@ export function initializeAuth(authService: AuthService): () => Promise<void> {
     RoutesComponent,
     LoginComponent,
     RegisterComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
     HeaderComponent,
     ApplicationsComponent,
     GroupsComponent,

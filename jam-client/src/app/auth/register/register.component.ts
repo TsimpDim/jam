@@ -29,6 +29,7 @@ export class RegisterComponent implements OnInit {
     this.form = this.formBuilder.group(
       {
         username: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
         password1: new FormControl('', [
           Validators.required,
           Validators.minLength(8),
@@ -56,6 +57,7 @@ export class RegisterComponent implements OnInit {
     this.authService
       .register(
         this.form.value.username,
+        this.form.value.email,
         this.form.value.password1,
         this.form.value.password2
       )
@@ -77,6 +79,7 @@ export class RegisterComponent implements OnInit {
   private parseError(error: any): string {
     if (!error) return 'Registration failed. Please check your details.';
     if (error.username) return 'Username: ' + error.username[0];
+    if (error.email) return 'Email: ' + error.email[0];
     if (error.password1) return 'Password: ' + error.password1[0];
     if (error.password2) return 'Confirm password: ' + error.password2[0];
     if (error.non_field_errors) return error.non_field_errors[0];

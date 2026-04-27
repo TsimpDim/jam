@@ -1,58 +1,82 @@
 <div class="main-container">
   <div class="login-wrapper">
     <form clrForm class="login" [formGroup]="form">
-        <section class="title">
-          <h3 class="welcome">Welcome back to JAM!</h3>
-        </section>
-        <div class="login-group">
-          <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
-            <clr-alert-item>
-              <span class="alert-text">
-                {{ errorMessage }}
-              </span>
-            </clr-alert-item>
-          </clr-alert>
+      <section class="title">
+        <h3 class="welcome">Welcome back to JAM!</h3>
+      </section>
+      <div class="login-group">
+        <clr-alert
+          [clrAlertClosable]="false"
+          [clrAlertType]="'danger'"
+          *ngIf="errorMessage"
+        >
+          <clr-alert-item>
+            <span class="alert-text">
+              {{ errorMessage }}
+            </span>
+          </clr-alert-item>
+        </clr-alert>
 
-          <clr-input-container>
-            <label>Username</label>
-            <input
+        <clr-input-container>
+          <label>Username</label>
+          <input
             clrInput
             name="username"
             type="text"
             placeholder="JohnDoe"
             formControlName="username"
-            />
-            <clr-control-error>Make sure your username is filled in properly</clr-control-error>
-          </clr-input-container>
+          />
+          <clr-control-error
+            >Make sure your username is filled in properly</clr-control-error
+          >
+        </clr-input-container>
 
-          <clr-password-container>
-            <label>Password</label>
-            <input
+        <clr-password-container>
+          <label>Password</label>
+          <input
             clrPassword
             placeholder="Password"
             name="password"
             formControlName="password"
-            />
-            <clr-control-error>Make sure your password is filled in properly</clr-control-error>
-          </clr-password-container>
+          />
+          <clr-control-error
+            >Make sure your password is filled in properly</clr-control-error
+          >
+        </clr-password-container>
 
-        <div class="column" style="margin-left: auto; flex: 1;">
+        <div class="column" style="margin-left: auto; flex: 1">
           <div class="row">
             <button
-            class="btn btn-primary action"
-            type="submit"
-            (click)="login()"
-            [disabled]="loading"
-            >  
+              class="btn btn-primary action"
+              type="submit"
+              (click)="login()"
+              [disabled]="loading"
+            >
               LOG IN
             </button>
           </div>
           <div class="row">
-            or <a class="nav-link" routerLinkActive="active" routerLink="/auth/register" style="margin-left: 0.3em">register</a>
+            or
+            <a
+              class="nav-link"
+              routerLinkActive="active"
+              routerLink="/auth/register"
+              style="margin-left: 0.3em"
+              >register</a
+            >
+          </div>
+          <div class="row">
+            or
+            <a
+              class="nav-link"
+              routerLink="/auth/forgot-password"
+              style="margin-left: 0.3em"
+              >reset password</a
+            >
           </div>
         </div>
       </div>
     </form>
-    <img src="../../../assets/undraw_login.svg">
+    <img src="../../../assets/undraw_login.svg" />
   </div>
 </div>

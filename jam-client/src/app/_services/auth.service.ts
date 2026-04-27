@@ -14,6 +14,10 @@ export interface AuthTokenResponse {
   user: AuthUserResponse;
 }
 
+export interface AuthMessageResponse {
+  detail: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -41,12 +45,13 @@ export class AuthService {
 
   register(
     username: string,
+    email: string,
     password1: string,
     password2: string
   ): Observable<AuthTokenResponse> {
     return this.http.post<AuthTokenResponse>(
       environment.apiUrl + '/auth/register/',
-      { username, password1, password2 }
+      { username, email, password1, password2 }
     );
   }
 
@@ -76,5 +81,24 @@ export class AuthService {
 
   clearSession(): void {
     this.statusLoggedIn.next(false);
+  }
+
+  requestPasswordReset(email: string): Observable<AuthMessageResponse> {
+    return this.http.post<AuthMessageResponse>(
+      environment.apiUrl + '/auth/password-reset/',
+      { email }
+    );
+  }
+
+  confirmPasswordReset(
+    uid: string,
+    token: string,
+    new_password1: string,
+    new_password2: string
+  ): Observable<AuthMessageResponse> {
+    return this.http.post<AuthMessageResponse>(
+      environment.apiUrl + '/auth/password-reset/confirm/',
+      { uid, token, new_password1, new_password2 }
+    );
   }
 }

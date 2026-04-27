@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "core",
+    "auth",
     "jam",
 ]
 
@@ -167,3 +168,14 @@ REST_KNOX = {
     'AUTO_REFRESH_MAX_TTL': timedelta(days=30),
     'TOKEN_LIMIT_PER_USER': 5,
 }
+
+# Email / SMTP Configuration
+EMAIL_HOST = os.getenv("JAM_EMAIL_HOST", "jam.com")
+EMAIL_PORT = int(os.getenv("JAM_EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv("JAM_EMAIL_USE_TLS", "True")
+EMAIL_HOST_USER = os.getenv("JAM_EMAIL_HOST_USER", "jam@local.com")
+EMAIL_HOST_PASSWORD = os.getenv("JAM_EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.getenv("JAM_DEFAULT_FROM_EMAIL", "jam@local.com")
+
+# Frontend URL (used in password reset links)
+FRONTEND_URL = os.getenv("JAM_FRONTEND_URL", "http://localhost:81")
