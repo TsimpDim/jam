@@ -255,14 +255,12 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     let label: string;
 
     if (this.trendView === 'monthly') {
-      const monthlyReversed = [...monthly].reverse();
-      labels = monthlyReversed.map((m) => m.period);
-      data = monthlyReversed.map((m) => m.count);
+      labels = monthly.map((m) => m.period);
+      data = monthly.map((m) => m.count);
       label = 'Monthly Applications';
     } else {
-      const weeklyReversed = [...weekly].reverse();
-      labels = weeklyReversed.map((w) => w.period);
-      data = weeklyReversed.map((w) => w.count);
+      labels = weekly.map((w) => w.period);
+      data = weekly.map((w) => w.count);
       label = 'Weekly Applications';
     }
 

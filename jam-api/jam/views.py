@@ -360,8 +360,8 @@ class AnalyticsView(APIView):
 
         # 5. Time Trends (applications per week/month)
         
-        apps_by_week = total_jobapps.annotate(week=TruncWeek('date')).values('week').annotate(count=models.Count('id')).order_by('week')[:12]
-        apps_by_month = total_jobapps.annotate(month=TruncMonth('date')).values('month').annotate(count=models.Count('id')).order_by('month')[:12]
+        apps_by_week = total_jobapps.annotate(week=TruncWeek('date')).values('week').annotate(count=models.Count('id')).order_by('week')
+        apps_by_month = total_jobapps.annotate(month=TruncMonth('date')).values('month').annotate(count=models.Count('id')).order_by('month')
         
         time_trends = {
             'weekly': [{'period': item['week'].strftime('%Y-%m-%d') if item['week'] else '', 'count': item['count']} for item in apps_by_week],
@@ -411,9 +411,10 @@ class SankeyView(APIView):
             sankey_nodes.append({'name': step.name, 'color': step.color})
             step_name_to_id[step.name] = idx
         
-        # Add "Drop-off" node
+        # Add invisible "Drop-off" node to capture applications that don't progress
+        # This ensures the first step's height reflects ALL applications
         dropoff_node_id = len(sankey_nodes)
-        sankey_nodes.append({'name': 'Drop-off', 'color': '#db4848'})
+        sankey_nodes.append({'name': 'Drop-off', 'color': 'transparent', 'invisible': True})
         
         # Prefetch all timelines in a single query to avoid N+1
         from collections import defaultdict
@@ -438,13 +439,12 @@ class SankeyView(APIView):
             app_timelines = timelines_by_app.get(app.id, [])
             
             if not app_timelines:
-                # Application with no timelines - flows to drop-off
-                if app.initial_step:
-                    sankey_links.append({
-                        'source': step_name_to_id.get(app.initial_step.name, 0),
-                        'target': dropoff_node_id,
-                        'value': 1
-                    })
+                # Application with no timelines - flows from first step to drop-off
+                sankey_links.append({
+                    'source': 0,  # First step
+                    'target': dropoff_node_id,
+                    'value': 1
+                })
                 continue
             
             # Track flows between consecutive steps
@@ -456,12 +456,9 @@ class SankeyView(APIView):
                     continue
                 
                 if i == len(app_timelines) - 1:
-                    # Last step - check if it's an end step or if application dropped off
-                    if app_timelines[i].step.type == 'E':
-                        # Completed - no further flow needed
-                        pass
-                    else:
-                        # Not completed - flows to drop-off
+                    # Last step for this application
+                    if app_timelines[i].step.type != 'E':
+                        # Not an end step - flows to drop-off
                         sankey_links.append({
                             'source': source_id,
                             'target': dropoff_node_id,

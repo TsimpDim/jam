@@ -92,7 +92,10 @@ export class SankeyComponent
     container.innerHTML = '';
 
     const graph: any = {
-      nodes: this.sankeyData.nodes.map((n) => ({ name: n.name })),
+      nodes: this.sankeyData.nodes.map((n) => ({
+        name: n.name,
+        invisible: (n as any).invisible || false,
+      })),
       links: this.sankeyData.links.map((l) => ({
         source: l.source,
         target: l.target,
@@ -104,8 +107,11 @@ export class SankeyComponent
     const margin = { top: 16, right: 160, bottom: 16, left: 160 };
     const containerWidth = Math.max(container.clientWidth || 700, 600);
     const width = containerWidth;
-    const nodeCount = this.sankeyData.nodes.length;
-    const height = Math.min(Math.max(320, nodeCount * 60), 520);
+    // Count only visible nodes for height calculation
+    const visibleNodeCount = this.sankeyData.nodes.filter(
+      (n) => !(n as any).invisible
+    ).length;
+    const height = Math.min(Math.max(320, visibleNodeCount * 60), 520);
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -124,10 +130,14 @@ export class SankeyComponent
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Build color map
+    // Build color map and invisible set
     const colorMap = new Map<string, string>();
+    const invisibleNodeNames = new Set<string>();
     this.sankeyData.nodes.forEach((node) => {
       colorMap.set(node.name, node.color || '#8c8c8c');
+      if ((node as any).invisible) {
+        invisibleNodeNames.add(node.name);
+      }
     });
 
     // Sankey layout
@@ -151,6 +161,18 @@ export class SankeyComponent
       return;
     }
 
+    // Filter out links that connect to invisible nodes
+    const visibleLinks = links.filter(
+      (d: any) =>
+        !invisibleNodeNames.has((d.target as any).name) &&
+        !invisibleNodeNames.has((d.source as any).name)
+    );
+
+    // Filter out invisible nodes from rendering
+    const visibleNodes = nodes.filter(
+      (d: any) => !invisibleNodeNames.has(d.name)
+    );
+
     // Defs: subtle shadow for nodes
     const defs = svg.append('defs');
     const shadowFilter = defs
@@ -168,18 +190,19 @@ export class SankeyComponent
       .attr('flood-color', 'rgba(0,0,0,0.18)');
 
     // Draw links as stroked paths (standard professional approach)
+    // Link width is proportional to the target node's height (d.width from d3-sankey)
     const linkGroup = g.append('g').attr('class', 'links').attr('fill', 'none');
 
     const linkPaths = linkGroup
       .selectAll('path')
-      .data(links)
+      .data(visibleLinks)
       .join('path')
       .attr('d', sankeyLinkHorizontal())
       .attr(
         'stroke',
         (d: any) => colorMap.get((d.source as any).name) || '#aaa'
       )
-      .attr('stroke-width', (d: any) => Math.max(1, d.width * 0.65))
+      .attr('stroke-width', (d: any) => Math.max(1, d.width))
       .attr('stroke-opacity', 0.35)
       .style('cursor', 'default');
 
@@ -191,17 +214,17 @@ export class SankeyComponent
           `${(d.source as any).name} → ${(d.target as any).name}: ${d.value}`
       );
 
-    // Link hover
+    // Link hover - increase opacity while maintaining proportional width
     linkPaths
       .on('mouseover', function (event: any, d: any) {
         d3.select(this)
           .attr('stroke-opacity', 0.6)
-          .attr('stroke-width', Math.max(1.5, d.width * 0.65 + 1));
+          .attr('stroke-width', Math.max(1.5, d.width + 1));
       })
       .on('mouseout', function (event: any, d: any) {
         d3.select(this)
           .attr('stroke-opacity', 0.35)
-          .attr('stroke-width', Math.max(1, d.width * 0.65));
+          .attr('stroke-width', Math.max(1, d.width));
       });
 
     // Draw nodes
@@ -209,7 +232,7 @@ export class SankeyComponent
 
     const nodeEl = nodeGroup
       .selectAll('g')
-      .data(nodes)
+      .data(visibleNodes)
       .join('g')
       .attr('transform', (d: any) => `translate(${d.x0},${d.y0})`);
 
