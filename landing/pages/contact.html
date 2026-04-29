@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contact JAM! - Get in touch with our team for support, questions, or feedback."
+    />
+    <title>Contact Us - JAM!</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-content {
+        max-width: 800px;
+        margin: 8rem auto 4rem;
+        padding: 0 2rem;
+      }
+      .page-content h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+      }
+      .page-content .subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 3rem;
+      }
+      .contact-form {
+        background: var(--bg-secondary);
+        padding: 3rem;
+        border-radius: 16px;
+        margin: 3rem 0;
+      }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.875rem;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: border-color 0.2s ease;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+      .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+      .contact-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+      .contact-card {
+        background: var(--bg-secondary);
+        padding: 2rem;
+        border-radius: 12px;
+        text-align: center;
+      }
+      .contact-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .contact-card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+      }
+      .contact-card p {
+        color: var(--text-secondary);
+      }
+      .contact-card a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .contact-card a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-brand">
+          <a
+            href="../index.html"
+            class="logo"
+            style="text-decoration: none; color: var(--primary-color)"
+            >JAM!</a
+          >
+        </div>
+        <div class="nav-menu" id="navMenu">
+          <a href="../index.html#features" class="nav-link">Features</a>
+          <a href="../index.html#how-it-works" class="nav-link">How It Works</a>
+          <a href="../index.html#pricing" class="nav-link">Pricing</a>
+          <a href="company.html" class="nav-link">About</a>
+          <a href="/login" class="nav-link nav-login">Login</a>
+          <a href="/register" class="btn btn-primary btn-nav">Sign Up Free</a>
+        </div>
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="page-content">
+      <h1>Contact Us</h1>
+      <p class="subtitle">
+        We'd love to hear from you! Whether you have questions, feedback, or
+        need support, our team is here to help.
+      </p>
+
+      <div class="contact-info">
+        <div class="contact-card">
+          <div class="contact-icon">📧</div>
+          <h3>Email Us</h3>
+          <p><a href="mailto:support@jam-app.com">support@jam-app.com</a></p>
+          <p>We typically respond within 24 hours</p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">💬</div>
+          <h3>Live Chat</h3>
+          <p>Available 9 AM - 5 PM EST</p>
+          <p>
+            <a
+              href="#"
+              onclick="alert('Chat integration coming soon!'); return false;"
+              >Start a chat</a
+            >
+          </p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">📚</div>
+          <h3>Help Center</h3>
+          <p>Find answers to common questions</p>
+          <p><a href="help.html">Visit Help Center</a></p>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h2 style="margin-bottom: 1.5rem; color: var(--text-primary)">
+          Send us a Message
+        </h2>
+        <form id="contactForm" onsubmit="return handleSubmit(event)">
+          <div class="form-group">
+            <label for="name">Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Your name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="your@email.com"
+            />
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject *</label>
+            <select id="subject" name="subject" required>
+              <option value="">Select a topic...</option>
+              <option value="support">Technical Support</option>
+              <option value="billing">Billing Question</option>
+              <option value="feature">Feature Request</option>
+              <option value="feedback">General Feedback</option>
+              <option value="partnership">Partnership Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message *</label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              placeholder="How can we help you?"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <div
+        style="
+          background: var(--bg-secondary);
+          padding: 2rem;
+          border-radius: 12px;
+          margin-top: 3rem;
+        "
+      >
+        <h3 style="margin-bottom: 1rem; color: var(--text-primary)">
+          Enterprise Solutions
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem">
+          Looking for team plans, custom integrations, or white-label solutions?
+          Our enterprise team can help you scale JAM! for your organization.
+        </p>
+        <a href="mailto:enterprise@jam-app.com" class="btn btn-outline"
+          >Contact Enterprise Sales</a
+        >
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <h4 class="footer-title">JAM!</h4>
+            <p class="footer-description">
+              Your personal job application command center. Track, manage, and
+              succeed in your job search.
+            </p>
+          </div>
+          <div class="footer-column">
+            <h4 class="footer-heading">Product</h4>
+            <ul class="footer-links">
+              <li><a href="../index.html#features">Features</a></li>
+              <li><a href="../index.html#pricing">Pricing</a></li>
+              <li><a href="../index.html#how-it-works">How It Works</a></li>
+              <li><a href="/register">Sign Up</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4 class="footer-heading">Company</h4>
+            <ul class="footer-links">
+              <li><a href="company.html">About Us</a></li>
+              <li><a href="contact.html">Contact</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="terms.html">Terms of Service</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4 class="footer-heading">Resources</h4>
+            <ul class="footer-links">
+              <li><a href="help.html">Help Center</a></li>
+              <li><a href="blog.html">Blog</a></li>
+              <li><a href="guides.html">Job Search Guides</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 JAM! All rights reserved.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Twitter">Twitter</a>
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="#" aria-label="GitHub">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+      function handleSubmit(event) {
+        event.preventDefault();
+        alert(
+          "Thank you for your message! This is a demo form. In production, this would send your message to our support team."
+        );
+        document.getElementById("contactForm").reset();
+        return false;
+      }
+    </script>
+  </body>
+</html>

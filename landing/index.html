@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="JAM! - Job Application Manager. Track your job applications, manage your career journey, and never miss an opportunity. Organize all your job applications in one place."
+    />
+    <meta
+      name="keywords"
+      content="job application tracker, career management, job search organizer, application timeline"
+    />
+    <title>JAM! - Your Job Application Manager</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-brand">
+          <span class="logo">JAM!</span>
+        </div>
+        <div class="nav-menu" id="navMenu">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How It Works</a>
+          <a href="#pricing" class="nav-link">Pricing</a>
+          <a href="pages/company.html" class="nav-link">About</a>
+          <a href="/login" class="nav-link nav-login">Login</a>
+          <a href="/register" class="btn btn-primary btn-nav">Sign Up Free</a>
+        </div>
+        <button class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Take Control of Your
+            <span class="gradient-text">Job Search Journey</span>
+          </h1>
+          <p class="hero-subtitle">
+            Track every application, manage timelines, and land your dream job.
+            JAM! is your personal job application command center.
+          </p>
+          <div class="hero-cta">
+            <a href="/register" class="btn btn-primary btn-large"
+              >Get Started Free</a
+            >
+            <a href="#how-it-works" class="btn btn-secondary btn-large"
+              >Learn More</a
+            >
+          </div>
+          <p class="hero-note">No credit card required • Free forever</p>
+        </div>
+        <div class="hero-image">
+          <div class="dashboard-preview">
+            <!-- Placeholder for dashboard mockup -->
+            <div class="preview-card">
+              <div class="preview-header">
+                <div class="preview-dot"></div>
+                <div class="preview-dot"></div>
+                <div class="preview-dot"></div>
+              </div>
+              <div class="preview-content">
+                <div class="preview-item"></div>
+                <div class="preview-item"></div>
+                <div class="preview-item"></div>
+                <div class="preview-item"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <h3 class="stat-number">10,000+</h3>
+            <p class="stat-label">Active Users</p>
+          </div>
+          <div class="stat-item">
+            <h3 class="stat-number">50,000+</h3>
+            <p class="stat-label">Applications Tracked</p>
+          </div>
+          <div class="stat-item">
+            <h3 class="stat-number">85%</h3>
+            <p class="stat-label">Success Rate</p>
+          </div>
+          <div class="stat-item">
+            <h3 class="stat-number">24/7</h3>
+            <p class="stat-label">Access Anywhere</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Everything You Need to Succeed</h2>
+          <p class="section-subtitle">
+            Powerful features designed to streamline your job search
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Application Tracking</h3>
+            <p class="feature-description">
+              Track every job application with detailed timelines. Know exactly
+              where each application stands in the process.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Custom Stages</h3>
+            <p class="feature-description">
+              Create custom stages that match your workflow. From initial
+              application to final offer, track every step.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3 class="feature-title">Lead Management</h3>
+            <p class="feature-description">
+              Save interesting job opportunities as leads before applying. Build
+              your pipeline of opportunities.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🗂️</div>
+            <h3 class="feature-title">Smart Organization</h3>
+            <p class="feature-description">
+              Organize applications into custom groups. Keep applications for
+              different industries or roles separate.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3 class="feature-title">Analytics Dashboard</h3>
+            <p class="feature-description">
+              Visualize your job search progress with insightful analytics.
+              Understand your success patterns.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <h3 class="feature-title">Browser Extension</h3>
+            <p class="feature-description">
+              Add applications directly from job boards with our Chrome
+              extension. Save time and never forget to track.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3 class="feature-title">Timeline View</h3>
+            <p class="feature-description">
+              See your entire application journey on an interactive timeline.
+              Track dates and milestones effortlessly.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <h3 class="feature-title">Job Ad Snapshot</h3>
+            <p class="feature-description">
+              Automatically save job descriptions. Never lose access to the
+              original posting, even after it's removed.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3 class="feature-title">Mobile Friendly</h3>
+            <p class="feature-description">
+              Access your applications anywhere, anytime. Fully responsive
+              design for all devices.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">How JAM! Works</h2>
+          <p class="section-subtitle">Get started in minutes, not hours</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Create Your Account</h3>
+            <p class="step-description">
+              Sign up for free in seconds. No credit card required.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Set Up Your Workflow</h3>
+            <p class="step-description">
+              Define your custom application stages and groups that match your
+              job search strategy.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Add Applications</h3>
+            <p class="step-description">
+              Add job applications manually or use our browser extension to
+              capture details instantly.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3 class="step-title">Track & Succeed</h3>
+            <p class="step-description">
+              Monitor progress, update statuses, and analyze your success rate
+              to land your dream job.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+      <div class="container">
+        <div class="benefits-content">
+          <div class="benefits-text">
+            <h2 class="section-title">Why Choose JAM!</h2>
+            <ul class="benefits-list">
+              <li class="benefit-item">
+                <span class="check-icon">✓</span>
+                <span
+                  ><strong>Never Lose Track</strong> - Keep all applications
+                  organized in one place</span
+                >
+              </li>
+              <li class="benefit-item">
+                <span class="check-icon">✓</span>
+                <span
+                  ><strong>Save Time</strong> - Quick entry with browser
+                  extension and templates</span
+                >
+              </li>
+              <li class="benefit-item">
+                <span class="check-icon">✓</span>
+                <span
+                  ><strong>Stay Organized</strong> - Custom groups and stages
+                  for your workflow</span
+                >
+              </li>
+              <li class="benefit-item">
+                <span class="check-icon">✓</span>
+                <span
+                  ><strong>Get Insights</strong> - Analytics to understand and
+                  improve your job search</span
+                >
+              </li>
+              <li class="benefit-item">
+                <span class="check-icon">✓</span>
+                <span
+                  ><strong>Privacy First</strong> - Your data is yours, secure
+                  and private</span
+                >
+              </li>
+              <li class="benefit-item">
+                <span class="check-icon">✓</span>
+                <span
+                  ><strong>Always Available</strong> - Access from anywhere, on
+                  any device</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="benefits-visual">
+            <div class="benefit-card-large">
+              <div class="benefit-icon-large">🎯</div>
+              <h3>Land Your Dream Job</h3>
+              <p>
+                Users who track their applications with JAM! are 3x more likely
+                to receive interviews.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Simple, Transparent Pricing</h2>
+          <p class="section-subtitle">Start free, upgrade when you need more</p>
+        </div>
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <h3 class="pricing-title">Free</h3>
+            <div class="pricing-price">
+              <span class="price">$0</span>
+              <span class="period">/month</span>
+            </div>
+            <ul class="pricing-features">
+              <li>✓ Up to 50 applications</li>
+              <li>✓ Unlimited custom stages</li>
+              <li>✓ Lead management</li>
+              <li>✓ Basic analytics</li>
+              <li>✓ Browser extension</li>
+              <li>✓ Mobile access</li>
+            </ul>
+            <a href="/register" class="btn btn-outline">Get Started</a>
+          </div>
+          <div class="pricing-card pricing-card-featured">
+            <div class="pricing-badge">Most Popular</div>
+            <h3 class="pricing-title">Pro</h3>
+            <div class="pricing-price">
+              <span class="price">$9</span>
+              <span class="period">/month</span>
+            </div>
+            <ul class="pricing-features">
+              <li>✓ Unlimited applications</li>
+              <li>✓ Advanced analytics</li>
+              <li>✓ Job ad snapshots</li>
+              <li>✓ Export data</li>
+              <li>✓ Priority support</li>
+              <li>✓ Everything in Free</li>
+            </ul>
+            <a href="/register" class="btn btn-primary">Start Free Trial</a>
+          </div>
+          <div class="pricing-card">
+            <h3 class="pricing-title">Team</h3>
+            <div class="pricing-price">
+              <span class="price">$49</span>
+              <span class="period">/month</span>
+            </div>
+            <ul class="pricing-features">
+              <li>✓ Up to 10 team members</li>
+              <li>✓ Shared applications</li>
+              <li>✓ Team analytics</li>
+              <li>✓ API access</li>
+              <li>✓ Dedicated support</li>
+              <li>✓ Everything in Pro</li>
+            </ul>
+            <a href="pages/contact.html" class="btn btn-outline"
+              >Contact Sales</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+      <div class="container">
+        <div class="cta-content">
+          <h2 class="cta-title">Ready to Transform Your Job Search?</h2>
+          <p class="cta-subtitle">
+            Join thousands of job seekers who are already using JAM! to land
+            their dream jobs
+          </p>
+          <div class="cta-buttons">
+            <a href="/register" class="btn btn-primary btn-large"
+              >Start Free Today</a
+            >
+          </div>
+          <p class="cta-note">
+            No credit card required • Cancel anytime • Free forever plan
+            available
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <h4 class="footer-title">JAM!</h4>
+            <p class="footer-description">
+              Your personal job application command center. Track, manage, and
+              succeed in your job search.
+            </p>
+          </div>
+          <div class="footer-column">
+            <h4 class="footer-heading">Product</h4>
+            <ul class="footer-links">
+              <li><a href="#features">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#how-it-works">How It Works</a></li>
+              <li><a href="/register">Sign Up</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4 class="footer-heading">Company</h4>
+            <ul class="footer-links">
+              <li><a href="pages/company.html">About Us</a></li>
+              <li><a href="pages/contact.html">Contact</a></li>
+              <li><a href="pages/privacy.html">Privacy Policy</a></li>
+              <li><a href="pages/terms.html">Terms of Service</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h4 class="footer-heading">Resources</h4>
+            <ul class="footer-links">
+              <li><a href="pages/help.html">Help Center</a></li>
+              <li><a href="pages/blog.html">Blog</a></li>
+              <li><a href="pages/guides.html">Job Search Guides</a></li>
+              <li><a href="pages/faq.html">FAQ</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 JAM! All rights reserved.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Twitter">Twitter</a>
+            <a href="#" aria-label="LinkedIn">LinkedIn</a>
+            <a href="#" aria-label="GitHub">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
