@@ -48,10 +48,10 @@ import { HeaderComponent } from './shared/header/header.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './_services/auth.interceptor';
 import { ApplicationsComponent } from './control-panel/applications/applications.component';
-import { GroupsComponent } from './control-panel/groups/groups.component';
 import { StepsComponent } from './control-panel/steps/steps.component';
 import { JobModalComponent } from './control-panel/job-modal/job-modal.component';
 import { TimelineModalComponent } from './control-panel/timeline-modal/timeline-modal.component';
+import { GroupModalComponent } from './control-panel/group-modal/group-modal.component';
 import { HomeComponent } from './home/home.component';
 import { JobNavComponent } from './control-panel/job-nav/job-nav.component';
 import { registerLocaleData } from '@angular/common';
@@ -104,10 +104,10 @@ export function initializeAuth(authService: AuthService): () => Promise<void> {
     ResetPasswordComponent,
     HeaderComponent,
     ApplicationsComponent,
-    GroupsComponent,
     StepsComponent,
     JobModalComponent,
     TimelineModalComponent,
+    GroupModalComponent,
     HomeComponent,
     JobNavComponent,
     AnalyticsComponent,

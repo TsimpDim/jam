@@ -9,6 +9,14 @@
         .drag-handle {
             display: none;
         }
+
+        .nav-header {
+            display: none;
+        }
+
+        .group-list {
+            display: none;
+        }
     }
 
     &.is-dragging {
@@ -24,6 +32,197 @@
         flex: 1;
         min-width: 0;
         overflow: hidden;
+    }
+
+    .group-list {
+        width: 100%;
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    clr-vertical-nav-group {
+        .group-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding-left: 0;
+            margin-left: 0;
+
+            .group-name {
+                flex-shrink: 0;
+            }
+
+            .add-icon {
+                margin-left: auto;
+                cursor: pointer;
+                color: #666;
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
+
+                &:hover {
+                    color: #320047;
+                }
+            }
+
+            .drag-icon {
+                color: #999;
+                font-size: 0.75rem;
+                cursor: grab;
+                flex-shrink: 0;
+                margin-right: 0.35rem;
+                width: 14px;
+                height: 14px;
+
+                &:hover {
+                    color: #0072a3;
+                }
+            }
+
+            .header-actions-right {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+            }
+
+            .edit-icon {
+                cursor: pointer;
+                color: #666;
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
+
+                &:hover {
+                    color: #0072a3;
+                }
+            }
+        }
+    }
+
+    clr-vertical-nav-group-children {
+        .group-item-app {
+            padding-left: 1.5rem;
+            
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .nav-header {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        transition: opacity 0.2s ease;
+
+        .btn-group {
+            display: flex;
+            width: 100%;
+            max-width: none;
+            margin: 0;
+
+            // First button (Add Application) grows to fill all remaining space.
+            // Override Clarity's default `.btn { max-width: 15rem; min-width: 3rem; }`
+            // which otherwise caps the btn-group width when the nav is expanded.
+            > .btn {
+                flex: 1 1 auto;
+                min-width: 0;
+                max-width: none;
+                width: auto;
+            }
+
+            // The clr-dropdown wraps the toggle button - constrain both to ~30px
+            clr-dropdown {
+                flex: 0 0 30px;
+                width: 30px;
+                min-width: 30px;
+                max-width: 30px;
+
+                .btn {
+                    width: 100%;
+                    min-width: 30px;
+                    max-width: 30px;
+                    padding-left: 0;
+                    padding-right: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    cds-icon {
+                        right: inherit;
+                    }
+                }
+            }
+        }
+
+        .header-actions {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+
+            #filter {
+                padding: 0;
+                height: auto;
+                
+                button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: .2em;
+                    border: none;
+                    box-shadow: none;
+                    
+                    &:focus {
+                        box-shadow: none;
+                        border: none;
+                    }
+                    
+                    &:active, &.active {
+                        border: none;
+                        box-shadow: none;
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                }        
+            }
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            height: 30px;
+
+            .search-input {
+                width: 100%;
+                height: inherit;
+                padding: 0.25rem 0.5rem;
+                padding-right: 2rem;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: .6rem;
+                font-weight: 300;
+
+                &:focus {
+                    outline: none;
+                    border-color: #0072a3;
+                }
+            }
+
+            .search-icon {
+                position: absolute;
+                right: 0.5rem;
+                top: 65%;
+                transform: translateY(-65%);
+                color: #666;
+            }
+        }
     }
 }
 
@@ -58,141 +257,10 @@
     }
 }
 
-.nav-header {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    transition: opacity 0.2s ease;
-
-    :host-context(.is-collapsed) &,
-    &.collapsed {
-        display: none;
-    }
-
-    #add-new-app {
-        background-color: var(--clr-btn-primary-bg-color, #0072a3);
-        font-size: var(--clr-btn-appearance-form-font-size, 0.6rem);
-        font-weight: var(--clr-btn-appearance-form-font-weight, 500);
-        
-        color: var(--clr-btn-primary-color, white);
-        text-align: center;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        border-radius: var(--clr-btn-border-radius, 0.15rem);
-    
-        &:hover {
-            background-color: var(--clr-btn-primary-hover-bg-color, #00567a);
-            cursor: pointer;
-        }
-    }
-
-    .header-actions {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-    }
-
-    .search-container {
-        position: relative;
-        flex: 1;
-        height: 30px;
-
-        .search-input {
-            width: 100%;
-            height: inherit;
-            padding: 0.25rem 0.5rem;
-            padding-right: 2rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: .6rem;
-            font-weight: 300;
-
-            &:focus {
-                outline: none;
-                border-color: #0072a3;
-            }
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 0.5rem;
-            top: 65%;
-            transform: translateY(-65%);
-            color: #666;
-        }
-    }
-}
-
-#filter {
-    padding: 0 !important;
-    height: auto;
-    
-    button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: .2em;
-        border: none;
-        box-shadow: none;
-        
-        &:focus {
-            box-shadow: none;
-            border: none;
-        }
-        
-        &:active, &.active {
-            border: none;
-            box-shadow: none;
-        }
-    }
-
-    &:hover {
-        cursor: pointer;
-    }        
-}
-
-.dropdown-toggle.active::before {
-    content: none;
-    display: none;
-}
-
-.group-header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.group-name {
-    flex-shrink: 0;
-}
-
-.add-icon {
-    margin-left: auto;
-    cursor: pointer;
-    color: #666;
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-
-    &:hover {
-        color: #320047;
-    }
-}
-
-.group-item-app:hover {
-    cursor: pointer;
-}
-
 .action {
     background-color: white;
     font-size: var(--clr-btn-appearance-form-font-size, 0.6rem);
     font-weight: var(--clr-btn-appearance-form-font-weight, 500);
-    
     color: #320047;
     text-align: center;
     width: 80%;
@@ -219,4 +287,112 @@
     padding: 1rem;
     text-align: center;
     color: #666;
+}
+
+.group-actions {
+    margin-top: 0.5rem;
+
+    .add-group-btn {
+        width: 100%;
+        font-size: 0.6rem;
+        padding: 0.25rem 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        color: #666;
+        border: 1px dashed #ccc;
+        border-radius: 4px;
+
+        &:hover {
+            color: #0072a3;
+            border-color: #0072a3;
+            background-color: rgba(0, 114, 163, 0.05);
+        }
+
+        cds-icon {
+            width: 14px;
+            height: 14px;
+        }
+    }
+}
+
+.drag-placeholder {
+    background: #e0e0e0;
+    border: dotted #999;
+    border-radius: 4px;
+    min-height: 40px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.drag-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.5rem;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    min-width: 100px;
+
+    .drag-preview-icon {
+        color: #0072a3;
+        width: 14px;
+        height: 14px;
+    }
+
+    .drag-preview-name {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #333;
+    }
+}
+
+// Scoped ::ng-deep for elements generated internally by Clarity UI
+:host ::ng-deep {
+    .job-nav-container clr-vertical-nav .nav-group-text {
+        padding: 0;
+        padding-left: 1rem;
+    }
+
+    .dropdown-toggle.active::before {
+        content: none;
+        display: none;
+    }
+
+    
+}
+
+// CDK Drag & Drop Overlays attached outside the component (to the <body>)
+::ng-deep {
+    .cdk-drag-preview {
+        box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+        background: white;
+        border-radius: 4px;
+        padding: 0.5rem 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        min-width: 120px;
+
+        .drag-preview-icon {
+            color: #0072a3;
+            width: 14px;
+            height: 14px;
+        }
+
+        .drag-preview-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #333;
+        }
+    }
+
+    .cdk-drag-animating {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .group-list.cdk-drop-list-dragging clr-vertical-nav-group:not(.cdk-drag-placeholder) {
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
 }

@@ -6,6 +6,7 @@
       (onSelectApp)="selectApp($event)"
       (onOpenAndClearJobAppModal)="openAndClearJobAppModal($event)"
       (onSortChange)="onSortChange($event)"
+      (onGroupsReordered)="getApplications()"
     ></app-job-nav>
 
     <div class="content-area">
@@ -86,7 +87,12 @@
             [clrInverse]="true"
           ></clr-spinner>
 
-          <ul id="timeline" class="clr-timeline" [class.clr-timeline-vertical]="timelineLayout === 'vertical'" [class.clr-timeline-horizontal]="timelineLayout === 'horizontal'">
+          <ul
+            id="timeline"
+            class="clr-timeline"
+            [class.clr-timeline-vertical]="timelineLayout === 'vertical'"
+            [class.clr-timeline-horizontal]="timelineLayout === 'horizontal'"
+          >
             <ng-container *ngFor="let tl of selectedAppTimeline; index as i">
               <li
                 class="clr-timeline-step"

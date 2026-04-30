@@ -6,7 +6,6 @@ import { ForgotPasswordComponent } from '../auth/forgot-password/forgot-password
 import { ResetPasswordComponent } from '../auth/reset-password/reset-password.component';
 import { AnalyticsComponent } from '../control-panel/analytics/analytics.component';
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
-import { GroupsComponent } from '../control-panel/groups/groups.component';
 import { LeadsComponent } from '../control-panel/leads/leads.component';
 import { StepsComponent } from '../control-panel/steps/steps.component';
 import { HomeComponent } from '../home/home.component';
@@ -17,11 +16,6 @@ const routes: Routes = [
   {
     path: 'control-panel/applications',
     component: ApplicationsComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'control-panel/groups',
-    component: GroupsComponent,
     canActivate: [AuthGuard],
   },
   {

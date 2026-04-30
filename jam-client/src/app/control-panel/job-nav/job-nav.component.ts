@@ -6,12 +6,19 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { JamService } from 'src/app/_services/jam.service';
 
 const JOB_NAV_WIDTH_STORAGE_KEY = 'jam_job_nav_width';
 const JOB_NAV_MIN_WIDTH_PX = 220;
 const JOB_NAV_MAX_WIDTH_VW = 30;
 const JOB_NAV_DEFAULT_WIDTH_PX = 280;
 const JOB_NAV_COLLAPSED_WIDTH_PX = 48;
+
+interface FilteredGroup {
+  name: string;
+  apps: any[];
+}
 
 @Component({
   selector: 'app-job-nav',
@@ -24,11 +31,14 @@ export class JobNavComponent implements OnInit {
   @Output() onSelectApp = new EventEmitter();
   @Output() onOpenAndClearJobAppModal = new EventEmitter();
   @Output() onSortChange = new EventEmitter<string>();
-  static lastOpenedGroup: string | null = null;
+  @Output() onGroupsReordered = new EventEmitter<void>();
+
+  // Instance property to track which group is expanded
+  expandedGroupName: string | null = null;
 
   sortBy: string = 'id';
   searchQuery: string = '';
-  filteredApps: any = null;
+  filteredGroups: FilteredGroup[] = [];
   navCollapsed: boolean = false;
 
   // Drag resize state
@@ -37,14 +47,20 @@ export class JobNavComponent implements OnInit {
   private startX: number = 0;
   private startWidth: number = 0;
 
+  // Group management state
+  public groups: any[] = [];
+  public loadingGroups: boolean = true;
+  public groupModalIsOpen: boolean = false;
+  public selectedGroup: any = null;
+
   get effectiveWidth(): number {
     return this.navCollapsed ? JOB_NAV_COLLAPSED_WIDTH_PX : this.navWidth;
   }
 
-  keepOriginalOrder = (a: any, b: any) => a.key;
+  constructor(private jamService: JamService) {}
 
   ngOnInit() {
-    this.initLastOpenedGroup();
+    this.initExpandedGroup();
     this.initNavWidth();
     const savedSort = localStorage.getItem('jam_job_nav_sort');
     if (savedSort === 'date') {
@@ -56,7 +72,69 @@ export class JobNavComponent implements OnInit {
       this.sortBy = '-id';
       localStorage.setItem('jam_job_nav_sort', this.sortBy);
     }
-    this.updateFilteredApps();
+    this.rebuildFilteredGroups();
+    this.getGroups();
+  }
+
+  // Group management methods
+  dropGroup(event: CdkDragDrop<any[]>) {
+    // Reorder the groups array immediately (UI updates instantly)
+    moveItemInArray(this.groups, event.previousIndex, event.currentIndex);
+
+    // Expand only the dropped group
+    const droppedGroup = this.groups[event.currentIndex];
+    this.expandedGroupName = droppedGroup.name;
+
+    // Rebuild filteredGroups to reflect new order
+    this.rebuildFilteredGroups();
+
+    // Send reorder request to server (optimistic update already done)
+    const positions = this.groups.map((g, i) => ({ id: g.id, position: i }));
+    this.jamService.reorderGroups(positions).subscribe({
+      error: () => {
+        this.getGroups();
+      }, // Revert on failure
+    });
+  }
+
+  getGroups() {
+    this.loadingGroups = true;
+    this.jamService.getGroups().subscribe({
+      next: (data) => {
+        this.groups = data;
+        this.rebuildFilteredGroups();
+      },
+      error: () => {
+        this.loadingGroups = false;
+      },
+      complete: () => (this.loadingGroups = false),
+    });
+  }
+
+  clearAndOpenGroupModal() {
+    this.selectedGroup = null;
+    this.groupModalIsOpen = true;
+  }
+
+  selectGroup(groupId: number | null) {
+    if (groupId === null) return;
+    this.selectedGroup = this.groups.find((g: any) => g.id === groupId);
+    this.groupModalIsOpen = true;
+  }
+
+  getGroupId(groupName: string): number | null {
+    const group = this.groups.find((g: any) => g.name === groupName);
+    return group ? group.id : null;
+  }
+
+  getGroupDescription(groupName: string): string {
+    const group = this.groups.find((g: any) => g.name === groupName);
+    return group?.description || '';
+  }
+
+  onGroupModalClose() {
+    this.groupModalIsOpen = false;
+    this.selectedGroup = null;
   }
 
   initNavWidth() {
@@ -117,67 +195,63 @@ export class JobNavComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.initLastOpenedGroup();
-    this.updateFilteredApps();
+    this.initExpandedGroup();
+    this.rebuildFilteredGroups();
   }
 
-  initLastOpenedGroup() {
+  initExpandedGroup() {
     if (this.applications) {
       const saved = localStorage.getItem('jam_last_opened_group');
       if (saved && saved in this.applications) {
-        JobNavComponent.lastOpenedGroup = saved;
+        this.expandedGroupName = saved;
       } else {
-        JobNavComponent.lastOpenedGroup =
-          Object.keys(this.applications)[0] || null;
+        // Don't auto-expand any group initially
+        this.expandedGroupName = null;
       }
     }
   }
 
-  updateFilteredApps() {
+  rebuildFilteredGroups() {
     if (!this.applications) {
-      this.filteredApps = null;
-      return;
-    }
-    if (!this.searchQuery.trim()) {
-      this.filteredApps = this.applications;
+      this.filteredGroups = [];
       return;
     }
 
     const query = this.searchQuery.toLowerCase();
-    const filtered: any = {};
 
-    for (const [groupName, apps] of Object.entries(this.applications)) {
-      const matchingApps = (apps as any[]).filter(
-        (app: any) =>
-          app.company.toLowerCase().includes(query) ||
-          app.role.toLowerCase().includes(query)
-      );
-      if (matchingApps.length > 0) {
-        filtered[groupName] = matchingApps;
-      }
-    }
-
-    this.filteredApps = Object.keys(filtered).length > 0 ? filtered : null;
+    this.filteredGroups = this.groups
+      .map((group) => {
+        const apps = (this.applications[group.name] as any[]) || [];
+        const filteredApps = query
+          ? apps.filter(
+              (app: any) =>
+                app.company.toLowerCase().includes(query) ||
+                app.role.toLowerCase().includes(query)
+            )
+          : apps;
+        return { name: group.name, apps: filteredApps };
+      })
+      .filter((group) => group.apps.length > 0);
   }
 
   onSearchKeyup(event: Event) {
     this.searchQuery = (event.target as HTMLInputElement).value;
-    this.updateFilteredApps();
+    this.rebuildFilteredGroups();
   }
 
-  toggleNavState(event: any, groupName: any) {
+  toggleNavState(event: Event, groupName: string) {
     event.stopPropagation();
-    JobNavComponent.lastOpenedGroup = groupName;
-    localStorage.setItem('jam_last_opened_group', groupName);
+    // Toggle: if already expanded, collapse it; otherwise expand this group
+    if (this.expandedGroupName === groupName) {
+      this.expandedGroupName = null;
+    } else {
+      this.expandedGroupName = groupName;
+    }
+    localStorage.setItem('jam_last_opened_group', this.expandedGroupName ?? '');
   }
 
-  onAppSelect(groupName: string) {
-    JobNavComponent.lastOpenedGroup = groupName;
-    localStorage.setItem('jam_last_opened_group', groupName);
-  }
-
-  getNavState(groupName: any) {
-    return JobNavComponent.lastOpenedGroup === groupName;
+  isGroupExpanded(groupName: string): boolean {
+    return this.expandedGroupName === groupName;
   }
 
   handleSortChange(value: any) {

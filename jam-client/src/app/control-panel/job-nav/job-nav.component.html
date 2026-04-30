@@ -11,12 +11,25 @@
     style="height: 100%"
   >
     <div class="nav-header" [class.collapsed]="navCollapsed">
-      <a
-        id="add-new-app"
-        clrVerticalNavLink
-        (click)="onOpenAndClearJobAppModal.emit({ group: undefined })"
-        >ADD NEW APPLICATION</a
-      >
+      <div class="btn-group btn-primary">
+        <button
+          class="btn"
+          id="add-app-btn"
+          (click)="onOpenAndClearJobAppModal.emit({ group: undefined })"
+        >
+          Add Application
+        </button>
+        <clr-dropdown>
+          <button class="btn" clrDropdownTrigger>
+            <cds-icon shape="angle" direction="down"></cds-icon>
+          </button>
+          <clr-dropdown-menu clrPosition="bottom-left">
+            <button class="dropdown-item" (click)="clearAndOpenGroupModal()">
+              Add Group
+            </button>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+      </div>
       <div class="header-actions">
         <div class="search-container">
           <input
@@ -58,37 +71,64 @@
     >
       <progress></progress>
     </div>
-    <clr-vertical-nav-group
-      *ngFor="let group of filteredApps | keyvalue : keepOriginalOrder"
-      [clrVerticalNavGroupExpanded]="getNavState(group.key)"
-    >
-      <div class="group-header" (click)="toggleNavState($event, group.key)">
-        <span class="group-name">{{ group.key }}</span>
-        <span class="badge" style="margin-left: 0.5em">{{
-          $any(group).value.length
-        }}</span>
-        <cds-icon
-          shape="plus"
-          class="add-icon"
-          (click)="onOpenAndClearJobAppModal.emit({ group: group.key })"
-        ></cds-icon>
-      </div>
-      <clr-vertical-nav-group-children *ngFor="let app of $any(group).value">
-        <a
-          class="group-item-app"
-          clrVerticalNavLink
-          (click)="onSelectApp.emit({ groupName: group.key, jobAppId: app.id })"
-        >
-          <span
-            class="badge"
-            [style.background-color]="app.last_step_color"
-          ></span>
-          {{ app.company }} / {{ app.role }}
-        </a>
-      </clr-vertical-nav-group-children>
-    </clr-vertical-nav-group>
     <div
-      *ngIf="filteredApps === null && searchQuery && !loadingApplications"
+      class="group-list"
+      cdkDropList
+      (cdkDropListDropped)="dropGroup($event)"
+    >
+      <clr-vertical-nav-group
+        *ngFor="let group of filteredGroups"
+        [clrVerticalNavGroupExpanded]="isGroupExpanded(group.name)"
+        cdkDrag
+      >
+        <div class="group-header" (click)="toggleNavState($event, group.name)">
+          <span class="group-name" [title]="getGroupDescription(group.name)">{{
+            group.name
+          }}</span>
+          <span class="badge" style="margin-left: 0.5em">{{
+            group.apps.length
+          }}</span>
+          <div class="header-actions-right">
+            <cds-icon
+              shape="pencil"
+              class="edit-icon"
+              (click)="
+                selectGroup(getGroupId(group.name)); $event.stopPropagation()
+              "
+              title="Edit Group"
+            ></cds-icon>
+            <cds-icon
+              shape="plus"
+              class="add-icon"
+              (click)="onOpenAndClearJobAppModal.emit({ group: group.name })"
+            ></cds-icon>
+          </div>
+        </div>
+        <clr-vertical-nav-group-children *ngFor="let app of group.apps">
+          <a
+            class="group-item-app"
+            clrVerticalNavLink
+            (click)="
+              onSelectApp.emit({ groupName: group.name, jobAppId: app.id })
+            "
+          >
+            <span
+              class="badge"
+              [style.background-color]="app.last_step_color"
+            ></span>
+            {{ app.company }} / {{ app.role }}
+          </a>
+        </clr-vertical-nav-group-children>
+
+        <div *cdkDragPreview class="drag-preview">
+          <span class="drag-preview-name">{{ group.name }}</span>
+        </div>
+      </clr-vertical-nav-group>
+
+      <div *cdkDragPlaceholder class="drag-placeholder"></div>
+    </div>
+    <div
+      *ngIf="filteredGroups.length === 0 && searchQuery && !loadingApplications"
       class="no-results"
     >
       No results found
@@ -98,3 +138,10 @@
     <cds-icon shape="grip-vertical"></cds-icon>
   </div>
 </div>
+
+<app-group-modal
+  [isOpen]="groupModalIsOpen"
+  [group]="selectedGroup"
+  (onClose)="onGroupModalClose()"
+  (onGroupsChanged)="getGroups()"
+></app-group-modal>
