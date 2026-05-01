@@ -52,7 +52,6 @@ import { StepsComponent } from './control-panel/steps/steps.component';
 import { JobModalComponent } from './control-panel/job-modal/job-modal.component';
 import { TimelineModalComponent } from './control-panel/timeline-modal/timeline-modal.component';
 import { GroupModalComponent } from './control-panel/group-modal/group-modal.component';
-import { HomeComponent } from './home/home.component';
 import { JobNavComponent } from './control-panel/job-nav/job-nav.component';
 import { registerLocaleData } from '@angular/common';
 import { AnalyticsComponent } from './control-panel/analytics/analytics.component';
@@ -108,7 +107,6 @@ export function initializeAuth(authService: AuthService): () => Promise<void> {
     JobModalComponent,
     TimelineModalComponent,
     GroupModalComponent,
-    HomeComponent,
     JobNavComponent,
     AnalyticsComponent,
     BadgeComponent,

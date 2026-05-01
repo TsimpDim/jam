@@ -8,11 +8,14 @@ import { AnalyticsComponent } from '../control-panel/analytics/analytics.compone
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
 import { LeadsComponent } from '../control-panel/leads/leads.component';
 import { StepsComponent } from '../control-panel/steps/steps.component';
-import { HomeComponent } from '../home/home.component';
 import { AuthGuard, NoAuthGuard } from '../_services/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  {
+    path: '',
+    redirectTo: 'control-panel/applications',
+    pathMatch: 'full',
+  },
   {
     path: 'control-panel/applications',
     component: ApplicationsComponent,
