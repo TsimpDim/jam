@@ -43,14 +43,26 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Cookie settings for cross-subdomain access (jam.tsdim.net <-> jam-api.tsdim.net)
-CSRF_COOKIE_DOMAIN = ".tsdim.net"
-CSRF_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = False
+if DEBUG:
+    # Localhost development: no domain restriction, allow HTTP
+    CSRF_COOKIE_DOMAIN = None
+    CSRF_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SECURE = False
+    CSRF_COOKIE_HTTPONLY = False
 
-SESSION_COOKIE_DOMAIN = ".tsdim.net"
-SESSION_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_DOMAIN = None
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = False
+else:
+    # Production: cross-subdomain cookies, HTTPS only
+    CSRF_COOKIE_DOMAIN = ".tsdim.net"
+    CSRF_COOKIE_SAMESITE = "None"
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = False
+
+    SESSION_COOKIE_DOMAIN = ".tsdim.net"
+    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SECURE = True
 
 # Allow extension origins (chrome-extension:// and moz-extension://)
 # Extension IDs are dynamic, so we allow all origins in development

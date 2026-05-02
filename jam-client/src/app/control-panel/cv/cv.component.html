@@ -1,0 +1,112 @@
+<div class="main-container">
+  <div class="content-container">
+    <div *ngIf="loading" style="font-size: 1px" class="progress loop">
+      <progress></progress>
+    </div>
+
+    <div class="content-area">
+      <div class="clr-column">
+        <clr-alert
+          [clrAlertClosable]="true"
+          [clrAlertType]="'danger'"
+          *ngIf="errorMessage"
+          [(clrAlertClosed)]="showErrorAlert"
+        >
+          <clr-alert-item>
+            <span class="alert-text">{{ errorMessage }}</span>
+          </clr-alert-item>
+        </clr-alert>
+
+        <clr-alert
+          [clrAlertClosable]="true"
+          [clrAlertType]="'success'"
+          *ngIf="successMessage"
+          [(clrAlertClosed)]="showSuccessAlert"
+        >
+          <clr-alert-item>
+            <span class="alert-text">{{ successMessage }}</span>
+          </clr-alert-item>
+        </clr-alert>
+
+        <button
+          class="btn btn-primary"
+          (click)="openUploadForm()"
+          *ngIf="!loading && cvs.length > 0 && cvCount < cvLimit"
+        >
+          <cds-icon shape="upload"></cds-icon>
+          Upload CV
+          <span class="badge badge-light-blue"
+            >{{ cvCount }} / {{ cvLimit }}</span
+          >
+        </button>
+
+        <clr-alert
+          [clrAlertClosable]="false"
+          [clrAlertType]="'warning'"
+          *ngIf="!loading && cvCount >= cvLimit && cvs.length > 0"
+        >
+          <clr-alert-item>
+            <span class="alert-text">
+              CV limit reached ({{ cvCount }} / {{ cvLimit }}). Delete a CV to
+              upload a new one.
+            </span>
+          </clr-alert-item>
+        </clr-alert>
+
+        <!-- Empty state -->
+        <div class="empty-state" *ngIf="!loading && cvs.length === 0">
+          <cds-icon shape="file" class="empty-icon"></cds-icon>
+          <h2>No CVs uploaded yet</h2>
+          <p>Upload your first CV to get started with your job applications.</p>
+          <button class="btn btn-primary btn-lg" (click)="openUploadForm()">
+            <cds-icon shape="upload"></cds-icon>
+            Upload CV
+          </button>
+        </div>
+
+        <!-- CV cards -->
+        <div class="card" *ngFor="let cv of cvs">
+          <div class="card-header">
+            <cds-icon shape="file" class="cv-file-icon"></cds-icon>
+            {{ cv.key }}
+            <span class="badge">{{ getFileExtension(cv.file) }}</span>
+            <span class="badge"
+              >Uploaded {{ cv.created_at | date : "mediumDate" }}</span
+            >
+          </div>
+          <div class="card-block">
+            <div class="card-text cv-filename">
+              <cds-icon shape="folder"></cds-icon>
+              {{ getFileName(cv.file) }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <button
+              class="btn btn-sm btn-link"
+              (click)="downloadCV(cv)"
+              [disabled]="downloadingId === cv.id"
+            >
+              <clr-spinner
+                *ngIf="downloadingId === cv.id"
+                [clrInline]="true"
+              ></clr-spinner>
+              Download <cds-icon shape="download"></cds-icon>
+            </button>
+            <button
+              class="btn btn-sm btn-link btn-danger"
+              (click)="deleteCV(cv)"
+            >
+              Delete <cds-icon shape="trash"></cds-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-cv-upload-modal
+  [open]="showUploadForm"
+  (uploaded)="onCvUploaded()"
+  (closed)="onModalClosed()"
+></app-cv-upload-modal>

@@ -8,6 +8,7 @@ router.register(r"steps", StepViewSet, basename="step")
 router.register(r"jobapps", JobApplicationViewSet, basename="jobapp")
 router.register(r"timeline", TimelineViewSet, basename="timeline")
 router.register(r"leads", LeadViewSet, basename="leads")
+router.register(r"cv", CVViewSet, basename="cv")
 
 urlpatterns = [
     path("", include(router.urls)),

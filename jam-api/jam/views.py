@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404
-from django.db import models
+from django.http import FileResponse
+from django.db import models, transaction
 from django.db.models import Max
 from django.db.models.functions import TruncWeek, TruncMonth
 from .serializers import (
@@ -9,9 +10,10 @@ from .serializers import (
     JobAdSnapshotSerializer,
     StepSerializer,
     TimelineSerializer,
-    LeadSerializer
+    LeadSerializer,
+    CVSerializer
 )
-from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead
+from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead, CV, UserProfile
 from .utils import remove_circular_links
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -368,6 +370,23 @@ class AnalyticsView(APIView):
             'monthly': [{'period': item['month'].strftime('%Y-%m') if item['month'] else '', 'count': item['count']} for item in apps_by_month]
         }
 
+        # 6. CV Usage breakdown (count of job apps per CV key)
+        cv_used_count = {}
+        for cv in CV.objects.filter(user=user):
+            count = total_jobapps.filter(cv_used=cv).count()
+            cv_used_count[cv.key] = count
+        # Also count applications with no CV
+        cv_used_count['Not specified'] = total_jobapps.filter(cv_used__isnull=True).count()
+
+        # 7. CV Average Steps (average number of timeline steps per CV)
+        cv_avg_steps = {}
+        for cv in CV.objects.filter(user=user):
+            apps_with_cv = total_jobapps.filter(cv_used=cv)
+            if apps_with_cv.exists():
+                app_ids = apps_with_cv.values_list('id', flat=True)
+                steps_count = timelines.filter(application_id__in=app_ids).count()
+                avg = steps_count / apps_with_cv.count()
+                cv_avg_steps[cv.key] = f'{avg:.1f}'
         return Response({
             'totalJobApps': total_jobapps.count(),
             'completedJobApps': completed_jobapps_count,
@@ -379,7 +398,9 @@ class AnalyticsView(APIView):
             'sourceEffectiveness': source_effectiveness,
             'totalLeads': total_leads,
             'stageDuration': stage_duration,
-            'timeTrends': time_trends
+            'timeTrends': time_trends,
+            'cvUsed': cv_used_count,
+            'cvAvgSteps': cv_avg_steps
         }, status=200)
 
 
@@ -542,3 +563,66 @@ class LeadViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class CVViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CVSerializer
+
+    def get_queryset(self):
+        return CV.objects.filter(user_id=self.request.user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+    def create(self, request, *args, **kwargs):
+        # Check CV limit inside a transaction to prevent race conditions
+        with transaction.atomic():
+            user_profile = UserProfile.objects.select_for_update().get(user=request.user)
+            cv_limit = user_profile.get_user_cv_limit()
+            current_cv_count = CV.objects.filter(user=request.user).count()
+            
+            if current_cv_count >= cv_limit:
+                return Response(
+                    {'error': f'CV limit reached. Maximum {cv_limit} CVs allowed.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            data = request.data.copy()
+            data["user"] = request.user.id
+            
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Store file reference for deletion after DB record is removed
+        file_to_delete = instance.file
+        response = super().destroy(request, *args, **kwargs)
+        
+        # Delete the file from storage after successful DB deletion
+        if file_to_delete:
+            file_to_delete.delete(save=False)
+        
+        return response
+
+    @action(detail=True, methods=['get'], url_path='download')
+    def download(self, request, pk=None):
+        cv = self.get_object()
+        if not cv.file:
+            return Response({'error': 'No file attached to this CV.'}, status=status.HTTP_404_NOT_FOUND)
+        file_handle = cv.file.open('rb')
+        filename = cv.file.name.split('/')[-1]
+        response = FileResponse(file_handle, as_attachment=True, filename=filename)
+        return response

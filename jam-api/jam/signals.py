@@ -1,12 +1,18 @@
 import logging
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline
+from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, UserProfile
 from django.contrib.auth.models import User
 import threading
 import jam.utils as utils
 
 logger = logging.getLogger(__name__)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=JobApplication)

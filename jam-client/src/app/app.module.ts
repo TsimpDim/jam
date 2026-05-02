@@ -37,6 +37,12 @@ import {
   searchIcon,
   clockIcon,
   clipboardIcon,
+  uploadIcon,
+  fileIcon,
+  folderIcon,
+  downloadIcon,
+  trashIcon,
+  checkCircleIcon,
 } from '@cds/core/icon';
 import { AppRoutingModule } from './routes/routes.module';
 import { RoutesComponent } from './routes/routes.component';
@@ -58,6 +64,8 @@ import { AnalyticsComponent } from './control-panel/analytics/analytics.componen
 import { BadgeComponent } from './shared/badge/badge.component';
 import { LeadsComponent } from './control-panel/leads/leads.component';
 import { SankeyComponent } from './control-panel/analytics/sankey/sankey.component';
+import { CvComponent } from './control-panel/cv/cv.component';
+import { CvUploadModalComponent } from './control-panel/cv/cv-upload-modal/cv-upload-modal.component';
 import { AuthService } from './_services/auth.service';
 
 ClarityIcons.addIcons(
@@ -82,7 +90,13 @@ ClarityIcons.addIcons(
   filter2Icon,
   searchIcon,
   clockIcon,
-  clipboardIcon
+  clipboardIcon,
+  uploadIcon,
+  fileIcon,
+  folderIcon,
+  downloadIcon,
+  trashIcon,
+  checkCircleIcon
 );
 
 // Canada locale, so that yyyy-mm-dd format is used by Clarity
@@ -112,6 +126,8 @@ export function initializeAuth(authService: AuthService): () => Promise<void> {
     BadgeComponent,
     LeadsComponent,
     SankeyComponent,
+    CvComponent,
+    CvUploadModalComponent,
   ],
   imports: [
     BrowserModule,

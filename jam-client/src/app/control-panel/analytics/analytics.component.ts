@@ -58,6 +58,8 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
   sourcePieChart: any = null;
   trendLineChart: any = null;
   stageBarChart: any = null;
+  cvUsageChart: any = null;
+  cvAvgStepsChart: any = null;
 
   // Timeout reference for chart updates
   private chartUpdateTimeout: any = null;
@@ -72,6 +74,12 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     | ElementRef<HTMLCanvasElement>
     | undefined;
   @ViewChild('stageChartCanvas') stageChartCanvas:
+    | ElementRef<HTMLCanvasElement>
+    | undefined;
+  @ViewChild('cvUsageChartCanvas') cvUsageChartCanvas:
+    | ElementRef<HTMLCanvasElement>
+    | undefined;
+  @ViewChild('cvAvgStepsChartCanvas') cvAvgStepsChartCanvas:
     | ElementRef<HTMLCanvasElement>
     | undefined;
   constructor(private jamService: JamService) {}
@@ -137,6 +145,14 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.stageBarChart.destroy();
       this.stageBarChart = null;
     }
+    if (this.cvUsageChart) {
+      this.cvUsageChart.destroy();
+      this.cvUsageChart = null;
+    }
+    if (this.cvAvgStepsChart) {
+      this.cvAvgStepsChart.destroy();
+      this.cvAvgStepsChart = null;
+    }
   }
 
   private initCharts(): void {
@@ -153,6 +169,8 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateSourcePieChart();
       this.updateTrendLineChart();
       this.updateStageBarChart();
+      this.updateCVUsageChart();
+      this.updateCVAvgStepsChart();
       this.chartUpdateTimeout = null;
     }, 100);
   }
@@ -364,5 +382,126 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   parseFloat(value: string): number {
     return parseFloat(value);
+  }
+
+  private updateCVUsageChart(): void {
+    if (this.cvUsageChart) {
+      this.cvUsageChart.destroy();
+      this.cvUsageChart = null;
+    }
+
+    if (!this.cvUsageChartCanvas?.nativeElement || !this.analytics.cvUsed) {
+      return;
+    }
+
+    const cvData = this.analytics.cvUsed;
+    const labels = Object.keys(cvData);
+    const data = labels.map((l) => cvData[l]);
+
+    const colors = [
+      '#4285F4',
+      '#EA4335',
+      '#FBBC05',
+      '#34A853',
+      '#FF6D01',
+      '#46BDC6',
+      '#7B1FA2',
+      '#C2185B',
+    ];
+
+    this.cvUsageChart = new Chart(this.cvUsageChartCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Applications',
+            data: data,
+            backgroundColor: labels.map((_, i) => colors[i % colors.length]),
+            borderRadius: 4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 },
+            title: { display: true, text: 'Applications' },
+          },
+        },
+        plugins: {
+          legend: { display: false },
+        },
+      },
+    });
+  }
+
+  private updateCVAvgStepsChart(): void {
+    if (this.cvAvgStepsChart) {
+      this.cvAvgStepsChart.destroy();
+      this.cvAvgStepsChart = null;
+    }
+
+    if (
+      !this.cvAvgStepsChartCanvas?.nativeElement ||
+      !this.analytics.cvAvgSteps
+    ) {
+      return;
+    }
+
+    const cvData = this.analytics.cvAvgSteps;
+    const labels = Object.keys(cvData);
+    const data = labels.map((l) => parseFloat(cvData[l]));
+
+    const colors = [
+      '#4285F4',
+      '#EA4335',
+      '#FBBC05',
+      '#34A853',
+      '#FF6D01',
+      '#46BDC6',
+      '#7B1FA2',
+      '#C2185B',
+    ];
+
+    this.cvAvgStepsChart = new Chart(this.cvAvgStepsChartCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Avg Steps',
+            data: data,
+            backgroundColor: labels.map((_, i) => colors[i % colors.length]),
+            borderRadius: 4,
+          },
+        ],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            beginAtZero: true,
+            title: { display: true, text: 'Average Steps' },
+          },
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const x = context.parsed.x ?? 0;
+                return `${x.toFixed(1)} steps`;
+              },
+            },
+          },
+        },
+      },
+    });
   }
 }

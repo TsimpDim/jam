@@ -8,13 +8,13 @@ from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.csrf import csrf_exempt
+from jam.models import CV
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.serializers import CharField, EmailField, Serializer, ValidationError
 
 User = get_user_model()
-
 
 class RegisterSerializer(Serializer):
     username = CharField()
@@ -132,7 +132,17 @@ class MeView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        return Response({"pk": request.user.pk, "username": request.user.username})
+        user_profile = getattr(request.user, 'profile', None)
+        is_premium = user_profile.is_premium if user_profile else False
+        cv_limit = user_profile.get_user_cv_limit()
+        cv_count = CV.objects.filter(user=request.user).count()
+        return Response({
+            "pk": request.user.pk,
+            "username": request.user.username,
+            "is_premium": is_premium,
+            "cv_limit": cv_limit,
+            "cv_count": cv_count
+        })
 
 
 # Password reset serializers and views

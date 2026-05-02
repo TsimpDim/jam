@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { GroupReorderPayload } from '../interfaces';
+import { GroupReorderPayload, UserInfo } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,8 @@ export class JamService {
     date: string,
     group: number,
     initialStep: number,
-    lead: number | null = null
+    lead: number | null = null,
+    cvUsedId: number | null = null
   ) {
     return this.runHttpCall('POST', environment.apiUrl + '/jam/jobapps/', {
       company: company,
@@ -63,6 +64,7 @@ export class JamService {
       group: group,
       initial_step: initialStep,
       lead: lead ? lead : undefined,
+      cv_used: cvUsedId ? cvUsedId : undefined,
     });
   }
 
@@ -76,7 +78,8 @@ export class JamService {
     notes: string,
     date: string,
     group: number,
-    lead: number | null = null
+    lead: number | null = null,
+    cvUsedId: number | null = null
   ) {
     return this.runHttpCall(
       'PATCH',
@@ -91,6 +94,7 @@ export class JamService {
         date: date ? date : undefined,
         group: group,
         lead: lead ? lead : undefined,
+        cv_used: cvUsedId ? cvUsedId : undefined,
       }
     );
   }
@@ -305,6 +309,48 @@ export class JamService {
         archived: archived,
       }
     );
+  }
+
+  getCVs() {
+    return this.runHttpCall('GET', environment.apiUrl + '/jam/cv/');
+  }
+
+  createCV(key: string, file: File) {
+    const formData = new FormData();
+    formData.append('key', key);
+    formData.append('file', file);
+    return this.http.post(environment.apiUrl + '/jam/cv/', formData);
+  }
+
+  updateCV(cvId: number, key: string, file?: File) {
+    return this.runHttpCall(
+      'PATCH',
+      environment.apiUrl + '/jam/cv/' + cvId + '/',
+      {
+        key,
+        file,
+      }
+    );
+  }
+
+  deleteCV(cvId: number) {
+    return this.runHttpCall(
+      'DELETE',
+      environment.apiUrl + '/jam/cv/' + cvId + '/'
+    );
+  }
+
+  downloadCV(cvId: number): Observable<Blob> {
+    return this.http.get(
+      environment.apiUrl + '/jam/cv/' + cvId + '/download/',
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  getUserInfo(): Observable<UserInfo> {
+    return this.runHttpCall('GET', environment.apiUrl + '/auth/me/');
   }
 
   runHttpCall(

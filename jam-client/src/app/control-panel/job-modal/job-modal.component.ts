@@ -42,6 +42,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   public initialSteps: any = null;
   public groups: any = null;
   public leads: any = null;
+  public cvs: any = null;
   public errorMessage: string = '';
 
   constructor(
@@ -59,6 +60,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       group: new FormControl('', [Validators.required]),
       initialStep: new FormControl('', []),
       lead: new FormControl(null, []),
+      cvUsed: new FormControl(null, []),
     });
   }
 
@@ -80,6 +82,7 @@ export class JobModalComponent implements OnInit, OnChanges {
         date: application.date || '',
         group: application.group,
         lead: application.lead || null,
+        cvUsed: application.cv_used?.id || null,
       });
       this.jobAppForm.get('initialStep')?.clearValidators();
     } else if (
@@ -123,6 +126,7 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.getInitialSteps();
     this.getGroups();
     this.getLeads();
+    this.getCVs();
   }
 
   submitJobAppForm() {
@@ -174,6 +178,14 @@ export class JobModalComponent implements OnInit, OnChanges {
     });
   }
 
+  getCVs() {
+    this.jamService.getCVs().subscribe({
+      next: (data) => {
+        this.cvs = data;
+      },
+    });
+  }
+
   createJobApplication() {
     this.loading = true;
     this.jamService
@@ -187,7 +199,8 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.jobAppForm.value.date,
         this.jobAppForm.value.group,
         this.jobAppForm.value.initialStep,
-        this.jobAppForm.value.lead
+        this.jobAppForm.value.lead,
+        this.jobAppForm.value.cvUsed
       )
       .subscribe({
         next: (data: any) => {
@@ -220,7 +233,8 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.jobAppForm.value.notes,
         this.jobAppForm.value.date,
         this.jobAppForm.value.group,
-        this.jobAppForm.value.lead
+        this.jobAppForm.value.lead,
+        this.jobAppForm.value.cvUsed
       )
       .subscribe({
         next: () => {

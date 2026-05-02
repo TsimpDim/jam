@@ -3,7 +3,11 @@
   <h3 class="modal-title" *ngIf="application !== null">Edit Job Application</h3>
 
   <div class="modal-body">
-    <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+    <clr-alert
+      [clrAlertClosable]="false"
+      [clrAlertType]="'danger'"
+      *ngIf="errorMessage"
+    >
       <clr-alert-item>
         <span class="alert-text">
           {{ errorMessage }}
@@ -67,7 +71,9 @@
 
       <div class="clr-form-control">
         <clr-input-container>
-          <label><cds-icon shape="info-standard"></cds-icon> Applied Through</label>
+          <label
+            ><cds-icon shape="info-standard"></cds-icon> Applied Through</label
+          >
           <input
             clrInput
             type="text"
@@ -76,6 +82,18 @@
             placeholder="LinkedIn"
           />
         </clr-input-container>
+      </div>
+
+      <div class="clr-form-control">
+        <clr-select-container>
+          <label><cds-icon shape="file"></cds-icon> CV Used</label>
+          <select clrSelect name="cvUsed" formControlName="cvUsed">
+            <option [ngValue]="null">Not specified</option>
+            <option *ngFor="let cv of cvs" [ngValue]="cv.id">
+              {{ cv.key }}
+            </option>
+          </select>
+        </clr-select-container>
       </div>
 
       <div class="clr-form-control">

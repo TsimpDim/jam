@@ -1,0 +1,79 @@
+<clr-modal
+  [(clrModalOpen)]="open"
+  [clrModalClosable]="!uploading"
+  (clrModalOpenChange)="onModalOpenChange($event)"
+>
+  <h3 class="modal-title">Upload New CV</h3>
+  <div class="modal-body">
+    <clr-alert
+      [clrAlertClosable]="false"
+      [clrAlertType]="'danger'"
+      *ngIf="errorMessage"
+    >
+      <clr-alert-item>
+        <span class="alert-text">{{ errorMessage }}</span>
+      </clr-alert-item>
+    </clr-alert>
+
+    <form class="clr-form clr-form-horizontal">
+      <div class="clr-form-control">
+        <clr-input-container>
+          <label>CV Name *</label>
+          <input
+            clrInput
+            type="text"
+            name="cvKey"
+            [(ngModel)]="cvKey"
+            placeholder="e.g., Tech CV v1"
+          />
+          <clr-control-helper
+            >Give your CV a descriptive name</clr-control-helper
+          >
+        </clr-input-container>
+      </div>
+
+      <div class="clr-form-control">
+        <clr-file-container>
+          <label>CV File *</label><br />
+          <input
+            clrFile
+            type="file"
+            name="cvFile"
+            (change)="onFileSelected($event)"
+            accept=".pdf,.doc,.docx"
+          />
+          <clr-control-helper>PDF, DOC, DOCX (max 1MB)</clr-control-helper>
+        </clr-file-container>
+      </div>
+
+      <div *ngIf="cvFile" class="file-preview">
+        <cds-icon shape="check-circle" status="success"></cds-icon>
+        <span>{{ cvFile.name }}</span>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <clr-spinner
+      *ngIf="uploading"
+      [clrMedium]="true"
+      [clrInline]="true"
+      [clrInverse]="true"
+    ></clr-spinner>
+    <button
+      type="button"
+      class="btn btn-outline"
+      (click)="close()"
+      [disabled]="uploading"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="submit()"
+      [disabled]="uploading"
+    >
+      Upload CV
+    </button>
+  </div>
+</clr-modal>

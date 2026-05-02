@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead
+from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead, CV
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = "__all__"
+
+
+class CVSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CV
+        fields = ['id', 'key', 'file', 'created_at', 'updated_at']
 
 
 class JobApplicationSerializer(serializers.ModelSerializer):
@@ -14,6 +20,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     last_step_color = serializers.SerializerMethodField()
     lead = serializers.PrimaryKeyRelatedField(queryset=Lead.objects.all(), required=False, allow_null=True)
     snapshot = serializers.SerializerMethodField()
+    cv_used = CVSerializer(read_only=True)
 
     def get_group_name(self, obj):
         return obj.group.name

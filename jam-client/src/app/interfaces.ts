@@ -23,6 +23,14 @@ export interface TimelineEntry {
   completed?: boolean;
 }
 
+export interface CV {
+  id: number;
+  key: string;
+  file: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface JobApplication {
   id: number;
   company: string;
@@ -36,6 +44,7 @@ export interface JobApplication {
   group_name?: string;
   initial_step?: number;
   lead?: number | null;
+  cv_used?: CV | null;
   completed?: boolean;
 }
 
@@ -80,6 +89,11 @@ export interface StageDurationEntry {
   color: string;
 }
 
+export interface CVMetrics {
+  total: number;
+  completed: number;
+}
+
 export interface Analytics {
   totalJobApps: number;
   completedJobApps: number;
@@ -92,6 +106,8 @@ export interface Analytics {
   totalLeads: number;
   stageDuration: Record<string, StageDurationEntry>;
   timeTrends: TimeTrends;
+  cvUsed: Record<string, number>;
+  cvAvgSteps: Record<string, string>;
 }
 
 export interface SankeyNodeData {
@@ -113,4 +129,12 @@ export interface SankeyData {
 export interface GroupReorderPayload {
   id: number;
   position: number;
+}
+
+export interface UserInfo {
+  pk: number;
+  username: string;
+  is_premium: boolean;
+  cv_limit: number;
+  cv_count: number;
 }

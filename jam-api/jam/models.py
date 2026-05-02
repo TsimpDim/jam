@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from dateutil.relativedelta import relativedelta
+from .validators import validate_cv_file, CV_LIMIT_FREE, CV_LIMIT_PREMIUM
 
 class Group(models.Model):
     name = models.CharField(max_length=30, null=False)
@@ -48,6 +49,7 @@ class JobApplication(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lead = models.ForeignKey(Lead, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='applications')
+    cv_used = models.ForeignKey('CV', on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
 
     def is_completed(self):
         tl = self.timeline_set.last()
@@ -60,12 +62,37 @@ class JobApplication(models.Model):
 
             return relativedelta(last.date, first.date)
 
-
 class JobAdSnapshot(models.Model):
     job_application = models.OneToOneField(JobApplication, on_delete=models.CASCADE, related_name='snapshot')
     text = models.TextField()
     fetched_at = models.DateTimeField(auto_now_add=True)
 
+class CV(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cvs')
+    key = models.CharField(max_length=70)
+    file = models.FileField(upload_to='server_data/files/', validators=[validate_cv_file])
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.key}"
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    is_premium = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+
+    def get_user_cv_limit(self):
+        try:
+            if self.is_premium:
+                return CV_LIMIT_PREMIUM
+        except:
+            pass
+        return CV_LIMIT_FREE
 
 class Timeline(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)

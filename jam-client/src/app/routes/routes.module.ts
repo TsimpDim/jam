@@ -8,6 +8,7 @@ import { AnalyticsComponent } from '../control-panel/analytics/analytics.compone
 import { ApplicationsComponent } from '../control-panel/applications/applications.component';
 import { LeadsComponent } from '../control-panel/leads/leads.component';
 import { StepsComponent } from '../control-panel/steps/steps.component';
+import { CvComponent } from '../control-panel/cv/cv.component';
 import { AuthGuard, NoAuthGuard } from '../_services/auth.guard';
 
 const routes: Routes = [
@@ -34,6 +35,11 @@ const routes: Routes = [
   {
     path: 'control-panel/leads',
     component: LeadsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'control-panel/cv',
+    component: CvComponent,
     canActivate: [AuthGuard],
   },
   {
