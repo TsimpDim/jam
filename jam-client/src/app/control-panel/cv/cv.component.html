@@ -31,11 +31,12 @@
         <button
           class="btn btn-primary"
           (click)="openUploadForm()"
-          *ngIf="!loading && cvs.length > 0 && cvCount < cvLimit"
+          [disabled]="cvCount >= cvLimit"
+          *ngIf="!loading && cvs.length > 0"
         >
           <cds-icon shape="upload"></cds-icon>
           Upload CV
-          <span class="badge badge-light-blue"
+          <span *ngIf="cvLimit > 1" class="badge badge-light-blue"
             >{{ cvCount }} / {{ cvLimit }}</span
           >
         </button>
@@ -76,7 +77,6 @@
           </div>
           <div class="card-block">
             <div class="card-text cv-filename">
-              <cds-icon shape="folder"></cds-icon>
               {{ getFileName(cv.file) }}
             </div>
           </div>
@@ -91,6 +91,9 @@
                 [clrInline]="true"
               ></clr-spinner>
               Download <cds-icon shape="download"></cds-icon>
+            </button>
+            <button class="btn btn-sm btn-link" (click)="openUpdateForm(cv)">
+              Update <cds-icon shape="pencil"></cds-icon>
             </button>
             <button
               class="btn btn-sm btn-link btn-danger"
@@ -107,6 +110,7 @@
 
 <app-cv-upload-modal
   [open]="showUploadForm"
+  [editCV]="editingCV"
   (uploaded)="onCvUploaded()"
   (closed)="onModalClosed()"
 ></app-cv-upload-modal>

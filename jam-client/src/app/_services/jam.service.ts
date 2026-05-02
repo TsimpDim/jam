@@ -323,13 +323,14 @@ export class JamService {
   }
 
   updateCV(cvId: number, key: string, file?: File) {
-    return this.runHttpCall(
-      'PATCH',
+    const formData = new FormData();
+    formData.append('key', key);
+    if (file) {
+      formData.append('file', file);
+    }
+    return this.http.patch(
       environment.apiUrl + '/jam/cv/' + cvId + '/',
-      {
-        key,
-        file,
-      }
+      formData
     );
   }
 

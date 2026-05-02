@@ -3,7 +3,7 @@
   [clrModalClosable]="!uploading"
   (clrModalOpenChange)="onModalOpenChange($event)"
 >
-  <h3 class="modal-title">Upload New CV</h3>
+  <h3 class="modal-title">{{ isEditMode ? "Update CV" : "Upload New CV" }}</h3>
   <div class="modal-body">
     <clr-alert
       [clrAlertClosable]="false"
@@ -34,7 +34,10 @@
 
       <div class="clr-form-control">
         <clr-file-container>
-          <label>CV File *</label><br />
+          <label>{{
+            isEditMode ? "New CV File (optional)" : "CV File *"
+          }}</label
+          ><br />
           <input
             clrFile
             type="file"
@@ -42,7 +45,11 @@
             (change)="onFileSelected($event)"
             accept=".pdf,.doc,.docx"
           />
-          <clr-control-helper>PDF, DOC, DOCX (max 1MB)</clr-control-helper>
+          <clr-control-helper>{{
+            isEditMode
+              ? "Leave empty to keep current file"
+              : "PDF, DOC, DOCX (max 1MB)"
+          }}</clr-control-helper>
         </clr-file-container>
       </div>
 
@@ -73,7 +80,7 @@
       (click)="submit()"
       [disabled]="uploading"
     >
-      Upload CV
+      {{ isEditMode ? "Update CV" : "Upload CV" }}
     </button>
   </div>
 </clr-modal>

@@ -17,6 +17,7 @@ export class CvComponent implements OnInit {
 
   // Modal state
   showUploadForm: boolean = false;
+  editingCV: CV | null = null;
 
   // User info / quota
   userInfo: UserInfo | null = null;
@@ -68,12 +69,20 @@ export class CvComponent implements OnInit {
       this.showErrorAlert = true;
       return;
     }
+    this.editingCV = null;
+    this.showUploadForm = true;
+  }
+
+  openUpdateForm(cv: CV): void {
+    this.editingCV = cv;
     this.showUploadForm = true;
   }
 
   onCvUploaded(): void {
     this.showUploadForm = false;
-    this.successMessage = 'CV uploaded successfully.';
+    this.successMessage = this.editingCV
+      ? 'CV updated successfully.'
+      : 'CV uploaded successfully.';
     this.showSuccessAlert = true;
     this.loadCVs();
     this.loadUserInfo();
@@ -81,6 +90,7 @@ export class CvComponent implements OnInit {
 
   onModalClosed(): void {
     this.showUploadForm = false;
+    this.editingCV = null;
   }
 
   deleteCV(cv: CV): void {

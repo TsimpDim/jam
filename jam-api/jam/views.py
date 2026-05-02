@@ -604,6 +604,22 @@ class CVViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        # Handle file upload separately since it comes as multipart/form-data
+        if request.FILES.get('file'):
+            instance.file = request.FILES['file']
+        
+        # Update key if provided
+        if 'key' in request.data:
+            instance.key = request.data['key']
+        
+        instance.save()
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
 
