@@ -269,4 +269,8 @@ export class JobNavComponent implements OnInit {
     localStorage.setItem('jam_job_nav_sort', this.sortBy);
     this.onSortChange.emit(this.sortBy);
   }
+
+  isSortActive(sortValue: string): boolean {
+    return this.sortBy === sortValue;
+  }
 }

@@ -369,7 +369,11 @@
         display: none;
     }
 
-    
+    // Style for active sort dropdown item
+    clr-dropdown-menu .dropdown-item.active {
+        background-color: #e0e0e0;
+        font-weight: bold;
+    }
 }
 
 // CDK Drag & Drop Overlays attached outside the component (to the <body>)

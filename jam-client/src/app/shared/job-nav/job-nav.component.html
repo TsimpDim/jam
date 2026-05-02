@@ -49,14 +49,14 @@
             <button
               class="dropdown-item"
               (click)="handleSortChange('-id')"
-              [class.active]="sortBy === '-id'"
+              [class.active]="isSortActive('-id')"
             >
               New -> Old
             </button>
             <button
               class="dropdown-item"
               (click)="handleSortChange('id')"
-              [class.active]="sortBy === 'id'"
+              [class.active]="isSortActive('id')"
             >
               Old -> New
             </button>

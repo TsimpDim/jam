@@ -109,3 +109,13 @@ html, body {
     max-width: 100%;
   }
 }
+
+/* Active sort dropdown item styling - Clarity dropdown menus render outside component scope */
+.dropdown-item.active {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
+.dropdown-item.active cds-icon {
+  margin-right: 0.25rem;
+}
