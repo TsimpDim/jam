@@ -32,12 +32,17 @@
         flex: 1;
         min-width: 0;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     .group-list {
         width: 100%;
         padding-left: 0;
         margin-left: 0;
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0;
     }
 
     clr-vertical-nav-group {
