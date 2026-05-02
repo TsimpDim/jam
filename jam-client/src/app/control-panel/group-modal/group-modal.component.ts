@@ -8,7 +8,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
 import {
+  ReactiveFormsModule,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -18,6 +21,8 @@ import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
   selector: 'app-group-modal',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
   templateUrl: './group-modal.component.html',
   styleUrls: ['./group-modal.component.scss'],
 })

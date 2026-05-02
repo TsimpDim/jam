@@ -6,7 +6,10 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/_services/jam.service';
+import { SankeyComponent } from './sankey/sankey.component';
 import {
   Chart,
   BarController,
@@ -44,6 +47,8 @@ Chart.register(
 
 @Component({
   selector: 'app-analytics',
+  standalone: true,
+  imports: [CommonModule, ClarityModule, SankeyComponent],
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
 })
@@ -114,6 +119,11 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onGroupChange(): void {
     this.getAnalytics();
+  }
+
+  onGroupSelectChange(event: Event): void {
+    this.selectedGroup = (event.target as HTMLSelectElement).value;
+    this.onGroupChange();
   }
 
   getAnalytics(): void {

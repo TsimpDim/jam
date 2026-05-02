@@ -9,6 +9,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { JamService } from 'src/app/_services/jam.service';
 import * as d3 from 'd3';
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from 'd3-sankey';
@@ -16,6 +17,8 @@ import { SankeyData } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-sankey',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './sankey.component.html',
   styleUrls: ['./sankey.component.scss'],
 })

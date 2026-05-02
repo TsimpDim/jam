@@ -6,8 +6,15 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { JamService } from 'src/app/_services/jam.service';
+import { GroupModalComponent } from '../group-modal/group-modal.component';
 
 const JOB_NAV_WIDTH_STORAGE_KEY = 'jam_job_nav_width';
 const JOB_NAV_MIN_WIDTH_PX = 220;
@@ -22,6 +29,8 @@ interface FilteredGroup {
 
 @Component({
   selector: 'app-job-nav',
+  standalone: true,
+  imports: [CommonModule, ClarityModule, DragDropModule, GroupModalComponent],
   templateUrl: './job-nav.component.html',
   styleUrls: ['./job-nav.component.scss'],
 })

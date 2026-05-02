@@ -9,8 +9,8 @@
     <div class="filter-bar">
       <select
         class="filter-select"
-        [(ngModel)]="selectedGroup"
-        (ngModelChange)="onGroupChange()"
+        [value]="selectedGroup"
+        (change)="onGroupSelectChange($event)"
         [disabled]="loading"
       >
         <option value="all">All Groups</option>

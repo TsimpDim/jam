@@ -1,14 +1,23 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
   selector: 'app-leads',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
   templateUrl: './leads.component.html',
-  styleUrls: ['./leads.component.scss']
+  styleUrls: ['./leads.component.scss'],
 })
 export class LeadsComponent implements OnInit {
-
   loading = false;
   leads: any;
   groups: any;
@@ -24,17 +33,17 @@ export class LeadsComponent implements OnInit {
     private jamService: JamService
   ) {
     this.leadForm = this.formBuilder.group({
-      "company": new FormControl('', [Validators.required]),
-      "role": new FormControl('', [Validators.required]),
-      "location": new FormControl('', []),
-      "externalLink": new FormControl('', []),
-      "notes": new FormControl('', []),
-      "group": new FormControl(null, []),
-    })
+      company: new FormControl('', [Validators.required]),
+      role: new FormControl('', [Validators.required]),
+      location: new FormControl('', []),
+      externalLink: new FormControl('', []),
+      notes: new FormControl('', []),
+      group: new FormControl(null, []),
+    });
   }
 
   @HostListener('document:keydown.escape', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) { 
+  handleKeyboardEvent(event: KeyboardEvent) {
     this.closeModal();
   }
 
@@ -64,32 +73,30 @@ export class LeadsComponent implements OnInit {
 
   getLeads() {
     this.loading = true;
-    this.jamService.getLeads(this.viewingArchived ? 'true' : 'false')
-    .subscribe({
-      next: (data: any) => {
-        this.leads = data;
-      },
-      error: () => {
-        this.loading = false;
-      },
-      complete: () => this.loading = false
-    })
+    this.jamService
+      .getLeads(this.viewingArchived ? 'true' : 'false')
+      .subscribe({
+        next: (data: any) => {
+          this.leads = data;
+        },
+        error: () => {
+          this.loading = false;
+        },
+        complete: () => (this.loading = false),
+      });
   }
 
   getGroups() {
-    this.jamService.getGroups()
-    .subscribe({
+    this.jamService.getGroups().subscribe({
       next: (data: any) => {
         this.groups = data;
-      }
-    })
+      },
+    });
   }
 
   deleteLead(leadId: number) {
     this.loading = true;
-    this.jamService.deleteLead(
-      leadId
-    ).subscribe({
+    this.jamService.deleteLead(leadId).subscribe({
       next: () => {
         this.selectedLead = null;
         this.getLeads();
@@ -100,15 +107,14 @@ export class LeadsComponent implements OnInit {
       complete: () => {
         this.loading = false;
         this.closeModal();
-      }
-    })
+      },
+    });
   }
 
   toggleLeadArchive(lead: any) {
     const newArchivedState = !lead.archived;
     this.loading = true;
-    this.jamService.archiveLead(lead.id, newArchivedState)
-    .subscribe({
+    this.jamService.archiveLead(lead.id, newArchivedState).subscribe({
       next: () => {
         if (newArchivedState === false) {
           this.viewingArchived = false;
@@ -121,67 +127,71 @@ export class LeadsComponent implements OnInit {
       complete: () => {
         this.loading = false;
         this.closeModal();
-      }
-    })
+      },
+    });
   }
 
   createLead() {
     this.loading = true;
-    this.jamService.createLead(
-      this.leadForm.value.location,
-      this.leadForm.value.notes,
-      this.leadForm.value.externalLink,
-      this.leadForm.value.role,
-      this.leadForm.value.company,
-      this.leadForm.value.group
-    ).subscribe({
-      next: () => {
-        this.selectedLead = null;
-        this.getLeads();
-        this.closeModal();
-      },
-      error: (e) => {
-        this.loading = false;
-        this.errorMessage = 'An error occurred while creating the lead.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    })
+    this.jamService
+      .createLead(
+        this.leadForm.value.location,
+        this.leadForm.value.notes,
+        this.leadForm.value.externalLink,
+        this.leadForm.value.role,
+        this.leadForm.value.company,
+        this.leadForm.value.group
+      )
+      .subscribe({
+        next: () => {
+          this.selectedLead = null;
+          this.getLeads();
+          this.closeModal();
+        },
+        error: (e) => {
+          this.loading = false;
+          this.errorMessage = 'An error occurred while creating the lead.';
+          if (e.error) {
+            this.errorMessage = JSON.stringify(e.error);
+          }
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
   }
 
   updateLead() {
     this.loading = true;
     const archived = this.selectedLead ? this.selectedLead.archived : false;
-    this.jamService.updateLead(
-      this.selectedLead.id,
-      this.leadForm.value.location,
-      this.leadForm.value.notes,
-      this.leadForm.value.externalLink,
-      this.leadForm.value.role,
-      this.leadForm.value.company,
-      archived,
-      this.leadForm.value.group
-    ).subscribe({
-      next: () => {
-        this.selectedLead = null;
-        this.getLeads();
-        this.closeModal();
-      },
-      error: (e) => {
-        this.loading = false;
-        this.errorMessage = 'An error occurred while updating the lead.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    })
+    this.jamService
+      .updateLead(
+        this.selectedLead.id,
+        this.leadForm.value.location,
+        this.leadForm.value.notes,
+        this.leadForm.value.externalLink,
+        this.leadForm.value.role,
+        this.leadForm.value.company,
+        archived,
+        this.leadForm.value.group
+      )
+      .subscribe({
+        next: () => {
+          this.selectedLead = null;
+          this.getLeads();
+          this.closeModal();
+        },
+        error: (e) => {
+          this.loading = false;
+          this.errorMessage = 'An error occurred while updating the lead.';
+          if (e.error) {
+            this.errorMessage = JSON.stringify(e.error);
+          }
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
   }
 
   clearAndOpenModal() {
@@ -210,7 +220,7 @@ export class LeadsComponent implements OnInit {
       location: this.selectedLead.location,
       externalLink: this.selectedLead.external_link,
       notes: this.selectedLead.notes,
-      group: this.selectedLead.group
+      group: this.selectedLead.group,
     };
     this.leadForm.reset(formData);
     this.openModal();

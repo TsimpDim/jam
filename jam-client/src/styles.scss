@@ -1,4 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+/* Restore JAM! purple header color (Clarity v17 changed header-3 default to azure-900) */
+:root {
+  --clr-header-3-bg-color: #320047;
+}
+
+/* Restore heading font weights */
+:root {
+  --cds-alias-typography-display-font-weight: 400;
+  --cds-alias-typography-headline-font-weight: 400;
+  --cds-alias-typography-title-font-weight: 400;
+  --cds-alias-typography-section-font-weight: 400;
+  --cds-alias-typography-subsection-font-weight: 400;
+}
 
 * {
   box-sizing: border-box;

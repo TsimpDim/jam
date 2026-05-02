@@ -1,17 +1,16 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from '../auth/login/login.component';
-import { RegisterComponent } from '../auth/register/register.component';
-import { ForgotPasswordComponent } from '../auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from '../auth/reset-password/reset-password.component';
-import { AnalyticsComponent } from '../control-panel/analytics/analytics.component';
-import { ApplicationsComponent } from '../control-panel/applications/applications.component';
-import { LeadsComponent } from '../control-panel/leads/leads.component';
-import { StepsComponent } from '../control-panel/steps/steps.component';
-import { CvComponent } from '../control-panel/cv/cv.component';
-import { AuthGuard, NoAuthGuard } from '../_services/auth.guard';
+import { Routes } from '@angular/router';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { AnalyticsComponent } from './control-panel/analytics/analytics.component';
+import { ApplicationsComponent } from './control-panel/applications/applications.component';
+import { LeadsComponent } from './control-panel/leads/leads.component';
+import { StepsComponent } from './control-panel/steps/steps.component';
+import { CvComponent } from './control-panel/cv/cv.component';
+import { AuthGuard, NoAuthGuard } from './_services/auth.guard';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: 'control-panel/applications',
@@ -64,9 +63,3 @@ const routes: Routes = [
   },
   { path: '**', component: ApplicationsComponent },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

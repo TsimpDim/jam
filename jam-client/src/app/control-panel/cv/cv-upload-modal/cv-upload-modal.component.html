@@ -15,33 +15,32 @@
       </clr-alert-item>
     </clr-alert>
 
-    <form class="clr-form clr-form-horizontal">
+    <form class="clr-form clr-form-horizontal" [formGroup]="form">
       <div class="clr-form-control">
         <clr-input-container>
           <label>CV Name *</label>
           <input
             clrInput
             type="text"
-            name="cvKey"
-            [(ngModel)]="cvKey"
+            formControlName="cvKey"
             placeholder="e.g., Tech CV v1"
           />
           <clr-control-helper
             >Give your CV a descriptive name</clr-control-helper
           >
+          <clr-control-error *clrIfError="'required'"
+            >CV name is required.</clr-control-error
+          >
         </clr-input-container>
       </div>
 
       <div class="clr-form-control">
-        <clr-file-container>
-          <label>{{
-            isEditMode ? "New CV File (optional)" : "CV File *"
-          }}</label
-          ><br />
+        <label class="clr-control-label">{{
+          isEditMode ? "New CV File (optional)" : "CV File *"
+        }}</label>
+        <div class="clr-control-container">
           <input
-            clrFile
             type="file"
-            name="cvFile"
             (change)="onFileSelected($event)"
             accept=".pdf,.doc,.docx"
           />
@@ -50,7 +49,7 @@
               ? "Leave empty to keep current file"
               : "PDF, DOC, DOCX (max 1MB)"
           }}</clr-control-helper>
-        </clr-file-container>
+        </div>
       </div>
 
       <div *ngIf="cvFile" class="file-preview">

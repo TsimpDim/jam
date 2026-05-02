@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/_services/jam.service';
 import { CV, UserInfo } from 'src/app/interfaces';
+import { CvUploadModalComponent } from './cv-upload-modal/cv-upload-modal.component';
 
 @Component({
   selector: 'app-cv',
+  standalone: true,
+  imports: [CommonModule, ClarityModule, CvUploadModalComponent],
   templateUrl: './cv.component.html',
   styleUrls: ['./cv.component.scss'],
 })

@@ -24,7 +24,7 @@
         user-select: none;
 
         .drag-handle {
-            background-color: var(--clr-global-border-color, #d2d2d2);
+            background-color: var(--clr-forms-border-color, #d2d2d2);
         }
     }
 
@@ -132,6 +132,10 @@
                 min-width: 0;
                 max-width: none;
                 width: auto;
+            }
+
+            #add-app-btn {
+                text-overflow: ellipsis;
             }
 
             // The clr-dropdown wraps the toggle button - constrain both to ~30px
@@ -247,7 +251,7 @@
     cds-icon {
         width: 12px;
         height: 12px;
-        color: var(--clr-global-border-color, #d2d2d2);
+        color: var(--clr-forms-border-color, #d2d2d2);
         opacity: 0;
         transition: opacity 0.15s ease;
     }
@@ -259,8 +263,8 @@
 
 .action {
     background-color: white;
-    font-size: var(--clr-btn-appearance-form-font-size, 0.6rem);
-    font-weight: var(--clr-btn-appearance-form-font-weight, 500);
+    font-size: 0.6rem;
+    font-weight: 500;
     color: #320047;
     text-align: center;
     width: 80%;

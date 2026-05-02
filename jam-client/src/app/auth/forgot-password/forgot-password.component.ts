@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ClarityModule } from '@clr/angular';
 import {
+  ReactiveFormsModule,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -10,6 +14,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ClarityModule],
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss', '../../shared/shared.scss'],
 })

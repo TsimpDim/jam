@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ClarityModule } from '@clr/angular';
 import {
   AbstractControl,
+  ReactiveFormsModule,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -13,6 +17,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ClarityModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })

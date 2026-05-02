@@ -1,10 +1,29 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/_services/jam.service';
 import { ClarityIcons, detailsIcon, lightbulbIcon } from '@cds/core/icon';
+import { JobNavComponent } from '../job-nav/job-nav.component';
+import { JobModalComponent } from '../job-modal/job-modal.component';
+import { TimelineModalComponent } from '../timeline-modal/timeline-modal.component';
 ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
 
 @Component({
   selector: 'app-applications',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ClarityModule,
+    JobNavComponent,
+    JobModalComponent,
+    TimelineModalComponent,
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss'],
 })

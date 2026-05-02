@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { ClarityModule } from '@clr/angular';
 import {
   AbstractControl,
+  ReactiveFormsModule,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -8,11 +12,13 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-reset-password',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ClarityModule],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss', '../../shared/shared.scss'],
 })
@@ -47,7 +53,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.route.paramMap.subscribe((params: ParamMap) => {
       this.uid = params.get('uid') || '';
       this.token = params.get('token') || '';
 

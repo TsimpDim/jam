@@ -5,12 +5,25 @@ import {
   Output,
   OnChanges,
   SimpleChanges,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/_services/jam.service';
 import { CV } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-cv-upload-modal',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './cv-upload-modal.component.html',
   styleUrls: ['./cv-upload-modal.component.scss'],
 })
@@ -20,7 +33,7 @@ export class CvUploadModalComponent implements OnChanges {
   @Output() uploaded = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
-  cvKey: string = '';
+  form: FormGroup;
   cvFile: File | null = null;
   uploading: boolean = false;
   errorMessage: string = '';
@@ -29,11 +42,15 @@ export class CvUploadModalComponent implements OnChanges {
     return this.editCV !== null;
   }
 
-  constructor(private jamService: JamService) {}
+  constructor(private jamService: JamService, private fb: FormBuilder) {
+    this.form = this.fb.group({
+      cvKey: new FormControl('', [Validators.required]),
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['editCV'] && this.editCV) {
-      this.cvKey = this.editCV.key;
+      this.form.patchValue({ cvKey: this.editCV.key });
       this.cvFile = null;
       this.errorMessage = '';
     }
@@ -69,7 +86,8 @@ export class CvUploadModalComponent implements OnChanges {
   }
 
   submit(): void {
-    if (!this.cvKey.trim()) {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       this.errorMessage = 'CV name is required.';
       return;
     }
@@ -81,10 +99,11 @@ export class CvUploadModalComponent implements OnChanges {
 
     this.uploading = true;
     this.errorMessage = '';
+    const cvKey = this.form.value.cvKey;
 
     if (this.isEditMode && this.editCV) {
       this.jamService
-        .updateCV(this.editCV.id, this.cvKey, this.cvFile || undefined)
+        .updateCV(this.editCV.id, cvKey, this.cvFile || undefined)
         .subscribe({
           next: () => {
             this.uploading = false;
@@ -98,13 +117,13 @@ export class CvUploadModalComponent implements OnChanges {
         });
     } else {
       if (!this.cvFile) return;
-      this.jamService.createCV(this.cvKey, this.cvFile).subscribe({
+      this.jamService.createCV(cvKey, this.cvFile).subscribe({
         next: () => {
           this.uploading = false;
           this.reset();
           this.uploaded.emit();
         },
-        error: (error) => {
+        error: () => {
           this.uploading = false;
           this.errorMessage = 'An error occurred while uploading the CV.';
         },
@@ -118,7 +137,7 @@ export class CvUploadModalComponent implements OnChanges {
   }
 
   private reset(): void {
-    this.cvKey = '';
+    this.form.reset();
     this.cvFile = null;
     this.errorMessage = '';
     this.uploading = false;

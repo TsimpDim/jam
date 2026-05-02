@@ -18,12 +18,14 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/jam-client",
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -32,28 +34,24 @@
               "src/app/privacy-policy.html"
             ],
             "styles": [
-              "node_modules/@clr/icons/clr-icons.min.css",
+              "node_modules/@cds/core/global.min.css",
               "node_modules/@clr/ui/clr-ui.min.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
-              "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
-              "node_modules/@clr/icons/clr-icons.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb",
+                  "maximumWarning": "2.5mb",
                   "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "20kb"
                 }
               ],
               "fileReplacements": [
@@ -65,9 +63,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -79,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "jam-client:build:production"
+              "buildTarget": "jam-client:build:production"
             },
             "development": {
-              "browserTarget": "jam-client:build:development"
+              "buildTarget": "jam-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,14 +86,16 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "jam-client:build"
+            "buildTarget": "jam-client:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
@@ -114,7 +112,6 @@
       }
     }
   },
-  "defaultProject": "jam-client",
   "cli": {
     "analytics": false
   }

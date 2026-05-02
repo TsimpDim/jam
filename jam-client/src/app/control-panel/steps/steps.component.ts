@@ -1,14 +1,23 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ClarityModule } from '@clr/angular';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { JamService } from 'src/app/_services/jam.service';
 
 @Component({
   selector: 'app-steps',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
   templateUrl: './steps.component.html',
-  styleUrls: ['./steps.component.scss']
+  styleUrls: ['./steps.component.scss'],
 })
 export class StepsComponent implements OnInit {
-
   public selectedStep: any = null;
   public stepForm: FormGroup;
   public modalIsOpen: boolean = false;
@@ -17,22 +26,22 @@ export class StepsComponent implements OnInit {
   public loadingSteps: boolean = true;
   public steps: any;
   public STEP_TYPES = {
-    'S': 'Starting Step',
-    'D': 'Default Step',
-    'E': 'Ending Step'
-  }
+    S: 'Starting Step',
+    D: 'Default Step',
+    E: 'Ending Step',
+  };
   selectedColor = 'grey';
   COLOR_HEXES = {
-    'red': '#db4848',
-    'grey': '#cccccc',
-    'green': '#43cc7f',
-    'blue': '#4696d4',
-    'black': '#2e2e2e',
-    'orange': '#fcba03'
+    red: '#db4848',
+    grey: '#cccccc',
+    green: '#43cc7f',
+    blue: '#4696d4',
+    black: '#2e2e2e',
+    orange: '#fcba03',
   } as Record<string, string>;
 
   @HostListener('document:keydown.escape', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) { 
+  handleKeyboardEvent(event: KeyboardEvent) {
     this.modalIsOpen = false;
   }
 
@@ -41,11 +50,14 @@ export class StepsComponent implements OnInit {
     private jamService: JamService
   ) {
     this.stepForm = this.formBuilder.group({
-      "name": new FormControl('', [Validators.required]),
-      "type": new FormControl('D', []),
-      "color": new FormControl('', [Validators.maxLength(7), Validators.minLength(7)]),
-      "notes": new FormControl('', []),
-    })
+      name: new FormControl('', [Validators.required]),
+      type: new FormControl('D', []),
+      color: new FormControl('', [
+        Validators.maxLength(7),
+        Validators.minLength(7),
+      ]),
+      notes: new FormControl('', []),
+    });
   }
 
   ngOnInit(): void {
@@ -59,7 +71,9 @@ export class StepsComponent implements OnInit {
 
   getStepTypeDisplayText(type?: String) {
     if (type === undefined) {
-      return this.STEP_TYPES[this.selectedStep.type as keyof typeof this.STEP_TYPES];
+      return this.STEP_TYPES[
+        this.selectedStep.type as keyof typeof this.STEP_TYPES
+      ];
     } else {
       return this.STEP_TYPES[type as keyof typeof this.STEP_TYPES];
     }
@@ -67,22 +81,21 @@ export class StepsComponent implements OnInit {
 
   getSteps() {
     this.loadingSteps = true;
-    this.jamService.getSteps()
-    .subscribe({
+    this.jamService.getSteps().subscribe({
       next: (data: any) => {
         this.steps = data;
       },
       error: () => {
         this.loadingSteps = false;
       },
-      complete: () => this.loadingSteps = false
-    })
+      complete: () => (this.loadingSteps = false),
+    });
   }
 
   clearAndOpenModal() {
     this.selectedStep = null;
     this.selectedColor = 'grey';
-    this.stepForm.reset({'type': 'D'});
+    this.stepForm.reset({ type: 'D' });
     this.openModal();
   }
 
@@ -112,16 +125,17 @@ export class StepsComponent implements OnInit {
 
   selectStep(stepId: number) {
     this.selectedStep = this.steps.find((s: any) => s.id == stepId);
-    this.selectedColor = Object.keys(this.COLOR_HEXES).find(c => this.COLOR_HEXES[c] === this.selectedStep.color) || 'grey';
+    this.selectedColor =
+      Object.keys(this.COLOR_HEXES).find(
+        (c) => this.COLOR_HEXES[c] === this.selectedStep.color
+      ) || 'grey';
     this.stepForm.reset(this.selectedStep);
     this.openModal();
   }
 
   deleteStep(stepId: number) {
     this.loading = true;
-    this.jamService.deleteStep(
-      stepId
-    ).subscribe({
+    this.jamService.deleteStep(stepId).subscribe({
       next: () => {
         this.selectedStep = null;
         this.getSteps();
@@ -136,59 +150,63 @@ export class StepsComponent implements OnInit {
       },
       complete: () => {
         this.loading = false;
-      }
-    })
+      },
+    });
   }
 
   createStep() {
     this.loading = true;
-    this.jamService.createStep(
-      this.stepForm.value.name,
-      this.stepForm.value.notes,
-      this.stepForm.value.type,
-      this.stepForm.value.color
-    ).subscribe({
-      next: () => {
-        this.selectedStep = null;
-        this.getSteps();
-        this.closeModal();
-      },
-      error: (e) => {
-        this.loading = false;
-        this.errorMessage = 'An error occurred while creating the step.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    })
+    this.jamService
+      .createStep(
+        this.stepForm.value.name,
+        this.stepForm.value.notes,
+        this.stepForm.value.type,
+        this.stepForm.value.color
+      )
+      .subscribe({
+        next: () => {
+          this.selectedStep = null;
+          this.getSteps();
+          this.closeModal();
+        },
+        error: (e) => {
+          this.loading = false;
+          this.errorMessage = 'An error occurred while creating the step.';
+          if (e.error) {
+            this.errorMessage = JSON.stringify(e.error);
+          }
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
   }
 
   updateStep() {
     this.loading = true;
-    this.jamService.updateStep(
-      this.selectedStep.id,
-      this.stepForm.value.name,
-      this.stepForm.value.notes,
-      this.stepForm.value.color
-    ).subscribe({
-      next: () => {
-        this.selectedStep = null;
-        this.getSteps();
-        this.closeModal();
-      },
-      error: (e) => {
-        this.loading = false;
-        this.errorMessage = 'An error occurred while updating the step.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    })
+    this.jamService
+      .updateStep(
+        this.selectedStep.id,
+        this.stepForm.value.name,
+        this.stepForm.value.notes,
+        this.stepForm.value.color
+      )
+      .subscribe({
+        next: () => {
+          this.selectedStep = null;
+          this.getSteps();
+          this.closeModal();
+        },
+        error: (e) => {
+          this.loading = false;
+          this.errorMessage = 'An error occurred while updating the step.';
+          if (e.error) {
+            this.errorMessage = JSON.stringify(e.error);
+          }
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
   }
 }

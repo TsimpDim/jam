@@ -1,17 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import {
+  ReactiveFormsModule,
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ClarityModule } from '@clr/angular';
 import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ClarityModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../../shared/shared.scss'],
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   public form: FormGroup;
