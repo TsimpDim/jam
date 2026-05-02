@@ -20,7 +20,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     last_step_color = serializers.SerializerMethodField()
     lead = serializers.PrimaryKeyRelatedField(queryset=Lead.objects.all(), required=False, allow_null=True)
     snapshot = serializers.SerializerMethodField()
-    cv_used = CVSerializer(read_only=True)
+    cv_used = serializers.PrimaryKeyRelatedField(queryset=CV.objects.all(), required=False, allow_null=True)
 
     def get_group_name(self, obj):
         return obj.group.name

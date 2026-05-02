@@ -87,7 +87,7 @@ export class JobModalComponent implements OnInit, OnChanges {
         date: application.date || '',
         group: application.group,
         lead: application.lead || null,
-        cvUsed: application.cv_used?.id || null,
+        cvUsed: application.cv_used || null,
       });
       this.jobAppForm.get('initialStep')?.clearValidators();
     } else if (
