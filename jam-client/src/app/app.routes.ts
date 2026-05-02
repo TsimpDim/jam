@@ -1,43 +1,43 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
-import { AnalyticsComponent } from './control-panel/analytics/analytics.component';
-import { ApplicationsComponent } from './control-panel/applications/applications.component';
-import { LeadsComponent } from './control-panel/leads/leads.component';
-import { StepsComponent } from './control-panel/steps/steps.component';
-import { CvComponent } from './control-panel/cv/cv.component';
-import { AuthGuard, NoAuthGuard } from './_services/auth.guard';
+import { LoginComponent } from './pages/auth/login/login.component';
+import { RegisterComponent } from './pages/auth/register/register.component';
+import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
+import { AnalyticsComponent } from './pages/analytics/analytics.component';
+import { ApplicationsComponent } from './pages/applications/applications.component';
+import { LeadsComponent } from './pages/leads/leads.component';
+import { StepsComponent } from './pages/steps/steps.component';
+import { CvComponent } from './pages/cv/cv.component';
+import { AuthGuard, NoAuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'control-panel/applications',
+    redirectTo: 'applications',
     pathMatch: 'full',
   },
   {
-    path: 'control-panel/applications',
+    path: 'applications',
     component: ApplicationsComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'control-panel/steps',
+    path: 'steps',
     component: StepsComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'control-panel/analytics',
+    path: 'analytics',
     component: AnalyticsComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'control-panel/leads',
+    path: 'leads',
     component: LeadsComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: 'control-panel/cv',
+    path: 'cv',
     component: CvComponent,
     canActivate: [AuthGuard],
   },

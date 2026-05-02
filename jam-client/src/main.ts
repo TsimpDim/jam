@@ -12,8 +12,8 @@ import localeEnCa from '@angular/common/locales/en-CA';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-import { AuthInterceptor } from './app/_services/auth.interceptor';
-import { AuthService } from './app/_services/auth.service';
+import { AuthInterceptor } from './app/core/interceptors/auth.interceptor';
+import { AuthService } from './app/core/services/auth.service';
 import { registerIcons } from './app/icons';
 
 // Canada locale so that yyyy-mm-dd format is used by Clarity

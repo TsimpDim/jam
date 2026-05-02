@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/_services/auth.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { ClarityModule } from '@clr/angular';
 
 @Component({
