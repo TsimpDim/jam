@@ -102,6 +102,7 @@ class RegisterView(generics.CreateAPIView):
 
 
 # Extension views (Knox token)
+@method_decorator(csrf_exempt, name='dispatch')
 class TokenView(generics.GenericAPIView):
     """Extension: issue a Knox token. No session created."""
     permission_classes = [permissions.AllowAny]

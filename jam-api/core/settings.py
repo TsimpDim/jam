@@ -66,11 +66,16 @@ else:
 
 # Allow extension origins (chrome-extension:// and moz-extension://)
 # Extension IDs are dynamic, so we allow all origins in development
-# or use CORS_ALLOWED_ORIGIN_REGEXS for more granular control
+# or use CORS_ORIGIN_REGEX_WHITELIST for more granular control (django-cors-headers 3.x)
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOW_ALL_ORIGINS = False
+    # Allow browser extension origins in production
+    CORS_ORIGIN_REGEX_WHITELIST = [
+        r"^chrome-extension://.*$",
+        r"^moz-extension://.*$",
+    ]
 CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
