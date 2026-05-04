@@ -52,13 +52,14 @@ export class ApplicationsComponent implements OnInit {
   ngOnInit(): void {
     const savedSort = localStorage.getItem('jam_job_nav_sort') || '-id';
     this.currentSort = savedSort;
-    this.getApplications(savedSort);
+    this.getApplications();
     this.getSteps();
     this.updateTimelineLayout();
   }
 
   onSortChange(sort: string) {
-    this.getApplications(sort);
+    this.currentSort = sort;
+    this.getApplications();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -70,11 +71,10 @@ export class ApplicationsComponent implements OnInit {
     this.timelineLayout = window.innerWidth < 768 ? 'vertical' : 'horizontal';
   }
 
-  getApplications(sort: string = 'id') {
-    this.currentSort = sort;
+  getApplications() {
     this.loadingApplications = true;
     this.loadingSelectedApplication = true;
-    this.jamService.getJobApplications(true, sort).subscribe({
+    this.jamService.getJobApplications(true, this.currentSort).subscribe({
       next: (data: any) => {
         this.loadingSelectedApplication = false;
         this.loadingApplications = false;
