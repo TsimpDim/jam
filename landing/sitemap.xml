@@ -7,7 +7,7 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://jam.tsdim.net/</loc>
+    <loc>https://jam-app.com/</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -15,7 +15,7 @@
 
   <!-- Company/About Page -->
   <url>
-    <loc>https://jam.tsdim.net/pages/company.html</loc>
+    <loc>https://jam-app.com/pages/company.html</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -23,7 +23,7 @@
 
   <!-- Contact Page -->
   <url>
-    <loc>https://jam.tsdim.net/pages/contact.html</loc>
+    <loc>https://jam-app.com/pages/contact.html</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -31,7 +31,7 @@
 
   <!-- Privacy Policy Page -->
   <url>
-    <loc>https://jam.tsdim.net/pages/privacy.html</loc>
+    <loc>https://jam-app.com/pages/privacy.html</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
@@ -39,7 +39,7 @@
 
   <!-- Terms of Service Page -->
   <url>
-    <loc>https://jam.tsdim.net/pages/terms.html</loc>
+    <loc>https://jam-app.com/pages/terms.html</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
@@ -47,7 +47,7 @@
 
   <!-- Help Center Page -->
   <url>
-    <loc>https://jam.tsdim.net/pages/help.html</loc>
+    <loc>https://jam-app.com/pages/help.html</loc>
     <lastmod>2026-05-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

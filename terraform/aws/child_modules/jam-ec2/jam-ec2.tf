@@ -43,9 +43,9 @@ resource "aws_security_group" "jam" {
 }
 
 resource "aws_instance" "jam" {
-  ami           = var.ami
-  instance_type = var.instance-type
-  user_data = <<EOF
+  ami                    = var.ami
+  instance_type          = var.instance-type
+  user_data              = <<EOF
   #!/bin/bash
   export DB_NAME=${var.db-name}
   export DB_USER=${var.db-user}
@@ -57,7 +57,7 @@ resource "aws_instance" "jam" {
   cd /projects/jam/jam-api
   /home/ubuntu/.pyenv/shims/gunicorn -c gunicorn.conf.py 
   EOF
-  vpc_security_group_ids = [ aws_security_group.jam.id ]
+  vpc_security_group_ids = [aws_security_group.jam.id]
   tags = {
     Name = "JAM"
   }
@@ -66,20 +66,20 @@ resource "aws_instance" "jam" {
 
 resource "aws_eip" "ip" {
   instance = aws_instance.jam.id
-  vpc = true
+  vpc      = true
 }
 
 resource "aws_route53_record" "jam-api" {
   zone_id = var.hosted-zone-id
-  name    = "jam-api.tsdim.net"
+  name    = "api.jam-app.com"
   type    = "A"
   ttl     = "300"
   records = [aws_eip.ip.public_ip]
 }
 
-resource "aws_route53_record" "jam-api" {
+resource "aws_route53_record" "jam-client" {
   zone_id = var.hosted-zone-id
-  name    = "jam.tsdim.net"
+  name    = "dashboard.jam-app.com"
   type    = "A"
   ttl     = "300"
   records = [aws_eip.ip.public_ip]

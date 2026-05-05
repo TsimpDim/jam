@@ -1,5 +1,5 @@
 # robots.txt for JAM! - Job Application Manager
-# https://jam.tsdim.net
+# https://jam-app.com
 
 User-agent: *
 Allow: /
@@ -15,7 +15,7 @@ Disallow: /dashboard/
 Allow: /pages/
 
 # Sitemap location
-Sitemap: https://jam.tsdim.net/sitemap.xml
+Sitemap: https://jam-app.com/sitemap.xml
 
 # Crawl-delay for polite crawling (optional)
 Crawl-delay: 1

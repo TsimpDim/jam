@@ -4,7 +4,7 @@
   "version": "1.2",
   "description": "Integrate JAM! deeper into your job search.",
   "author": "Dimitris Tsimpitas",
-  "homepage_url": "https://jam.tsdim.net",
+  "homepage_url": "https://jam-app.com",
   "short_name": "JAM!",
   "action": {
     "default_popup": "index.html",
@@ -24,7 +24,7 @@
   ],
   "optional_permissions": [],
   "host_permissions": [
-    "https://jam-api.tsdim.net/*"
+    "https://api.jam-app.com/*"
   ],
   "background": {
     "scripts": [

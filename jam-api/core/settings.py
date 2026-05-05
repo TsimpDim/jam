@@ -42,7 +42,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://dashboard.jam-app.com"
 ]
 
-# Cookie settings for cross-subdomain access (jam.tsdim.net <-> jam-api.tsdim.net)
+# Cookie settings for cross-subdomain access
 if DEBUG:
     # Localhost development: no domain restriction, allow HTTP
     CSRF_COOKIE_DOMAIN = None
@@ -55,12 +55,12 @@ if DEBUG:
     SESSION_COOKIE_SECURE = False
 else:
     # Production: cross-subdomain cookies, HTTPS only
-    CSRF_COOKIE_DOMAIN = ".job-app.com"
+    CSRF_COOKIE_DOMAIN = ".jam-app.com"
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = False
 
-    SESSION_COOKIE_DOMAIN = ".job-app.com"
+    SESSION_COOKIE_DOMAIN = ".jam-app.com"
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
 
