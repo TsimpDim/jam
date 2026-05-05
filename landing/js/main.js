@@ -200,13 +200,4 @@ document.querySelectorAll('.btn-primary').forEach(button => {
     });
 });
 
-// Add subtle parallax effect to hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll('.hero-image, .dashboard-preview');
-    
-    parallaxElements.forEach(element => {
-        const speed = 0.5;
-        element.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-});
+// Parallax effect removed to fix dashboard preview positioning

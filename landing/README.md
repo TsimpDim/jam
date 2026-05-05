@@ -121,10 +121,10 @@ The landing page has placeholder links that need to be updated:
 2. **Social links**: Update footer social links with actual profiles
 
 3. **Email addresses**: Replace placeholder emails:
-   - `support@jam-app.com`
-   - `privacy@jam-app.com`
-   - `legal@jam-app.com`
-   - `enterprise@jam-app.com`
+   - `jamapptsdim@gmaill.com`
+   - `jamapptsdim@gmaill.com`
+   - `jamapptsdim@gmaill.com`
+   - `jamapptsdim@gmaill.com`
 
 ### Contact Form
 

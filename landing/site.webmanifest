@@ -1,0 +1,36 @@
+{
+    "name": "JAM! - Job Application Manager",
+    "short_name": "JAM!",
+    "description": "AI-powered job application command center. Track applications, generate AI cover letters, discover matching jobs automatically, and optimize your resume.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#320047",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/favicon/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "business",
+        "productivity",
+        "utilities"
+    ],
+    "lang": "en-US"
+}

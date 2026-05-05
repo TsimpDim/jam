@@ -3,29 +3,166 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
+    <title>
+      JAM! - AI Job Application Manager | Track, Organize & Land Your Dream Job
+    </title>
+    <meta
+      name="title"
+      content="JAM! - AI Job Application Manager | Track, Organize & Land Your Dream Job"
+    />
     <meta
       name="description"
-      content="JAM! - Job Application Manager. Track your job applications, manage your career journey, and never miss an opportunity. Organize all your job applications in one place."
+      content="JAM! is your intelligent job application command center. Track applications, generate AI cover letters, discover matching jobs automatically, and optimize your resume. Free forever plan available."
     />
     <meta
       name="keywords"
-      content="job application tracker, career management, job search organizer, application timeline"
+      content="job application tracker, career management, job search organizer, application timeline, AI cover letter, resume optimizer, job tracking tool, application manager"
     />
-    <title>JAM! - Your Job Application Manager</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <meta name="author" content="JAM! Team" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#320047" />
+    <meta name="language" content="English" />
+    <link rel="canonical" href="https://jam.tsdim.net" />
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jam.tsdim.net" />
+    <meta property="og:site_name" content="JAM!" />
+    <meta
+      property="og:title"
+      content="JAM! - AI Job Application Manager | Track, Organize & Land Your Dream Job"
+    />
+    <meta
+      property="og:description"
+      content="Your intelligent job application command center. Track applications, generate AI cover letters, discover matching jobs automatically, and optimize your resume."
+    />
+    <meta property="og:image" content="https://jam.tsdim.net/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="JAM! Job Application Manager Dashboard"
+    />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Favicon & App Icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./favicon/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./favicon/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="css/styles.css" as="style" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      as="style"
+    />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- JSON-LD Structured Data: SoftwareApplication Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "JAM! - Job Application Manager",
+        "alternateName": "JAM!",
+        "description": "AI-powered job application command center. Track applications, generate personalized cover letters, discover matching jobs automatically, and optimize your resume for better results.",
+        "url": "https://jam.tsdim.net",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web Browser",
+        "browserRequirements": "Requires JavaScript. Works in all modern browsers.",
+        "softwareVersion": "1.0.0",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Free Plan",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Up to 50 applications, unlimited custom stages, lead management, basic analytics, browser extension, mobile access"
+          }
+        ],
+        "featureList": [
+          "AI Cover Letter Generation",
+          "AI Lead Generation",
+          "AI Resume Review",
+          "Application Tracking",
+          "Custom Application Stages",
+          "Lead Tracking",
+          "Smart Organization with Groups",
+          "Analytics Dashboard",
+          "Browser Extension",
+          "Timeline View",
+          "Job Ad Snapshot",
+          "Mobile Friendly Design"
+        ],
+        "screenshot": "https://jam.tsdim.net/og-image.png",
+        "author": {
+          "@type": "Organization",
+          "name": "JAM! Team",
+          "url": "https://jam.tsdim.net"
+        }
+      }
+    </script>
+
+    <!-- JSON-LD Structured Data: WebSite Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "JAM! - Job Application Manager",
+        "url": "https://jam.tsdim.net",
+        "description": "AI-powered job application management platform",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://jam.tsdim.net/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- JSON-LD Structured Data: Organization Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "JAM!",
+        "url": "https://jam.tsdim.net",
+        "logo": "https://jam.tsdim.net/logo.png",
+        "sameAs": []
+      }
+    </script>
   </head>
   <body>
     <!-- Navigation -->
     <nav class="navbar">
       <div class="container">
         <div class="nav-brand">
-          <span class="logo">JAM!</span>
+          <span class="logo"><span class="brand-name">JAM!</span></span>
         </div>
         <div class="nav-menu" id="navMenu">
           <a href="#features" class="nav-link">Features</a>
@@ -33,7 +170,9 @@
           <a href="#pricing" class="nav-link">Pricing</a>
           <a href="pages/company.html" class="nav-link">About</a>
           <a href="/login" class="nav-link nav-login">Login</a>
-          <a href="/register" class="btn btn-primary btn-nav">Sign Up Free</a>
+          <a href="/register" class="btn btn-primary btn-nav"
+            >Sign Up for Free</a
+          >
         </div>
         <button class="hamburger" id="hamburger">
           <span></span>
@@ -48,37 +187,98 @@
       <div class="container">
         <div class="hero-content">
           <h1 class="hero-title">
-            Take Control of Your
+            Accelerate your
             <span class="gradient-text">Job Search Journey</span>
           </h1>
           <p class="hero-subtitle">
-            Track every application, manage timelines, and land your dream job.
-            JAM! is your personal job application command center.
+            Generate personalized cover letters, discover matching jobs
+            automatically, and optimize your resume with AI.
+            <span class="brand-name">JAM!</span> is your one-stop shop for job
+            hunting.
           </p>
           <div class="hero-cta">
             <a href="/register" class="btn btn-primary btn-large"
               >Get Started Free</a
             >
-            <a href="#how-it-works" class="btn btn-secondary btn-large"
-              >Learn More</a
+            <a href="#ai-features" class="btn btn-secondary btn-large"
+              >Explore AI Features</a
             >
           </div>
-          <p class="hero-note">No credit card required • Free forever</p>
         </div>
         <div class="hero-image">
-          <div class="dashboard-preview">
-            <!-- Placeholder for dashboard mockup -->
+          <div
+            class="dashboard-preview"
+            role="img"
+            aria-label="JAM! Dashboard preview showing job application tracking with AI suggestions, application statuses, and timeline view"
+          >
             <div class="preview-card">
               <div class="preview-header">
                 <div class="preview-dot"></div>
                 <div class="preview-dot"></div>
                 <div class="preview-dot"></div>
+                <span class="preview-title-text">JAM! Dashboard</span>
+                <span class="preview-ai-badge">AI</span>
               </div>
               <div class="preview-content">
-                <div class="preview-item"></div>
-                <div class="preview-item"></div>
-                <div class="preview-item"></div>
-                <div class="preview-item"></div>
+                <!-- AI Suggestion Card -->
+                <div class="app-card app-card-ai">
+                  <div class="app-card-header">
+                    <div class="app-card-company ai-suggestion">
+                      <span class="ai-icon">✨</span> AI Suggestion
+                    </div>
+                  </div>
+                  <div class="app-card-role" style="font-size: 0.85rem">
+                    3 new jobs match your profile at Google, Meta
+                  </div>
+                  <div class="app-card-timeline">
+                    <div class="timeline-dot timeline-dot-ai"></div>
+                    <div class="timeline-text">
+                      Cover letter ready to generate
+                    </div>
+                  </div>
+                </div>
+                <!-- Application Card 1 - Offer Received -->
+                <div class="app-card app-card-success">
+                  <div class="app-card-header">
+                    <div class="app-card-company">TechCorp Inc.</div>
+                    <div class="app-card-status status-offer">✓ Offer</div>
+                  </div>
+                  <div class="app-card-role">Senior Frontend Developer</div>
+                  <div class="app-card-timeline">
+                    <div class="timeline-dot timeline-dot-success"></div>
+                    <div class="timeline-text">Applied → Interview → Offer</div>
+                  </div>
+                </div>
+                <!-- Application Card 2 - Interview -->
+                <div class="app-card app-card-active">
+                  <div class="app-card-header">
+                    <div class="app-card-company">StartupXYZ</div>
+                    <div class="app-card-status status-interview">
+                      📅 Interview
+                    </div>
+                  </div>
+                  <div class="app-card-role">Full Stack Engineer</div>
+                  <div class="app-card-timeline">
+                    <div class="timeline-dot timeline-dot-active"></div>
+                    <div class="timeline-text">
+                      Applied → Technical Interview Tomorrow
+                    </div>
+                  </div>
+                </div>
+                <!-- Lead Card -->
+                <div class="app-card app-card-lead">
+                  <div class="app-card-header">
+                    <div class="app-card-company">InnovateTech</div>
+                    <div class="app-card-status status-lead">💡 Lead</div>
+                  </div>
+                  <div class="app-card-role">React Developer</div>
+                  <div class="app-card-timeline">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-text">
+                      Saved from LinkedIn • Apply now
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -86,25 +286,152 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
+    <!-- Problem Statement Section -->
+    <section class="problem-statement">
       <div class="container">
-        <div class="stats-grid">
-          <div class="stat-item">
-            <h3 class="stat-number">10,000+</h3>
-            <p class="stat-label">Active Users</p>
+        <div class="problem-solution-layout">
+          <!-- Problem Side -->
+          <div class="problem-side">
+            <div class="problem-badge">
+              <span>😓</span>
+              <span>The Problem</span>
+            </div>
+            <h2 class="problem-title">Job Hunting is Broken</h2>
+            <p class="problem-intro">
+              Most job seekers juggle spreadsheets, sticky notes, and multiple
+              other supporting tools - and still lose track of where they
+              applied.
+            </p>
+            <div class="pain-points">
+              <div class="pain-point">
+                <div class="pain-stat">75%</div>
+                <div class="pain-desc">
+                  of applicants <strong>lose track</strong> of their submissions
+                  within weeks
+                </div>
+              </div>
+              <div class="pain-point">
+                <div class="pain-stat">40h</div>
+                <div class="pain-desc">
+                  wasted annually on <strong>manual tracking</strong> and
+                  copy-pasting application data
+                </div>
+              </div>
+              <div class="pain-point">
+                <div class="pain-stat">4+</div>
+                <div class="pain-desc">
+                  separate tools needed just to
+                  <strong
+                    >store cover letters/CVs, find jobs, track them, and follow
+                    up</strong
+                  >
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="stat-item">
-            <h3 class="stat-number">50,000+</h3>
-            <p class="stat-label">Applications Tracked</p>
+
+          <!-- Divider Arrow -->
+          <div class="solution-arrow">
+            <div class="arrow-icon">→</div>
+            <span class="arrow-label">JAM! solves this</span>
           </div>
-          <div class="stat-item">
-            <h3 class="stat-number">85%</h3>
-            <p class="stat-label">Success Rate</p>
+
+          <!-- Solution Side -->
+          <div class="solution-side">
+            <div class="solution-badge">
+              <span>✨</span>
+              <span>The Solution</span>
+            </div>
+            <h2 class="solution-title">One Platform. Everything You Need.</h2>
+            <p class="solution-intro">
+              <span class="brand-name">JAM!</span> supports with intelligent
+              automation, so you can focus on landing the job.
+            </p>
+            <div class="solution-points">
+              <div class="solution-point">
+                <span class="solution-check">✓</span>
+                <span
+                  ><strong>Track</strong> every application from the moment you
+                  apply in a centralised place</span
+                >
+              </div>
+              <div class="solution-point">
+                <span class="solution-check">✓</span>
+                <span
+                  ><strong>Generate</strong> cover letters and get feedback in
+                  seconds</span
+                >
+              </div>
+              <div class="solution-point">
+                <span class="solution-check">✓</span>
+                <span
+                  ><strong>Discover</strong> jobs matched to your profile
+                  automatically</span
+                >
+              </div>
+              <div class="solution-point">
+                <span class="solution-check">✓</span>
+                <span
+                  ><strong>Stay in control.</strong> Steer the entire process
+                  without falling into the pitfalls of always-on AI</span
+                >
+              </div>
+            </div>
           </div>
-          <div class="stat-item">
-            <h3 class="stat-number">24/7</h3>
-            <p class="stat-label">Access Anywhere</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Features Section -->
+    <section id="ai-features" class="ai-features">
+      <div class="container">
+        <div class="section-header">
+          <div class="ai-section-badge">
+            <span class="badge-icon">✨</span>
+            <span class="badge-text">AI-Powered</span>
+          </div>
+          <h2 class="section-title">All tools you need in one platform</h2>
+          <p class="section-subtitle">
+            Replace spreadsheets, trackers, and manual work with intelligent
+            automation. AI-supported features make each application a breeze.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card feature-card-ai">
+            <div class="feature-icon">✍️</div>
+            <h3 class="feature-title">Cover Letters</h3>
+            <p class="feature-description">
+              Generate personalized cover letters tailored to your profile and
+              the specific job. JAM! analyzes your experience and the job
+              requirements to create compelling narratives in seconds.
+            </p>
+          </div>
+          <div class="feature-card feature-card-ai">
+            <div class="feature-icon">🔍</div>
+            <h3 class="feature-title">Lead Generation</h3>
+            <p class="feature-description">
+              Discover companies automatically matched to your skills,
+              interests, and preferences. JAM! scans job boards and company
+              profiles to surface hidden gems that align with your career goals.
+            </p>
+          </div>
+          <div class="feature-card feature-card-ai">
+            <div class="feature-icon">📄</div>
+            <h3 class="feature-title">Resume Review</h3>
+            <p class="feature-description">
+              Get intelligent feedback on your resume. JAM! identifies areas for
+              improvement and suggests optimizations to make your application
+              stand out from the crowd.
+            </p>
+          </div>
+          <div class="feature-card feature-card-ai">
+            <div class="feature-icon">🔔</div>
+            <h3 class="feature-title">Job Board Subscriptions</h3>
+            <p class="feature-description">
+              Subscribe to job boards and get notified when new matching
+              positions appear. JAM! filters ensure you only see relevant
+              opportunities, saving hours of manual searching.
+            </p>
           </div>
         </div>
       </div>
@@ -138,10 +465,11 @@
           </div>
           <div class="feature-card">
             <div class="feature-icon">📝</div>
-            <h3 class="feature-title">Lead Management</h3>
+            <h3 class="feature-title">Lead Tracking</h3>
             <p class="feature-description">
-              Save interesting job opportunities as leads before applying. Build
-              your pipeline of opportunities.
+              Save and track interesting job opportunities before applying.
+              Build your pipeline, set reminders, and never miss a deadline.
+              Convert leads to applications seamlessly.
             </p>
           </div>
           <div class="feature-card">
@@ -178,7 +506,7 @@
           </div>
           <div class="feature-card">
             <div class="feature-icon">💾</div>
-            <h3 class="feature-title">Job Ad Snapshot</h3>
+            <h3 class="feature-title">Job Ad Snapshots</h3>
             <p class="feature-description">
               Automatically save job descriptions. Never lose access to the
               original posting, even after it's removed.
@@ -200,7 +528,9 @@
     <section id="how-it-works" class="how-it-works">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">How JAM! Works</h2>
+          <h2 class="section-title">
+            How <span class="brand-name">JAM!</span> Works
+          </h2>
           <p class="section-subtitle">Get started in minutes, not hours</p>
         </div>
         <div class="steps-grid">
@@ -229,10 +559,18 @@
           </div>
           <div class="step-card">
             <div class="step-number">4</div>
-            <h3 class="step-title">Track & Succeed</h3>
+            <h3 class="step-title">Track & Measure</h3>
             <p class="step-description">
               Monitor progress, update statuses, and analyze your success rate
               to land your dream job.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <h3 class="step-title">Iterate & Succeed</h3>
+            <p class="step-description">
+              Use smart features to improve on your employee persona and attract
+              more employers.
             </p>
           </div>
         </div>
@@ -244,7 +582,9 @@
       <div class="container">
         <div class="benefits-content">
           <div class="benefits-text">
-            <h2 class="section-title">Why Choose JAM!</h2>
+            <h2 class="section-title">
+              Why Choose <span class="brand-name">JAM!</span>
+            </h2>
             <ul class="benefits-list">
               <li class="benefit-item">
                 <span class="check-icon">✓</span>
@@ -305,7 +645,7 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
+    <section id="pricing" class="pricing" style="display: none">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Simple, Transparent Pricing</h2>
@@ -371,20 +711,21 @@
     <section class="cta">
       <div class="container">
         <div class="cta-content">
+          <div class="cta-badge">
+            <span class="badge-icon">🚀</span>
+            <span class="badge-text">Start Free Today</span>
+          </div>
           <h2 class="cta-title">Ready to Transform Your Job Search?</h2>
           <p class="cta-subtitle">
-            Join thousands of job seekers who are already using JAM! to land
-            their dream jobs
+            Join thousands of job seekers who are already using <i>JAM!</i> to
+            land their dream jobs. AI-powered tools to accelerate your journey.
           </p>
           <div class="cta-buttons">
-            <a href="/register" class="btn btn-primary btn-large"
-              >Start Free Today</a
+            <a href="/register" class="btn btn-cta-primary btn-large"
+              >Get Started Free</a
             >
           </div>
-          <p class="cta-note">
-            No credit card required • Cancel anytime • Free forever plan
-            available
-          </p>
+          <p class="cta-note">No credit card required</p>
         </div>
       </div>
     </section>
@@ -394,7 +735,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-column">
-            <h4 class="footer-title">JAM!</h4>
+            <h4 class="footer-title"><i>JAM!</i></h4>
             <p class="footer-description">
               Your personal job application command center. Track, manage, and
               succeed in your job search.
@@ -414,31 +755,21 @@
             <ul class="footer-links">
               <li><a href="pages/company.html">About Us</a></li>
               <li><a href="pages/contact.html">Contact</a></li>
-              <li><a href="pages/privacy.html">Privacy Policy</a></li>
+              <li>
+                <a href="https://jam.tsdim.net/app/privacy-policy.html"
+                  >Privacy Policy</a
+                >
+              </li>
               <li><a href="pages/terms.html">Terms of Service</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4 class="footer-heading">Resources</h4>
-            <ul class="footer-links">
-              <li><a href="pages/help.html">Help Center</a></li>
-              <li><a href="pages/blog.html">Blog</a></li>
-              <li><a href="pages/guides.html">Job Search Guides</a></li>
-              <li><a href="pages/faq.html">FAQ</a></li>
             </ul>
           </div>
         </div>
         <div class="footer-bottom">
           <p>&copy; 2026 JAM! All rights reserved.</p>
-          <div class="social-links">
-            <a href="#" aria-label="Twitter">Twitter</a>
-            <a href="#" aria-label="LinkedIn">LinkedIn</a>
-            <a href="#" aria-label="GitHub">GitHub</a>
-          </div>
         </div>
       </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js" defer></script>
   </body>
 </html>
