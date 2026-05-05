@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "https://jam-api.tsdim.net"
+  apiUrl: 'https://api.jam-app.com',
 };

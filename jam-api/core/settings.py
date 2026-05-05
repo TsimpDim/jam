@@ -27,19 +27,19 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if not os.getenv("DEBUG") else True
 
-ALLOWED_HOSTS = ["localhost", "api.jam.local", "jam-api.tsdim.net"]
+ALLOWED_HOSTS = ["localhost", "api.jam.local", "api.jam-app.com"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:81",
     "http://127.0.0.1:8000",
     "http://localhost:8001",
     "http://client.jam.local:81",
-    "https://jam.tsdim.net",
+    "https://dashboard.jam-app.com"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:81",
-    "https://jam.tsdim.net",
+    "https://dashboard.jam-app.com"
 ]
 
 # Cookie settings for cross-subdomain access (jam.tsdim.net <-> jam-api.tsdim.net)
@@ -55,12 +55,12 @@ if DEBUG:
     SESSION_COOKIE_SECURE = False
 else:
     # Production: cross-subdomain cookies, HTTPS only
-    CSRF_COOKIE_DOMAIN = ".tsdim.net"
+    CSRF_COOKIE_DOMAIN = ".job-app.com"
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = False
 
-    SESSION_COOKIE_DOMAIN = ".tsdim.net"
+    SESSION_COOKIE_DOMAIN = ".job-app.com"
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
 
