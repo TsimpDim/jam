@@ -773,6 +773,107 @@ body {
     line-height: 1.6;
 }
 
+/* Browser Extension Section */
+.browser-extension {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, #ffffff 0%, #f5f0ff 100%);
+}
+
+.extension-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.extension-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.extension-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    border: 2px solid transparent;
+}
+
+.extension-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.extension-card-firefox {
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.extension-card-firefox:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+}
+
+.extension-card-chrome,
+.extension-card-edge {
+    opacity: 0.7;
+    cursor: default;
+}
+
+.extension-card-chrome:hover,
+.extension-card-edge:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.extension-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+
+.extension-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.extension-status {
+    display: inline-block;
+    padding: 0.375rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.extension-status-available {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.extension-status-coming-soon {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
 /* How It Works Section */
 .how-it-works {
     padding: 6rem 0;
@@ -1190,6 +1291,10 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .extension-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1307,6 +1412,11 @@ body {
 
     .features-grid {
         grid-template-columns: 1fr;
+    }
+
+    .extension-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
     }
 
     .steps-grid {
