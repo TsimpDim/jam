@@ -1,0 +1,141 @@
+.add-app-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.25rem;
+  flex-shrink: 0;
+}
+
+.add-app-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  overflow-y: auto;
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    margin: 0 0 0.25rem;
+  }
+}
+
+.error-message {
+  background-color: rgba(255, 82, 82, 0.2);
+  border: 1px solid #ff5252;
+  color: #ff5252;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.success-message {
+  background-color: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4caf50;
+  color: #4caf50;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: .4em 0;
+
+  label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+input, textarea, select {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.4rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  font-family: inherit;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all ease 100ms;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-back {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.btn-primary {
+  background-color: white;
+  color: #320047;
+  flex: 1;
+
+  &:hover {
+    box-shadow: 0 2px 0 0 rgba(211, 211, 211, 0.6);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    box-shadow: none;
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex: 1;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.button-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}

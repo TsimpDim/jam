@@ -79,10 +79,4 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.errorMessage =
       'Registration successful! Please login with your new account.';
   }
-
-  onPasswordKeyPress(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.onSubmit();
-    }
-  }
 }

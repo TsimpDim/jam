@@ -18,6 +18,9 @@ export interface Lead {
   id: number;
   company: string;
   role: string;
+  location?: string | null;
+  external_link?: string | null;
+  notes?: string | null;
 }
 
 export interface JobApplication {
@@ -50,27 +53,31 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  async getGroups(): Promise<Group[]> {
+  getGroups(): Promise<Group[]> {
     return firstValueFrom(
       this.http.get<Group[]>(`${this.baseUrl}/jam/groups/`)
     );
   }
 
-  async getSteps(): Promise<Step[]> {
+  getSteps(): Promise<Step[]> {
     return firstValueFrom(this.http.get<Step[]>(`${this.baseUrl}/jam/steps/`));
   }
 
-  async getLeads(): Promise<Lead[]> {
+  getLeads(): Promise<Lead[]> {
     return firstValueFrom(
       this.http.get<Lead[]>(`${this.baseUrl}/jam/leads/?all=true`)
     );
   }
 
-  async createJobApplication(
-    data: Partial<JobApplication>
-  ): Promise<JobApplication> {
+  createJobApplication(data: Partial<JobApplication>): Promise<JobApplication> {
     return firstValueFrom(
       this.http.post<JobApplication>(`${this.baseUrl}/jam/jobapps/`, data)
+    );
+  }
+
+  createLead(data: Partial<Lead>): Promise<Lead> {
+    return firstValueFrom(
+      this.http.post<Lead>(`${this.baseUrl}/jam/leads/`, data)
     );
   }
 }

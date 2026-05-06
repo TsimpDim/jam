@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddAppComponent } from './components/add-app/add-app.component';
+import { AddLeadComponent } from './components/add-lead/add-lead.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
@@ -15,17 +16,18 @@ import { AuthInterceptor } from './services/auth.interceptor';
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    AddAppComponent
+    AddAppComponent,
+    AddLeadComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

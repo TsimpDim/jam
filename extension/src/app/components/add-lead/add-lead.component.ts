@@ -1,32 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiService, Group, Lead, Step } from '../../services/api.service';
+import { ApiService } from '../../services/api.service';
+import { PageData } from '../add-app/add-app.component';
 
 declare const chrome: any;
 
-export interface PageData {
-  title?: string;
-  company?: string;
-  location?: string;
-  url?: string;
-  description?: string;
-  appliedThrough?: string;
-  salary?: string;
-  employmentType?: string;
-  remote?: boolean;
-}
-
 @Component({
-  selector: 'app-add-app',
-  templateUrl: './add-app.component.html',
-  styleUrls: ['./add-app.component.scss'],
+  selector: 'app-add-lead',
+  templateUrl: './add-lead.component.html',
+  styleUrls: ['./add-lead.component.scss'],
 })
-export class AddAppComponent implements OnInit {
+export class AddLeadComponent implements OnInit {
   form!: FormGroup;
-  groups: Group[] = [];
-  leads: Lead[] = [];
-  initialSteps: Step[] = [];
 
   errorMessage = '';
   successMessage = '';
@@ -45,41 +31,21 @@ export class AddAppComponent implements OnInit {
   }
 
   private initForm(): void {
-    const today = new Date().toISOString().split('T')[0];
     this.form = this.formBuilder.group({
       company: ['', Validators.required],
-      lead: [''],
       role: ['', Validators.required],
       location: [''],
-      appliedThrough: [''],
       externalLink: [''],
       notes: [''],
-      date: [today],
-      group: ['', Validators.required],
-      initialStep: ['', Validators.required],
     });
   }
 
   async loadData(): Promise<void> {
     try {
-      this.groups = await this.apiService.getGroups();
-
-      const steps = await this.apiService.getSteps();
-      this.initialSteps = steps.filter((s) => s.type === 'S');
-
-      this.leads = await this.apiService.getLeads();
-
-      if (this.groups.length > 0) {
-        this.form.get('group')?.setValue(this.groups[0].id);
-      }
-      if (this.initialSteps.length > 0) {
-        this.form.get('initialStep')?.setValue(this.initialSteps[0].id);
-      }
-
       await this.scrapeCurrentTab();
       this.populateFormFromPageData();
     } catch (error: any) {
-      this.errorMessage = error.message || 'Failed to load data';
+      this.errorMessage = error.message || 'Failed to load page data';
     }
   }
 
@@ -142,11 +108,6 @@ export class AddAppComponent implements OnInit {
     if (this.pageData.url) {
       this.form.get('externalLink')?.setValue(this.pageData.url);
     }
-    // Auto-fill "Applied Through" from the detected platform
-    if (this.pageData.appliedThrough) {
-      this.form.get('appliedThrough')?.setValue(this.pageData.appliedThrough);
-    }
-    // Prepend salary / employment-type info to notes if present
     if (
       this.pageData.salary ||
       this.pageData.employmentType ||
@@ -166,15 +127,10 @@ export class AddAppComponent implements OnInit {
   }
 
   async onSave(): Promise<void> {
-    const { company, role, group, initialStep } = this.form.value;
+    const { company, role } = this.form.value;
 
     if (!company || !role) {
       this.errorMessage = 'Please fill in company and role';
-      return;
-    }
-
-    if (!group || !initialStep) {
-      this.errorMessage = 'Please select group and initial step';
       return;
     }
 
@@ -183,22 +139,17 @@ export class AddAppComponent implements OnInit {
     this.loading = true;
 
     try {
-      const jobData = {
+      const leadData = {
         company,
         role,
         location: this.form.value.location || null,
-        applied_through: this.form.value.appliedThrough || null,
         external_link: this.form.value.externalLink || null,
         notes: this.form.value.notes || null,
-        date: this.form.value.date || undefined,
-        group: parseInt(group),
-        initial_step: parseInt(initialStep),
-        lead: this.form.value.lead ? parseInt(this.form.value.lead) : null,
       };
 
-      await this.apiService.createJobApplication(jobData);
+      await this.apiService.createLead(leadData);
 
-      this.successMessage = 'Application submitted successfully!';
+      this.successMessage = 'Lead saved successfully!';
 
       setTimeout(() => {
         this.resetForm();
@@ -206,7 +157,7 @@ export class AddAppComponent implements OnInit {
       }, 1500);
     } catch (error: any) {
       this.errorMessage =
-        error.message || 'Failed to submit application. Please try again.';
+        error.message || 'Failed to save lead. Please try again.';
     } finally {
       this.loading = false;
     }
@@ -218,12 +169,7 @@ export class AddAppComponent implements OnInit {
   }
 
   private resetForm(): void {
-    const today = new Date().toISOString().split('T')[0];
-    this.form.reset({
-      date: today,
-      group: this.groups[0]?.id,
-      initialStep: this.initialSteps[0]?.id,
-    });
+    this.form.reset();
     this.errorMessage = '';
     this.successMessage = '';
     this.pageData = null;

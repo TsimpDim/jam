@@ -130,6 +130,7 @@ class RegisterView(generics.CreateAPIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class TokenView(generics.GenericAPIView):
     """Extension: issue a Knox token. No session created."""
+    authentication_classes = []
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -138,9 +139,11 @@ class TokenView(generics.GenericAPIView):
         return Response({"token": token, "user": {"pk": user.pk, "username": user.username}})
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class TokenLogoutView(generics.GenericAPIView):
     """Extension: revoke the current Knox token."""
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = []
 
     def post(self, request):
         if not hasattr(request, "auth") or request.auth is None:

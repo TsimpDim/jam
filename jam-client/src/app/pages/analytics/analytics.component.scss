@@ -35,7 +35,7 @@
     50%       { opacity: 0.7; transform: scale(1.08); }
 }
 
-// Main content area – fades in on mount, dims on reload
+// Main content area - fades in on mount, dims on reload
 #container {
     padding: 0 1.5em 1.5em;
     animation: fade-in 0.3s ease both;
