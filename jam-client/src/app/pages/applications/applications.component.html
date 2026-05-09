@@ -16,9 +16,9 @@
 
       <div class="clr-column" *ngIf="selectedApp != null">
         <h4>Job Application</h4>
-        <div class="card">
+        <div class="card" (click)="openJobAppModal()">
           <div class="card-header">
-            {{ selectedApp.company }}
+            {{ selectedApp.company }} - {{ selectedApp.role }}
             <span
               *ngIf="
                 selectedApp.location !== null && selectedApp.location !== ''
@@ -38,12 +38,23 @@
               >{{ selectedApp.status }}</span
             >
           </div>
-          <div class="card-block">
-            <div class="card-title">
-              {{ selectedApp.role }}
-            </div>
-            <div class="card-text">
-              {{ selectedApp.notes }}
+          <div class="card-block" *ngIf="selectedApp.notes">
+            <div class="card-text notes">
+              <ng-container *ngIf="isNotesLong(selectedApp.notes)">
+                <span *ngIf="!showFullNotes">{{
+                  getNotesPreview(selectedApp.notes)
+                }}</span>
+                <span *ngIf="showFullNotes">{{ selectedApp.notes }}</span>
+                <button
+                  class="btn btn-link btn-sm toggle-notes-btn"
+                  (click)="toggleFullNotes(); $event.stopPropagation()"
+                >
+                  {{ showFullNotes ? "Show less" : "Show more" }}
+                </button>
+              </ng-container>
+              <ng-container *ngIf="!isNotesLong(selectedApp.notes)">
+                {{ selectedApp.notes }}
+              </ng-container>
             </div>
           </div>
           <div class="card-footer">
@@ -112,9 +123,18 @@
                   class="clr-timeline-step-body"
                   (click)="openEditTimelineModal(tl.id)"
                 >
-                  <div class="clr-timeline-step-title">{{ tl.step.name }}</div>
-                  <div class="clr-timeline-step-description">
-                    {{ tl.notes }}
+                  <div class="clr-timeline-step-title">
+                    {{ tl.step.name }}
+                    <cds-icon
+                      shape="note"
+                      size="sm"
+                      class="notes-icon"
+                      [class.has-notes]="tl.notes"
+                      (click)="
+                        openNoteViewModal(tl.id); $event.stopPropagation()
+                      "
+                      [title]="tl.notes ? 'View/Edit Notes' : 'Add Notes'"
+                    ></cds-icon>
                   </div>
                 </div>
               </li>
@@ -158,6 +178,14 @@
       (onAllApplicationsNeedUpdate)="getApplications()"
     >
     </app-timeline-modal>
+
+    <app-note-view-modal
+      [isOpen]="noteViewModalIsOpen"
+      [timelineStep]="selectedTimelineStepForNotes"
+      (onClose)="noteViewModalIsOpen = false"
+      (onNoteUpdated)="getTimeline()"
+    >
+    </app-note-view-modal>
 
     <clr-modal [(clrModalOpen)]="snapshotModalIsOpen" [clrModalSize]="'lg'">
       <h3 class="modal-title">Job Ad</h3>

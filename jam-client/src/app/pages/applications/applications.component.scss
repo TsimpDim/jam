@@ -2,9 +2,49 @@ a:hover {
     cursor: pointer;
 }
 
+.notes {
+    white-space: pre-wrap;
+}
+
+.toggle-notes-btn {
+    display: block;
+    padding: 0;
+    margin-left: 0.25rem;
+    font-size: 0.85em;
+}
+
+.clr-timeline-step-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .notes-icon {
+        cursor: pointer;
+        opacity: 0.35;
+        transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        flex-shrink: 0;
+        color: var(--clr-global-text2);
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        &.has-notes {
+            opacity: 0.85;
+            color: var(--clr-color-action-600, #5584ff);
+
+            &:hover {
+                opacity: 1;
+                color: var(--clr-color-action-700, #3366dd);
+            }
+        }
+    }
+}
+
 .clr-timeline-step-body:hover {
     cursor: pointer;
-    background-color: rgb(241, 241, 241);
+    border-radius: 4px;
 }
 
 .badge {
@@ -78,6 +118,10 @@ a:hover {
 .no-snapshot {
     color: #666;
     font-style: italic;
+}
+
+.card:hover {
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {

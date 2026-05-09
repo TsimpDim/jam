@@ -11,6 +11,7 @@ import { ClarityIcons, detailsIcon, lightbulbIcon } from '@cds/core/icon';
 import { JobNavComponent } from '../../shared/job-nav/job-nav.component';
 import { JobModalComponent } from '../../modals/job-modal/job-modal.component';
 import { TimelineModalComponent } from '../../modals/timeline-modal/timeline-modal.component';
+import { NoteViewModalComponent } from '../../modals/note-view-modal/note-view-modal.component';
 ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
 
 @Component({
@@ -22,6 +23,7 @@ ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
     JobNavComponent,
     JobModalComponent,
     TimelineModalComponent,
+    NoteViewModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './applications.component.html',
@@ -46,8 +48,29 @@ export class ApplicationsComponent implements OnInit {
   public loadingSnapshot: boolean = false;
   public timelineLayout: string = 'horizontal';
   public currentSort: string = 'id';
+  public noteViewModalIsOpen: boolean = false;
+  public selectedTimelineStepForNotes: any = null;
+  public showFullNotes: boolean = false;
+  private readonly MAX_JOB_APP_NOTE_LINES = 15;
 
   constructor(private jamService: JamService) {}
+
+  isNotesLong(notes: string): boolean {
+    if (!notes) return false;
+    const lines = notes.split('\n').length;
+    return lines > this.MAX_JOB_APP_NOTE_LINES;
+  }
+
+  getNotesPreview(notes: string): string {
+    if (!notes) return '';
+    const lines = notes.split('\n');
+    const preview = lines.slice(0, this.MAX_JOB_APP_NOTE_LINES).join('\n');
+    return preview + '...';
+  }
+
+  toggleFullNotes(): void {
+    this.showFullNotes = !this.showFullNotes;
+  }
 
   ngOnInit(): void {
     const savedSort = localStorage.getItem('jam_job_nav_sort') || '-id';
@@ -99,6 +122,7 @@ export class ApplicationsComponent implements OnInit {
 
     if (selectedJobApp !== undefined) {
       this.selectedApp = selectedJobApp;
+      this.showFullNotes = false;
 
       this.getTimeline();
     } else {
@@ -179,6 +203,23 @@ export class ApplicationsComponent implements OnInit {
       (timelineSteps: any) => timelineSteps.id == timelineStepId
     );
     this.timelineStepModalIsOpen = true;
+  }
+
+  openNoteViewModal(timelineStepId: any) {
+    if (!this.selectedAppTimeline) {
+      return;
+    }
+
+    const found = this.selectedAppTimeline.find(
+      (timelineSteps: any) => timelineSteps.id == timelineStepId
+    );
+
+    if (!found) {
+      return;
+    }
+
+    this.selectedTimelineStepForNotes = found;
+    this.noteViewModalIsOpen = true;
   }
 
   openSnapshotModal() {

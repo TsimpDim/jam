@@ -1,0 +1,77 @@
+<clr-modal
+  [(clrModalOpen)]="isOpen"
+  [clrModalClosable]="true"
+  [clrModalSize]="'lg'"
+>
+  <h3 class="modal-title">
+    <cds-icon shape="file"></cds-icon>
+    {{ timelineStep?.step?.name }} - notes
+  </h3>
+
+  <div class="modal-body note-modal-body" *ngIf="timelineStep">
+    <!-- View Mode -->
+    <div class="note-view" *ngIf="!isEditing">
+      <div
+        #noteContent
+        class="note-content"
+        (click)="startEditing()"
+        title="Click to edit"
+      >
+        <span class="note-text">{{ noteText }}</span>
+      </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <div class="note-edit" *ngIf="isEditing">
+      <textarea
+        #noteTextarea
+        [value]="editText"
+        (input)="editText = $any($event.target).value"
+        placeholder="Add your notes here..."
+        class="note-content"
+        [style.height]="textareaHeight"
+        (keydown.control.enter)="saveNote()"
+        (keydown.meta.enter)="saveNote()"
+        autofocus
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <clr-spinner
+      *ngIf="isSaving"
+      [clrMedium]="true"
+      [clrInline]="true"
+      [clrInverse]="true"
+    ></clr-spinner>
+    <button
+      *ngIf="!isEditing"
+      type="button"
+      class="btn btn-outline"
+      (click)="closeModal()"
+    >
+      Cancel
+    </button>
+    <button
+      *ngIf="!isEditing"
+      type="button"
+      class="btn btn-primary"
+      (click)="startEditing()"
+    >
+      <cds-icon shape="pencil"></cds-icon> Edit
+    </button>
+    <ng-container *ngIf="isEditing">
+      <button type="button" class="btn btn-outline" (click)="cancelEditing()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="saveNote()"
+        [disabled]="isSaving"
+      >
+        Submit
+      </button>
+    </ng-container>
+  </div>
+</clr-modal>

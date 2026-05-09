@@ -106,7 +106,7 @@ export class SankeyComponent
       })),
     };
 
-    // Fixed compact dimensions — fits in a single card view
+    // Fixed compact dimensions - fits in a single card view
     const margin = { top: 16, right: 160, bottom: 16, left: 160 };
     const containerWidth = Math.max(container.clientWidth || 700, 600);
     const width = containerWidth;

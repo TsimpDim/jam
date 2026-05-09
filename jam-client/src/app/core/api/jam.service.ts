@@ -214,26 +214,22 @@ export class JamService {
     jobAppId: number,
     jobAppGroup: number,
     nextStep: number,
-    timelineNotes: string,
     date: string
   ) {
     return this.runHttpCall('POST', environment.apiUrl + '/jam/timeline/', {
       group: jobAppGroup,
       step: nextStep,
-      notes: timelineNotes ? timelineNotes : undefined,
+      notes: undefined,
       jobapp: jobAppId,
       date: date ? date : undefined,
     });
   }
 
-  updateTimelineStep(timelineStepId: number, notes: string, date: string) {
+  updateTimelineStep(timelineStepId: number, data: {}) {
     return this.runHttpCall(
       'PATCH',
       environment.apiUrl + '/jam/timeline/' + timelineStepId + '/',
-      {
-        notes: notes,
-        date: date ? date : undefined,
-      }
+      data
     );
   }
 

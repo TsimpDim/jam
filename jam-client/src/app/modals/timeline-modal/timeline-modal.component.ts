@@ -50,7 +50,6 @@ export class TimelineModalComponent implements OnInit {
   ) {
     this.timelineStepForm = this.formBuilder.group({
       step: new FormControl('', [Validators.required]),
-      notes: new FormControl('', []),
       date: new FormControl('', []),
     });
   }
@@ -114,7 +113,6 @@ export class TimelineModalComponent implements OnInit {
         this.application.id,
         this.application.group,
         this.timelineStepForm.value.step,
-        this.timelineStepForm.value.notes,
         this.timelineStepForm.value.date
       )
       .subscribe({
@@ -140,11 +138,9 @@ export class TimelineModalComponent implements OnInit {
   updateTimelineStep() {
     this.loading = true;
     this.jamService
-      .updateTimelineStep(
-        this.timelineStep.id,
-        this.timelineStepForm.value.notes,
-        this.timelineStepForm.value.date
-      )
+      .updateTimelineStep(this.timelineStep.id, {
+        date: this.timelineStepForm.value.date,
+      })
       .subscribe({
         next: (data: any) => {
           this.onTimelineNeedsUpdate.emit();
