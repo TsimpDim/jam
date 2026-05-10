@@ -1,3 +1,25 @@
-.clr-control-container {
-    margin-top: -1em;
+.job-form {
+  .clr-control-container {
+    width: 100%;
+  }
+
+  clr-input-container,
+  clr-select-container,
+  clr-date-container,
+  clr-textarea-container {
+    width: 100%;
+
+    input[clrInput],
+    select,
+    textarea {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .clr-control-label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.8rem;
+  }
 }

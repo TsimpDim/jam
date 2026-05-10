@@ -105,8 +105,14 @@ export class JobModalComponent implements OnInit, OnChanges {
       this.jobAppForm.patchValue({
         group: this.getDefaultGroup(),
         initialStep: this.initialSteps[0].id,
+        date: this.getTodayDate(),
       });
     }
+  }
+
+  getTodayDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
   }
 
   getDefaultGroup() {

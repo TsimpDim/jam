@@ -74,3 +74,28 @@
     color: #666;
     font-style: italic;
 }
+
+.lead-form {
+    .clr-control-container {
+        width: 100%;
+    }
+
+    clr-input-container,
+    clr-select-container,
+    clr-textarea-container {
+        width: 100%;
+
+        input[clrInput],
+        select,
+        textarea {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+
+    .clr-control-label {
+        font-weight: 500;
+        color: #374151;
+        font-size: 0.8rem;
+    }
+}

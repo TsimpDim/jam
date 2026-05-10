@@ -1,4 +1,8 @@
-<clr-modal [(clrModalOpen)]="isOpen" [clrModalClosable]="false">
+<clr-modal
+  [(clrModalOpen)]="isOpen"
+  [clrModalClosable]="false"
+  [clrModalSize]="'lg'"
+>
   <h3 class="modal-title" *ngIf="application === null">Add Job Application</h3>
   <h3 class="modal-title" *ngIf="application !== null">Edit Job Application</h3>
 
@@ -9,16 +13,19 @@
       *ngIf="errorMessage"
     >
       <clr-alert-item>
-        <span class="alert-text">
-          {{ errorMessage }}
-        </span>
+        <span class="alert-text">{{ errorMessage }}</span>
       </clr-alert-item>
     </clr-alert>
 
-    <form class="clr-form clr-form-horizontal" [formGroup]="jobAppForm">
+    <form class="clr-form form-grid job-form" [formGroup]="jobAppForm">
+      <div class="form-section-header">
+        <cds-icon shape="id-badge" size="14"></cds-icon>
+        Position
+      </div>
+
       <div class="clr-form-control">
         <clr-input-container>
-          <label><cds-icon shape="organization"></cds-icon> Company *</label>
+          <label>Company *</label>
           <input
             clrInput
             type="text"
@@ -31,20 +38,8 @@
       </div>
 
       <div class="clr-form-control">
-        <clr-select-container>
-          <label><cds-icon shape="lightbulb"></cds-icon> Lead</label>
-          <select clrSelect name="lead" formControlName="lead">
-            <option [ngValue]="null">No Lead</option>
-            <option *ngFor="let lead of leads" [ngValue]="lead.id">
-              {{ lead.company }} - {{ lead.role }}
-            </option>
-          </select>
-        </clr-select-container>
-      </div>
-
-      <div class="clr-form-control">
         <clr-input-container>
-          <label><cds-icon shape="id-badge"></cds-icon> Role *</label>
+          <label>Role *</label>
           <input
             clrInput
             type="text"
@@ -58,7 +53,7 @@
 
       <div class="clr-form-control">
         <clr-input-container>
-          <label><cds-icon shape="map-marker"></cds-icon> Location</label>
+          <label>Location</label>
           <input
             clrInput
             type="text"
@@ -70,10 +65,25 @@
       </div>
 
       <div class="clr-form-control">
+        <clr-select-container>
+          <label>Lead</label>
+          <select clrSelect name="lead" formControlName="lead">
+            <option [ngValue]="null">No Lead</option>
+            <option *ngFor="let lead of leads" [ngValue]="lead.id">
+              {{ lead.company }} - {{ lead.role }}
+            </option>
+          </select>
+        </clr-select-container>
+      </div>
+
+      <div class="form-section-header">
+        <cds-icon shape="info-standard" size="14"></cds-icon>
+        Application Details
+      </div>
+
+      <div class="clr-form-control">
         <clr-input-container>
-          <label
-            ><cds-icon shape="info-standard"></cds-icon> Applied Through</label
-          >
+          <label>Applied Through</label>
           <input
             clrInput
             type="text"
@@ -85,8 +95,15 @@
       </div>
 
       <div class="clr-form-control">
+        <clr-date-container>
+          <label>Date</label>
+          <input clrDate type="date" name="date" formControlName="date" />
+        </clr-date-container>
+      </div>
+
+      <div class="clr-form-control">
         <clr-select-container>
-          <label><cds-icon shape="file"></cds-icon> CV Used</label>
+          <label>CV Used</label>
           <select clrSelect name="cvUsed" formControlName="cvUsed">
             <option [ngValue]="null">Not specified</option>
             <option *ngFor="let cv of cvs" [ngValue]="cv.id">
@@ -98,7 +115,7 @@
 
       <div class="clr-form-control">
         <clr-input-container>
-          <label><cds-icon shape="link"></cds-icon> External Link</label>
+          <label>External Link</label>
           <input
             clrInput
             type="text"
@@ -109,28 +126,14 @@
         </clr-input-container>
       </div>
 
-      <div class="clr-form-control">
-        <clr-textarea-container>
-          <label><cds-icon shape="note"></cds-icon> Notes</label>
-          <textarea
-            clrTextarea
-            name="notes"
-            formControlName="notes"
-            placeholder="Great first impression."
-          ></textarea>
-        </clr-textarea-container>
-      </div>
-
-      <div class="clr-form-control">
-        <clr-date-container>
-          <label><cds-icon shape="calendar"></cds-icon> Date</label>
-          <input clrDate type="date" name="date" formControlName="date" />
-        </clr-date-container>
+      <div class="form-section-header">
+        <cds-icon shape="block" size="14"></cds-icon>
+        Organisation
       </div>
 
       <div class="clr-form-control">
         <clr-select-container>
-          <label><cds-icon shape="block"></cds-icon> Group *</label>
+          <label>Group *</label>
           <select clrSelect name="group" formControlName="group">
             <option
               *ngFor="let group of groups; let i = index"
@@ -145,7 +148,7 @@
 
       <div class="clr-form-control" *ngIf="application === null">
         <clr-select-container>
-          <label><cds-icon shape="flag"></cds-icon> Initial Step *</label>
+          <label>Initial Step *</label>
           <select clrSelect name="initialStep" formControlName="initialStep">
             <option
               *ngFor="let step of initialSteps; let i = index"
@@ -156,6 +159,19 @@
           </select>
           <clr-control-error>Initial Step is required</clr-control-error>
         </clr-select-container>
+      </div>
+
+      <!-- Notes - full width -->
+      <div class="clr-form-control form-field-full">
+        <clr-textarea-container>
+          <label>Notes</label>
+          <textarea
+            clrTextarea
+            name="notes"
+            formControlName="notes"
+            placeholder="Great first impression."
+          ></textarea>
+        </clr-textarea-container>
       </div>
     </form>
   </div>

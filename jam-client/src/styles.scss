@@ -43,6 +43,72 @@ html, body {
   min-width: 200px;
 }
 
+/* Modern two-column form grid for modals */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+  width: 100%;
+}
+
+.form-grid .clr-form-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin: .2em;
+}
+
+.form-grid .clr-control-container {
+  width: 100%;
+}
+
+.form-grid .clr-control-container input,
+.form-grid .clr-control-container select {
+  width: 100%;
+  max-width: 100%;
+}
+
+.form-grid .form-field-full {
+  grid-column: 1 / -1;
+}
+
+.form-grid .form-field-full .clr-control-container textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Form section divider - spans full width, provides a titled visual separator */
+.form-section-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+
+  cds-icon {
+    color: #320047;
+    flex-shrink: 0;
+  }
+}
+
 @media (max-width: 576px) {
   html, body {
     width: 100%;
@@ -107,6 +173,14 @@ html, body {
   .clr-form-horizontal textarea {
     width: 100%;
     max-width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .form-field-full {
+    grid-column: 1;
   }
 }
 

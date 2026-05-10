@@ -70,12 +70,16 @@
         </div>
       </div>
 
-      <clr-modal [(clrModalOpen)]="modalIsOpen">
+      <clr-modal [(clrModalOpen)]="modalIsOpen" [clrModalSize]="'lg'">
         <h3 class="modal-title" *ngIf="selectedLead !== null">Edit Lead</h3>
         <h3 class="modal-title" *ngIf="selectedLead === null">Add Lead</h3>
 
         <div class="modal-body">
-          <clr-alert [clrAlertClosable]="false" [clrAlertType]="'danger'" *ngIf="errorMessage">
+          <clr-alert
+            [clrAlertClosable]="false"
+            [clrAlertType]="'danger'"
+            *ngIf="errorMessage"
+          >
             <clr-alert-item>
               <span class="alert-text">
                 {{ errorMessage }}
@@ -83,10 +87,16 @@
             </clr-alert-item>
           </clr-alert>
 
-          <form class="clr-form clr-form-horizontal" [formGroup]="leadForm">
+          <form class="clr-form form-grid lead-form" [formGroup]="leadForm">
+            <!-- ── Position ───────────────────────────────── -->
+            <div class="form-section-header">
+              <cds-icon shape="id-badge" size="14"></cds-icon>
+              Position
+            </div>
+
             <div class="clr-form-control">
               <clr-input-container>
-                <label><cds-icon shape="blocks-group"></cds-icon> Company *</label>
+                <label>Company *</label>
                 <input
                   clrInput
                   type="text"
@@ -100,7 +110,7 @@
 
             <div class="clr-form-control">
               <clr-input-container>
-                <label><cds-icon shape="id-badge"></cds-icon> Role *</label>
+                <label>Role *</label>
                 <input
                   clrInput
                   type="text"
@@ -114,7 +124,7 @@
 
             <div class="clr-form-control">
               <clr-input-container>
-                <label><cds-icon shape="map-marker"></cds-icon> Location</label>
+                <label>Location</label>
                 <input
                   clrInput
                   type="text"
@@ -126,8 +136,25 @@
             </div>
 
             <div class="clr-form-control">
+              <clr-select-container>
+                <label>Group</label>
+                <select clrSelect name="group" formControlName="group">
+                  <option [ngValue]="null">No Group</option>
+                  <option *ngFor="let group of groups" [ngValue]="group.id">
+                    {{ group.name }}
+                  </option>
+                </select>
+              </clr-select-container>
+            </div>
+
+            <div class="form-section-header">
+              <cds-icon shape="info-standard" size="14"></cds-icon>
+              Details
+            </div>
+
+            <div class="clr-form-control form-field-full">
               <clr-input-container>
-                <label><cds-icon shape="link"></cds-icon> External Link</label>
+                <label>External Link</label>
                 <input
                   clrInput
                   type="text"
@@ -138,26 +165,14 @@
               </clr-input-container>
             </div>
 
-            <div class="clr-form-control">
-              <clr-select-container>
-                <label><cds-icon shape="block"></cds-icon> Group</label>
-                <select clrSelect name="group" formControlName="group">
-                  <option [ngValue]="null">No Group</option>
-                  <option *ngFor="let group of groups" [ngValue]="group.id">
-                    {{ group.name }}
-                  </option>
-                </select>
-              </clr-select-container>
-            </div>
-
-            <div class="clr-form-control">
+            <div class="clr-form-control form-field-full">
               <clr-textarea-container>
-                <label><cds-icon shape="note"></cds-icon> Notes</label>
+                <label>Notes</label>
                 <textarea
                   clrTextarea
                   name="notes"
                   formControlName="notes"
-                  placeholder="A coding task given a candidate to complete on their own time"
+                  placeholder="Interesting opportunity, reached out via cold email..."
                 ></textarea>
               </clr-textarea-container>
             </div>

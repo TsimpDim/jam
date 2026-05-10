@@ -67,7 +67,7 @@ export class NoteViewModalComponent implements OnChanges {
   }
 
   cancelEditing() {
-    // If no notes exist, close immediately — no empty view state flash
+    // If no notes exist, close immediately - no empty view state flash
     if (this.noteText.length === 0 && this.editText.length === 0) {
       this.closeModal();
       return;

@@ -15,7 +15,7 @@
       </clr-alert-item>
     </clr-alert>
 
-    <form class="clr-form clr-form-horizontal" [formGroup]="form">
+    <form class="clr-form form-grid" [formGroup]="form">
       <div class="clr-form-control">
         <clr-input-container>
           <label>CV Name *</label>
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div *ngIf="cvFile" class="file-preview">
+      <div *ngIf="cvFile" class="file-preview form-field-full">
         <cds-icon shape="check-circle" status="success"></cds-icon>
         <span>{{ cvFile.name }}</span>
       </div>
