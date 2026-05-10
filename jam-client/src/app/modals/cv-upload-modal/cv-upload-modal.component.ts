@@ -34,7 +34,6 @@ export class CvUploadModalComponent implements OnChanges {
   @Output() closed = new EventEmitter<void>();
 
   form: FormGroup;
-  cvFile: File | null = null;
   uploading: boolean = false;
   errorMessage: string = '';
 
@@ -45,13 +44,13 @@ export class CvUploadModalComponent implements OnChanges {
   constructor(private jamService: JamService, private fb: FormBuilder) {
     this.form = this.fb.group({
       cvKey: new FormControl('', [Validators.required]),
+      cvFile: new FormControl(null),
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['editCV'] && this.editCV) {
       this.form.patchValue({ cvKey: this.editCV.key });
-      this.cvFile = null;
       this.errorMessage = '';
     }
   }
@@ -62,29 +61,6 @@ export class CvUploadModalComponent implements OnChanges {
     }
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const allowedExtensions = ['.pdf', '.doc', '.docx'];
-    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-
-    if (!allowedExtensions.includes(fileExtension)) {
-      this.errorMessage = 'Only PDF, DOC, and DOCX files are allowed.';
-      event.target.value = '';
-      return;
-    }
-
-    if (file.size > 1 * 1024 * 1024) {
-      this.errorMessage = 'File size must not exceed 1MB.';
-      event.target.value = '';
-      return;
-    }
-
-    this.cvFile = file;
-    this.errorMessage = '';
-  }
-
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -92,18 +68,39 @@ export class CvUploadModalComponent implements OnChanges {
       return;
     }
 
-    if (!this.isEditMode && !this.cvFile) {
+    const cvFile = this.form.get('cvFile')?.value;
+    if (!this.isEditMode && !cvFile) {
       this.errorMessage = 'Please select a file.';
       return;
     }
 
+    if (cvFile) {
+      const file = cvFile instanceof FileList ? cvFile[0] : cvFile;
+      if (file) {
+        const allowedExtensions = ['.pdf', '.doc', '.docx'];
+        const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+          this.form.get('cvFile')?.setErrors({ invalidFile: 'Only PDF, DOC, and DOCX files are allowed.' });
+          return;
+        }
+
+        if (file.size > 1 * 1024 * 1024) {
+          this.form.get('cvFile')?.setErrors({ invalidFile: 'File size must not exceed 1MB.' });
+          return;
+        }
+      }
+    }
+
     this.uploading = true;
     this.errorMessage = '';
+    this.form.get('cvFile')?.setErrors(null);
     const cvKey = this.form.value.cvKey;
 
     if (this.isEditMode && this.editCV) {
+      const file = cvFile instanceof FileList ? cvFile[0] : cvFile;
       this.jamService
-        .updateCV(this.editCV.id, cvKey, this.cvFile || undefined)
+        .updateCV(this.editCV.id, cvKey, file || undefined)
         .subscribe({
           next: () => {
             this.uploading = false;
@@ -116,8 +113,9 @@ export class CvUploadModalComponent implements OnChanges {
           },
         });
     } else {
-      if (!this.cvFile) return;
-      this.jamService.createCV(cvKey, this.cvFile).subscribe({
+      if (!cvFile) return;
+      const file = cvFile instanceof FileList ? cvFile[0] : cvFile;
+      this.jamService.createCV(cvKey, file).subscribe({
         next: () => {
           this.uploading = false;
           this.reset();
@@ -138,7 +136,6 @@ export class CvUploadModalComponent implements OnChanges {
 
   private reset(): void {
     this.form.reset();
-    this.cvFile = null;
     this.errorMessage = '';
     this.uploading = false;
     this.editCV = null;

@@ -5,16 +5,6 @@
 >
   <h3 class="modal-title">{{ isEditMode ? "Update CV" : "Upload New CV" }}</h3>
   <div class="modal-body">
-    <clr-alert
-      [clrAlertClosable]="false"
-      [clrAlertType]="'danger'"
-      *ngIf="errorMessage"
-    >
-      <clr-alert-item>
-        <span class="alert-text">{{ errorMessage }}</span>
-      </clr-alert-item>
-    </clr-alert>
-
     <form class="clr-form form-grid" [formGroup]="form">
       <div class="clr-form-control">
         <clr-input-container>
@@ -35,13 +25,12 @@
       </div>
 
       <div class="clr-form-control">
-        <label class="clr-control-label">{{
-          isEditMode ? "New CV File (optional)" : "CV File *"
-        }}</label>
-        <div class="clr-control-container">
+        <clr-file-input-container>
+          <label>{{ isEditMode ? "New CV File (optional)" : "CV File *" }}</label>
           <input
             type="file"
-            (change)="onFileSelected($event)"
+            formControlName="cvFile"
+            clrFileInput
             accept=".pdf,.doc,.docx"
           />
           <clr-control-helper>{{
@@ -49,13 +38,11 @@
               ? "Leave empty to keep current file"
               : "PDF, DOC, DOCX (max 1MB)"
           }}</clr-control-helper>
-        </div>
+          <clr-control-error *clrIfError="'invalidFile'">{{ form.get('cvFile')?.errors?.['invalidFile'] }}</clr-control-error>
+        </clr-file-input-container>
       </div>
 
-      <div *ngIf="cvFile" class="file-preview form-field-full">
-        <cds-icon shape="check-circle" status="success"></cds-icon>
-        <span>{{ cvFile.name }}</span>
-      </div>
+
     </form>
   </div>
   <div class="modal-footer">
