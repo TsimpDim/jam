@@ -7,16 +7,6 @@
   <h3 class="modal-title" *ngIf="application !== null">Edit Job Application</h3>
 
   <div class="modal-body">
-    <clr-alert
-      [clrAlertClosable]="false"
-      [clrAlertType]="'danger'"
-      *ngIf="errorMessage"
-    >
-      <clr-alert-item>
-        <span class="alert-text">{{ errorMessage }}</span>
-      </clr-alert-item>
-    </clr-alert>
-
     <form class="clr-form form-grid job-form" [formGroup]="jobAppForm">
       <div class="form-section-header">
         <cds-icon shape="id-badge" size="14"></cds-icon>

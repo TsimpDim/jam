@@ -3,18 +3,6 @@
   <h3 class="modal-title" *ngIf="timelineStep !== null">Edit Step</h3>
 
   <div class="modal-body">
-    <clr-alert
-      [clrAlertClosable]="false"
-      [clrAlertType]="'danger'"
-      *ngIf="errorMessage"
-    >
-      <clr-alert-item>
-        <span class="alert-text">
-          {{ errorMessage }}
-        </span>
-      </clr-alert-item>
-    </clr-alert>
-
     <form class="clr-form form-grid" [formGroup]="timelineStepForm">
       <div class="clr-form-control" *ngIf="timelineStep === null">
         <clr-select-container>

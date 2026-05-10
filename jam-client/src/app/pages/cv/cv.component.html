@@ -17,17 +17,6 @@
           </clr-alert-item>
         </clr-alert>
 
-        <clr-alert
-          [clrAlertClosable]="true"
-          [clrAlertType]="'success'"
-          *ngIf="successMessage"
-          [(clrAlertClosed)]="showSuccessAlert"
-        >
-          <clr-alert-item>
-            <span class="alert-text">{{ successMessage }}</span>
-          </clr-alert-item>
-        </clr-alert>
-
         <button
           class="btn btn-primary"
           (click)="openUploadForm()"

@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-register',
@@ -25,12 +26,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class RegisterComponent implements OnInit {
   public form: FormGroup;
   public loading = false;
-  public errorMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {
     this.form = this.formBuilder.group(
       {
@@ -52,7 +53,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {}
 
   register() {
-    this.errorMessage = '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -72,12 +72,13 @@ export class RegisterComponent implements OnInit {
           this.loading = false;
           if (resp && resp.user) {
             this.authService.setStatusLoggedIn();
+            this.snackbarService.showSuccess('Account created successfully.');
             this.router.navigate(['applications']);
           }
         },
         error: (err) => {
           this.loading = false;
-          this.errorMessage = this.parseError(err.error);
+          this.snackbarService.showError(this.parseError(err.error));
         },
       });
   }

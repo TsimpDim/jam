@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -25,13 +26,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class ForgotPasswordComponent implements OnInit {
   public form: FormGroup;
   public loading = false;
-  public errorMessage = '';
-  public successMessage = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {
     this.form = this.formBuilder.group({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -41,8 +41,6 @@ export class ForgotPasswordComponent implements OnInit {
   ngOnInit(): void {}
 
   submit() {
-    this.errorMessage = '';
-    this.successMessage = '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -53,13 +51,14 @@ export class ForgotPasswordComponent implements OnInit {
     this.authService.requestPasswordReset(this.form.value.email).subscribe({
       next: (resp) => {
         this.loading = false;
-        this.successMessage =
+        this.snackbarService.showSuccess(
           resp?.detail ||
-          'If an account with that email exists, a password reset link has been sent.';
+            'If an account with that email exists, a password reset link has been sent.'
+        );
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = this.parseError(err.error);
+        this.snackbarService.showError(this.parseError(err.error));
       },
     });
   }

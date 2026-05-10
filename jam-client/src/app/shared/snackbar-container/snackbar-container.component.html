@@ -1,0 +1,55 @@
+<div class="snackbar-container" *ngIf="snackbars$ | async as snackbars; else empty">
+  <div
+    class="snackbar"
+    *ngFor="let snackbar of snackbars"
+    [ngClass]="{
+      'snackbar--success': snackbar.type === 'success',
+      'snackbar--error': snackbar.type === 'error'
+    }"
+  >
+    <div class="snackbar__icon" [ngClass]="{
+      'snackbar__icon--success': snackbar.type === 'success',
+      'snackbar__icon--error': snackbar.type === 'error'
+    }">
+      <svg
+        *ngIf="snackbar.type === 'success'"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 36 36"
+        focusable="false"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M18 2a16 16 0 1 0 0 32 16 16 0 0 0 0-32zm-2.5 23.5l-7-7 2.1-2.1L15.5 21.3l9.4-9.4L27 14l-11.5 11.5z"
+        />
+      </svg>
+      <svg
+        *ngIf="snackbar.type === 'error'"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 36 36"
+        focusable="false"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M18 2a16 16 0 1 0 0 32 16 16 0 0 0 0-32zm7.1 22.9L22.9 27 18 22.1 13.1 27 10.9 24.9 15.8 20 10.9 15.1 13.1 13 18 17.9 22.9 13 25.1 15.1 20.2 20l4.9 4.9z"
+        />
+      </svg>
+    </div>
+    <span class="snackbar__message">{{ snackbar.message }}</span>
+    <button class="snackbar__close" (click)="dismiss(snackbar.id)" aria-label="Close">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 36 36"
+        focusable="false"
+        aria-hidden="true"
+      >
+        <path
+          fill="currentColor"
+          d="M28.9 9.1L26.9 7.1 18 16 9.1 7.1 7.1 9.1 16 18l-8.9 8.9 2 2L18 20l8.9 8.9 2-2L20 18z"
+        />
+      </svg>
+    </button>
+  </div>
+</div>
+<ng-template #empty></ng-template>

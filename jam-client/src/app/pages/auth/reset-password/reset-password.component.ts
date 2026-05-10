@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -25,8 +26,6 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class ResetPasswordComponent implements OnInit {
   public form: FormGroup;
   public loading = false;
-  public errorMessage = '';
-  public successMessage = '';
   public invalidToken = false;
   public uid = '';
   public token = '';
@@ -35,7 +34,8 @@ export class ResetPasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackbarService: SnackbarService
   ) {
     this.form = this.formBuilder.group(
       {
@@ -59,15 +59,14 @@ export class ResetPasswordComponent implements OnInit {
 
       if (!this.uid || !this.token) {
         this.invalidToken = true;
-        this.errorMessage =
-          'Invalid reset link. Please request a new password reset.';
+        this.snackbarService.showError(
+          'Invalid reset link. Please request a new password reset.'
+        );
       }
     });
   }
 
   submit() {
-    this.errorMessage = '';
-    this.successMessage = '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -85,16 +84,18 @@ export class ResetPasswordComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           this.loading = false;
-          this.successMessage =
+          this.snackbarService.showSuccess(
             resp?.detail ||
-            'Password has been reset successfully. You can now log in.';
+              'Password has been reset successfully. You can now log in.'
+          );
+          this.router.navigate(['/auth/login']);
         },
         error: (err) => {
           this.loading = false;
           if (err.status === 400) {
             this.invalidToken = true;
           }
-          this.errorMessage = this.parseError(err.error);
+          this.snackbarService.showError(this.parseError(err.error));
         },
       });
   }

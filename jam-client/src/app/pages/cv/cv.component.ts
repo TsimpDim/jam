@@ -4,6 +4,7 @@ import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
 import { CV, UserInfo } from 'src/app/interfaces';
 import { CvUploadModalComponent } from '../../modals/cv-upload-modal/cv-upload-modal.component';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-cv',
@@ -16,9 +17,7 @@ export class CvComponent implements OnInit {
   cvs: CV[] = [];
   loading: boolean = false;
   errorMessage: string = '';
-  successMessage: string = '';
   showErrorAlert: boolean = false;
-  showSuccessAlert: boolean = false;
 
   // Modal state
   showUploadForm: boolean = false;
@@ -32,7 +31,10 @@ export class CvComponent implements OnInit {
   // Download state
   downloadingId: number | null = null;
 
-  constructor(private jamService: JamService) {}
+  constructor(
+    private jamService: JamService,
+    private snackbarService: SnackbarService
+  ) {}
 
   ngOnInit(): void {
     this.loadCVs();
@@ -85,10 +87,9 @@ export class CvComponent implements OnInit {
 
   onCvUploaded(): void {
     this.showUploadForm = false;
-    this.successMessage = this.editingCV
-      ? 'CV updated successfully.'
-      : 'CV uploaded successfully.';
-    this.showSuccessAlert = true;
+    this.snackbarService.showSuccess(
+      this.editingCV ? 'CV updated successfully.' : 'CV uploaded successfully.'
+    );
     this.loadCVs();
     this.loadUserInfo();
   }
@@ -107,15 +108,15 @@ export class CvComponent implements OnInit {
     this.jamService.deleteCV(cv.id).subscribe({
       next: () => {
         this.loading = false;
-        this.successMessage = 'CV deleted successfully.';
-        this.showSuccessAlert = true;
+        this.snackbarService.showSuccess('CV deleted successfully.');
         this.loadCVs();
         this.loadUserInfo();
       },
       error: () => {
         this.loading = false;
-        this.errorMessage = 'An error occurred while deleting the CV.';
-        this.showErrorAlert = true;
+        this.snackbarService.showError(
+          'An error occurred while deleting the CV.'
+        );
       },
     });
   }
@@ -135,8 +136,9 @@ export class CvComponent implements OnInit {
         this.downloadingId = null;
       },
       error: () => {
-        this.errorMessage = 'An error occurred while downloading the CV.';
-        this.showErrorAlert = true;
+        this.snackbarService.showError(
+          'An error occurred while downloading the CV.'
+        );
         this.downloadingId = null;
       },
     });

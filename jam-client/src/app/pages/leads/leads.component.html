@@ -75,18 +75,6 @@
         <h3 class="modal-title" *ngIf="selectedLead === null">Add Lead</h3>
 
         <div class="modal-body">
-          <clr-alert
-            [clrAlertClosable]="false"
-            [clrAlertType]="'danger'"
-            *ngIf="errorMessage"
-          >
-            <clr-alert-item>
-              <span class="alert-text">
-                {{ errorMessage }}
-              </span>
-            </clr-alert-item>
-          </clr-alert>
-
           <form class="clr-form form-grid lead-form" [formGroup]="leadForm">
             <!-- ── Position ───────────────────────────────── -->
             <div class="form-section-header">

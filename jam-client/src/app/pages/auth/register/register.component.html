@@ -5,18 +5,6 @@
         <h3 class="welcome">Welcome to JAM!</h3>
       </section>
       <div class="login-group">
-        <clr-alert
-          [clrAlertClosable]="false"
-          [clrAlertType]="'danger'"
-          *ngIf="errorMessage"
-        >
-          <clr-alert-item>
-            <span class="alert-text">
-              {{ errorMessage }}
-            </span>
-          </clr-alert-item>
-        </clr-alert>
-
         <clr-input-container>
           <label>Username</label>
           <input

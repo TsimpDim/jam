@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-steps',
@@ -21,7 +22,6 @@ export class StepsComponent implements OnInit {
   public selectedStep: any = null;
   public stepForm: FormGroup;
   public modalIsOpen: boolean = false;
-  public errorMessage: string = '';
   public loading: boolean = false;
   public loadingSteps: boolean = true;
   public steps: any;
@@ -47,7 +47,8 @@ export class StepsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private jamService: JamService
+    private jamService: JamService,
+    private snackbarService: SnackbarService
   ) {
     this.stepForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
@@ -110,7 +111,6 @@ export class StepsComponent implements OnInit {
   }
 
   submitForm() {
-    this.errorMessage = '';
     if (this.stepForm.invalid) {
       this.stepForm.markAllAsTouched();
       return;
@@ -138,15 +138,18 @@ export class StepsComponent implements OnInit {
     this.jamService.deleteStep(stepId).subscribe({
       next: () => {
         this.selectedStep = null;
+        this.snackbarService.showSuccess('Step deleted successfully.');
         this.getSteps();
         this.closeModal();
       },
       error: (e) => {
         this.loading = false;
-        this.errorMessage = 'An error occurred while deleting the step.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
+        this.snackbarService.showError(
+          this.snackbarService.getErrorMessage(
+            e,
+            'An error occurred while deleting the step.'
+          )
+        );
       },
       complete: () => {
         this.loading = false;
@@ -166,15 +169,18 @@ export class StepsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.selectedStep = null;
+          this.snackbarService.showSuccess('Step created successfully.');
           this.getSteps();
           this.closeModal();
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while creating the step.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while creating the step.'
+            )
+          );
         },
         complete: () => {
           this.loading = false;
@@ -194,15 +200,18 @@ export class StepsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.selectedStep = null;
+          this.snackbarService.showSuccess('Step updated successfully.');
           this.getSteps();
           this.closeModal();
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while updating the step.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while updating the step.'
+            )
+          );
         },
         complete: () => {
           this.loading = false;

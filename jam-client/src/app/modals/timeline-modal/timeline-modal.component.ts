@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-timeline-modal',
@@ -41,12 +42,12 @@ export class TimelineModalComponent implements OnInit {
 
   public timelineStepForm: FormGroup;
   public loading: boolean = false;
-  public errorMessage: string = '';
   public nonInitialSteps: any = null;
 
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackbarService: SnackbarService
   ) {
     this.timelineStepForm = this.formBuilder.group({
       step: new FormControl('', [Validators.required]),
@@ -92,7 +93,6 @@ export class TimelineModalComponent implements OnInit {
   }
 
   submitTimelineStepForm() {
-    this.errorMessage = '';
     if (this.timelineStepForm.invalid) {
       this.timelineStepForm.markAllAsTouched();
       return;
@@ -117,6 +117,7 @@ export class TimelineModalComponent implements OnInit {
       )
       .subscribe({
         next: (data: any) => {
+          this.snackbarService.showSuccess('Step added to timeline.');
           this.onTimelineNeedsUpdate.emit();
           this.onApplicationNeedsUpdate.emit();
           this.onAllApplicationsNeedUpdate.emit();
@@ -124,10 +125,12 @@ export class TimelineModalComponent implements OnInit {
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while adding the step.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while adding the step.'
+            )
+          );
         },
         complete: () => {
           this.loading = false;
@@ -143,15 +146,18 @@ export class TimelineModalComponent implements OnInit {
       })
       .subscribe({
         next: (data: any) => {
+          this.snackbarService.showSuccess('Timeline step updated.');
           this.onTimelineNeedsUpdate.emit();
           this.closeModal();
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while updating the step.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while updating the step.'
+            )
+          );
         },
         complete: () => {
           this.loading = false;
@@ -164,6 +170,7 @@ export class TimelineModalComponent implements OnInit {
     this.jamService.deleteTimelineStep(this.timelineStep.id).subscribe({
       next: () => {
         this.timelineStep = null;
+        this.snackbarService.showSuccess('Timeline step deleted.');
         this.onApplicationNeedsUpdate.emit();
         this.onAllApplicationsNeedUpdate.emit();
         this.onTimelineNeedsUpdate.emit();
@@ -171,10 +178,12 @@ export class TimelineModalComponent implements OnInit {
       },
       error: (e) => {
         this.loading = false;
-        this.errorMessage = 'An error occurred while deleting the step.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
+        this.snackbarService.showError(
+          this.snackbarService.getErrorMessage(
+            e,
+            'An error occurred while deleting the step.'
+          )
+        );
       },
       complete: () => {
         this.loading = false;

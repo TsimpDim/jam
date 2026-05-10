@@ -18,6 +18,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-group-modal',
@@ -34,7 +35,6 @@ export class GroupModalComponent implements OnInit, OnChanges {
 
   public groupForm: FormGroup;
   public loading: boolean = false;
-  public errorMessage: string = '';
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -43,7 +43,8 @@ export class GroupModalComponent implements OnInit, OnChanges {
 
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackbarService: SnackbarService
   ) {
     this.groupForm = this.formBuilder.group({
       name: new FormControl('', [Validators.required]),
@@ -77,8 +78,6 @@ export class GroupModalComponent implements OnInit, OnChanges {
   }
 
   submitGroupForm() {
-    this.errorMessage = '';
-
     if (this.groupForm.invalid) {
       this.groupForm.markAllAsTouched();
       return;
@@ -97,16 +96,19 @@ export class GroupModalComponent implements OnInit, OnChanges {
       .createGroup(this.groupForm.value.name, this.groupForm.value.description)
       .subscribe({
         next: () => {
+          this.snackbarService.showSuccess('Group created successfully.');
           this.closeModal();
           this.onGroupsChanged.emit();
           this.loading = false;
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while creating the group.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while creating the group.'
+            )
+          );
         },
       });
   }
@@ -121,16 +123,19 @@ export class GroupModalComponent implements OnInit, OnChanges {
       )
       .subscribe({
         next: () => {
+          this.snackbarService.showSuccess('Group updated successfully.');
           this.closeModal();
           this.onGroupsChanged.emit();
           this.loading = false;
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while updating the group.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while updating the group.'
+            )
+          );
         },
       });
   }
@@ -141,16 +146,19 @@ export class GroupModalComponent implements OnInit, OnChanges {
     this.loading = true;
     this.jamService.deleteGroup(this.group.id).subscribe({
       next: () => {
+        this.snackbarService.showSuccess('Group deleted successfully.');
         this.closeModal();
         this.onGroupsChanged.emit();
         this.loading = false;
       },
       error: (e) => {
         this.loading = false;
-        this.errorMessage = 'An error occurred while deleting the group.';
-        if (e.error) {
-          this.errorMessage = JSON.stringify(e.error);
-        }
+        this.snackbarService.showError(
+          this.snackbarService.getErrorMessage(
+            e,
+            'An error occurred while deleting the group.'
+          )
+        );
       },
     });
   }

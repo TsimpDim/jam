@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-leads',
@@ -26,11 +27,11 @@ export class LeadsComponent implements OnInit {
   selectedLead: any = null;
   viewingArchived: boolean = false;
   applications: any[] = [];
-  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
-    private jamService: JamService
+    private jamService: JamService,
+    private snackbarService: SnackbarService
   ) {
     this.leadForm = this.formBuilder.group({
       company: new FormControl('', [Validators.required]),
@@ -58,7 +59,6 @@ export class LeadsComponent implements OnInit {
   }
 
   submitForm() {
-    this.errorMessage = '';
     if (this.leadForm.invalid) {
       this.leadForm.markAllAsTouched();
       return;
@@ -99,10 +99,12 @@ export class LeadsComponent implements OnInit {
     this.jamService.deleteLead(leadId).subscribe({
       next: () => {
         this.selectedLead = null;
+        this.snackbarService.showSuccess('Lead deleted successfully.');
         this.getLeads();
       },
       error: () => {
         this.loading = false;
+        this.snackbarService.showError('An error occurred while deleting the lead.');
       },
       complete: () => {
         this.loading = false;
@@ -119,10 +121,14 @@ export class LeadsComponent implements OnInit {
         if (newArchivedState === false) {
           this.viewingArchived = false;
         }
+        this.snackbarService.showSuccess(
+          newArchivedState ? 'Lead archived.' : 'Lead unarchived.'
+        );
         this.getLeads();
       },
       error: () => {
         this.loading = false;
+        this.snackbarService.showError('An error occurred while updating the lead.');
       },
       complete: () => {
         this.loading = false;
@@ -145,15 +151,18 @@ export class LeadsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.selectedLead = null;
+          this.snackbarService.showSuccess('Lead created successfully.');
           this.getLeads();
           this.closeModal();
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while creating the lead.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while creating the lead.'
+            )
+          );
         },
         complete: () => {
           this.loading = false;
@@ -178,15 +187,18 @@ export class LeadsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.selectedLead = null;
+          this.snackbarService.showSuccess('Lead updated successfully.');
           this.getLeads();
           this.closeModal();
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred while updating the lead.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while updating the lead.'
+            )
+          );
         },
         complete: () => {
           this.loading = false;

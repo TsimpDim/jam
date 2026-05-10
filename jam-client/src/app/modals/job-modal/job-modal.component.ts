@@ -18,6 +18,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 
 @Component({
   selector: 'app-job-modal',
@@ -48,11 +49,11 @@ export class JobModalComponent implements OnInit, OnChanges {
   public groups: any = null;
   public leads: any = null;
   public cvs: any = null;
-  public errorMessage: string = '';
 
   constructor(
     private jamService: JamService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackbarService: SnackbarService
   ) {
     this.jobAppForm = this.formBuilder.group({
       company: new FormControl('', [Validators.required]),
@@ -141,8 +142,6 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   submitJobAppForm() {
-    this.errorMessage = '';
-
     if (this.jobAppForm.invalid) {
       this.jobAppForm.markAllAsTouched();
       return;
@@ -215,6 +214,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       )
       .subscribe({
         next: (data: any) => {
+          this.snackbarService.showSuccess('Job application created successfully.');
           this.closeModal();
           this.onApplicationsNeedUpdate.emit();
           this.onApplicationCreated.emit(data);
@@ -222,11 +222,12 @@ export class JobModalComponent implements OnInit, OnChanges {
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage =
-            'An error occurred while creating the job application.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while creating the job application.'
+            )
+          );
         },
       });
   }
@@ -250,17 +251,19 @@ export class JobModalComponent implements OnInit, OnChanges {
       .subscribe({
         next: () => {
           this.application = null;
+          this.snackbarService.showSuccess('Job application updated successfully.');
           this.closeModal();
           this.onApplicationsNeedUpdate.emit();
           this.loading = false;
         },
         error: (e) => {
           this.loading = false;
-          this.errorMessage =
-            'An error occurred while updating the job application.';
-          if (e.error) {
-            this.errorMessage = JSON.stringify(e.error);
-          }
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while updating the job application.'
+            )
+          );
         },
       });
   }
@@ -270,10 +273,12 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.jamService.deleteJobApplication(jobAppId).subscribe({
       next: () => {
         this.application = null;
+        this.snackbarService.showSuccess('Job application deleted successfully.');
         this.onApplicationsNeedUpdate.emit();
       },
       error: () => {
         this.loading = false;
+        this.snackbarService.showError('An error occurred while deleting the job application.');
       },
       complete: () => {
         this.closeModal();
