@@ -15,12 +15,8 @@
             formControlName="cvKey"
             placeholder="e.g., Tech CV v1"
           />
-          <clr-control-helper
-            >Give your CV a descriptive name</clr-control-helper
-          >
-          <clr-control-error *clrIfError="'required'"
-            >CV name is required.</clr-control-error
-          >
+          <clr-control-helper>Give your CV a descriptive name</clr-control-helper>
+          <clr-control-error>CV name is required.</clr-control-error>
         </clr-input-container>
       </div>
 
@@ -38,11 +34,9 @@
               ? "Leave empty to keep current file"
               : "PDF, DOC, DOCX (max 1MB)"
           }}</clr-control-helper>
-          <clr-control-error *clrIfError="'invalidFile'">{{ form.get('cvFile')?.errors?.['invalidFile'] }}</clr-control-error>
         </clr-file-input-container>
+        <span class="clr-subtext file-error" *ngIf="cvFileError">{{ cvFileError }}</span>
       </div>
-
-
     </form>
   </div>
   <div class="modal-footer">
