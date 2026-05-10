@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   client:
     build: .
@@ -11,7 +10,7 @@ services:
     networks:
       jam:
         aliases:
-          - 'client.jam.local'
+          - "client.jam.local"
 
 networks:
   jam:
