@@ -20,6 +20,9 @@ services:
       - DJANGO_SUPERUSER_EMAIL=noemail@noemail.com
       - SECRET_KEY=django1234
       - DEBUG=*
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
     networks:
       jam:
         aliases:
@@ -27,5 +30,4 @@ services:
 
 networks:
   jam:
-    name: jam
     external: true

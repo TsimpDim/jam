@@ -67,7 +67,8 @@
             </div>
 
             <button class="btn btn-sm btn-link" (click)="openJobAppModal()">
-              Edit <cds-icon shape="pencil"></cds-icon>
+              <cds-icon shape="pencil"></cds-icon>
+              Edit
             </button>
 
             <ng-container *ngIf="selectedApp.external_link">
@@ -75,15 +76,18 @@
                 target="_blank"
                 class="btn btn-sm btn-link"
                 href="{{ selectedApp.external_link }}"
-                >Link <cds-icon shape="link"></cds-icon
-              ></a>
+              >
+                <cds-icon shape="link"></cds-icon>
+                Link
+              </a>
 
               <button
                 *ngIf="selectedApp.snapshot"
                 class="btn btn-sm btn-link"
                 (click)="openSnapshotModal()"
               >
-                View Job Ad <cds-icon shape="details"></cds-icon>
+                <cds-icon shape="details"></cds-icon>
+                View Job Ad
               </button>
             </ng-container>
           </div>

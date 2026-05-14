@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Intern",
+        "slug": "intern"
+    },
+    {
+        "name": "Junior",
+        "slug": "junior"
+    },
+    {
+        "name": "Mid-Level",
+        "slug": "mid-level"
+    },
+    {
+        "name": "Senior",
+        "slug": "senior"
+    },
+    {
+        "name": "Staff",
+        "slug": "staff"
+    },
+    {
+        "name": "Principal",
+        "slug": "principal"
+    },
+    {
+        "name": "Director",
+        "slug": "director"
+    },
+    {
+        "name": "VP",
+        "slug": "vp"
+    },
+    {
+        "name": "C-Level",
+        "slug": "c-level"
+    }
+]

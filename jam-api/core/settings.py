@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     "core",
     "auth",
     "jam",
+    "special",
 ]
 
 MIDDLEWARE = [

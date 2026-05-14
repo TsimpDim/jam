@@ -1,0 +1,59 @@
+.review-details-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--clr-gray-300);
+}
+
+.review-details-header h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: var(--clr-gray-700);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: var(--clr-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 0.9rem;
+  color: var(--clr-gray-800);
+}
+
+.review-result-content {
+  line-height: 1.6;
+}
+
+.review-result-content h1,
+.review-result-content h2,
+.review-result-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.review-result-content p {
+  margin-bottom: 1rem;
+}
+
+.review-result-content ul,
+.review-result-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.review-result-content li {
+  margin-bottom: 0.5rem;
+}

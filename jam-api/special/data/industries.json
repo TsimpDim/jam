@@ -1,0 +1,206 @@
+[
+    {
+        "name": "Technology",
+        "slug": "technology"
+    },
+    {
+        "name": "Finance",
+        "slug": "finance"
+    },
+    {
+        "name": "Healthcare",
+        "slug": "healthcare"
+    },
+    {
+        "name": "Marketing",
+        "slug": "marketing"
+    },
+    {
+        "name": "Engineering",
+        "slug": "engineering"
+    },
+    {
+        "name": "Education",
+        "slug": "education"
+    },
+    {
+        "name": "Retail",
+        "slug": "retail"
+    },
+    {
+        "name": "Manufacturing",
+        "slug": "manufacturing"
+    },
+    {
+        "name": "Consulting",
+        "slug": "consulting"
+    },
+    {
+        "name": "Media & Entertainment",
+        "slug": "media-entertainment"
+    },
+    {
+        "name": "Telecommunications",
+        "slug": "telecommunications"
+    },
+    {
+        "name": "Real Estate",
+        "slug": "real-estate"
+    },
+    {
+        "name": "Hospitality & Tourism",
+        "slug": "hospitality-tourism"
+    },
+    {
+        "name": "Energy & Utilities",
+        "slug": "energy-utilities"
+    },
+    {
+        "name": "Transportation & Logistics",
+        "slug": "transportation-logistics"
+    },
+    {
+        "name": "Agriculture",
+        "slug": "agriculture"
+    },
+    {
+        "name": "Construction",
+        "slug": "construction"
+    },
+    {
+        "name": "Insurance",
+        "slug": "insurance"
+    },
+    {
+        "name": "Legal Services",
+        "slug": "legal-services"
+    },
+    {
+        "name": "Pharmaceuticals",
+        "slug": "pharmaceuticals"
+    },
+    {
+        "name": "Biotechnology",
+        "slug": "biotechnology"
+    },
+    {
+        "name": "Aerospace & Defense",
+        "slug": "aerospace-defense"
+    },
+    {
+        "name": "Automotive",
+        "slug": "automotive"
+    },
+    {
+        "name": "Food & Beverage",
+        "slug": "food-beverage"
+    },
+    {
+        "name": "Fashion & Apparel",
+        "slug": "fashion-apparel"
+    },
+    {
+        "name": "Sports & Recreation",
+        "slug": "sports-recreation"
+    },
+    {
+        "name": "Non-Profit & NGO",
+        "slug": "non-profit-ngo"
+    },
+    {
+        "name": "Government & Public Administration",
+        "slug": "government-public-administration"
+    },
+    {
+        "name": "Human Resources",
+        "slug": "human-resources"
+    },
+    {
+        "name": "Accounting",
+        "slug": "accounting"
+    },
+    {
+        "name": "Banking",
+        "slug": "banking"
+    },
+    {
+        "name": "Investment Management",
+        "slug": "investment-management"
+    },
+    {
+        "name": "Venture Capital & Private Equity",
+        "slug": "venture-capital-private-equity"
+    },
+    {
+        "name": "Architecture",
+        "slug": "architecture"
+    },
+    {
+        "name": "Design",
+        "slug": "design"
+    },
+    {
+        "name": "Environmental Services",
+        "slug": "environmental-services"
+    },
+    {
+        "name": "Mining & Metals",
+        "slug": "mining-metals"
+    },
+    {
+        "name": "Oil & Gas",
+        "slug": "oil-gas"
+    },
+    {
+        "name": "Chemicals",
+        "slug": "chemicals"
+    },
+    {
+        "name": "Paper & Forest Products",
+        "slug": "paper-forest-products"
+    },
+    {
+        "name": "Textiles",
+        "slug": "textiles"
+    },
+    {
+        "name": "Consumer Goods",
+        "slug": "consumer-goods"
+    },
+    {
+        "name": "E-Commerce",
+        "slug": "e-commerce"
+    },
+    {
+        "name": "Gaming",
+        "slug": "gaming"
+    },
+    {
+        "name": "Music",
+        "slug": "music"
+    },
+    {
+        "name": "Film & Television",
+        "slug": "film-television"
+    },
+    {
+        "name": "Publishing",
+        "slug": "publishing"
+    },
+    {
+        "name": "Broadcasting",
+        "slug": "broadcasting"
+    },
+    {
+        "name": "Public Relations",
+        "slug": "public-relations"
+    },
+    {
+        "name": "Advertising",
+        "slug": "advertising"
+    },
+    {
+        "name": "Market Research",
+        "slug": "market-research"
+    }
+]

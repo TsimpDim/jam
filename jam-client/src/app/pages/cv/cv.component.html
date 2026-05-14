@@ -43,7 +43,6 @@
           </clr-alert-item>
         </clr-alert>
 
-        <!-- Empty state -->
         <div class="empty-state" *ngIf="!loading && cvs.length === 0">
           <cds-icon shape="file" class="empty-icon"></cds-icon>
           <h2>No CVs uploaded yet</h2>
@@ -54,8 +53,7 @@
           </button>
         </div>
 
-        <!-- CV cards -->
-        <div class="card" *ngFor="let cv of cvs">
+        <div class="card clickable" (click)="openUpdateForm(cv)" *ngFor="let cv of cvs">
           <div class="card-header">
             <cds-icon shape="file" class="cv-file-icon"></cds-icon>
             {{ cv.key }}
@@ -72,23 +70,45 @@
           <div class="card-footer">
             <button
               class="btn btn-sm btn-link"
-              (click)="downloadCV(cv)"
+              (click)="downloadCV(cv); $event.stopPropagation()"
               [disabled]="downloadingId === cv.id"
             >
               <clr-spinner
                 *ngIf="downloadingId === cv.id"
                 [clrInline]="true"
               ></clr-spinner>
-              Download <cds-icon shape="download"></cds-icon>
-            </button>
-            <button class="btn btn-sm btn-link" (click)="openUpdateForm(cv)">
-              Update <cds-icon shape="pencil"></cds-icon>
+              <cds-icon
+                *ngIf="downloadingId !== cv.id"
+                shape="download"
+              ></cds-icon>
+              Download
             </button>
             <button
-              class="btn btn-sm btn-link btn-danger"
-              (click)="deleteCV(cv)"
+              class="btn btn-sm btn-link"
+              (click)="openReviewRequestModal(cv.id); $event.stopPropagation()"
+              [disabled]="isCVReviewProcessing(cv.id)"
             >
-              Delete <cds-icon shape="trash"></cds-icon>
+              <clr-spinner
+                *ngIf="isCVReviewProcessing(cv.id)"
+                [clrInline]="true"
+              ></clr-spinner>
+              <cds-icon
+                *ngIf="!isCVReviewProcessing(cv.id)"
+                shape="bolt"
+              ></cds-icon>
+              {{
+                isCVReviewProcessing(cv.id)
+                  ? "Review in Progress..."
+                  : "Request CV Review"
+              }}
+            </button>
+            <button
+              class="btn btn-sm btn-link"
+              *ngIf="getCompletedReviewForCV(cv.id)"
+              (click)="viewReviewResult(cv.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="eye"></cds-icon>
+              View Last CV Review
             </button>
           </div>
         </div>
@@ -101,5 +121,18 @@
   [open]="showUploadForm"
   [editCV]="editingCV"
   (uploaded)="onCvUploaded()"
+  (deleted)="onCvDeleted()"
   (closed)="onModalClosed()"
 ></app-cv-upload-modal>
+
+<app-cv-review-request-modal
+  [open]="showReviewRequestModal"
+  (submitted)="onReviewRequestSubmitted($event)"
+  (closed)="onReviewRequestModalClosed()"
+></app-cv-review-request-modal>
+
+<app-cv-review-result-modal
+  [open]="showReviewResultModal"
+  [review]="selectedReviewForView"
+  (closed)="onReviewResultModalClosed()"
+></app-cv-review-result-modal>

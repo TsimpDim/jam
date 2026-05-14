@@ -1,0 +1,1434 @@
+[
+    {
+        "name": "UX Designer",
+        "slug": "ux-designer"
+    },
+    {
+        "name": "UI Designer",
+        "slug": "ui-designer"
+    },
+    {
+        "name": "Solutions Engineer",
+        "slug": "solutions-engineer"
+    },
+    {
+        "name": "Software Architect",
+        "slug": "software-architect"
+    },
+    {
+        "name": "Frontend Developer",
+        "slug": "frontend-developer"
+    },
+    {
+        "name": "Backend Developer",
+        "slug": "backend-developer"
+    },
+    {
+        "name": "Full Stack Developer",
+        "slug": "fullstack-developer"
+    },
+    {
+        "name": "Data Scientist",
+        "slug": "data-scientist"
+    },
+    {
+        "name": "DevOps Engineer",
+        "slug": "devops-engineer"
+    },
+    {
+        "name": "Product Manager",
+        "slug": "product-manager"
+    },
+    {
+        "name": "Project Manager",
+        "slug": "project-manager"
+    },
+    {
+        "name": "Scrum Master",
+        "slug": "scrum-master"
+    },
+    {
+        "name": "QA Engineer",
+        "slug": "qa-engineer"
+    },
+    {
+        "name": "Mobile Developer",
+        "slug": "mobile-developer"
+    },
+    {
+        "name": "iOS Developer",
+        "slug": "ios-developer"
+    },
+    {
+        "name": "Android Developer",
+        "slug": "android-developer"
+    },
+    {
+        "name": "Cloud Engineer",
+        "slug": "cloud-engineer"
+    },
+    {
+        "name": "Security Engineer",
+        "slug": "security-engineer"
+    },
+    {
+        "name": "Machine Learning Engineer",
+        "slug": "ml-engineer"
+    },
+    {
+        "name": "AI Engineer",
+        "slug": "ai-engineer"
+    },
+    {
+        "name": "Data Engineer",
+        "slug": "data-engineer"
+    },
+    {
+        "name": "Database Administrator",
+        "slug": "dba"
+    },
+    {
+        "name": "Systems Administrator",
+        "slug": "sysadmin"
+    },
+    {
+        "name": "Network Engineer",
+        "slug": "network-engineer"
+    },
+    {
+        "name": "Technical Writer",
+        "slug": "technical-writer"
+    },
+    {
+        "name": "Business Analyst",
+        "slug": "business-analyst"
+    },
+    {
+        "name": "Product Owner",
+        "slug": "product-owner"
+    },
+    {
+        "name": "Engineering Manager",
+        "slug": "engineering-manager"
+    },
+    {
+        "name": "CTO",
+        "slug": "cto"
+    },
+    {
+        "name": "VP of Engineering",
+        "slug": "vp-engineering"
+    },
+    {
+        "name": "Director of Engineering",
+        "slug": "director-engineering"
+    },
+    {
+        "name": "Staff Engineer",
+        "slug": "staff-engineer"
+    },
+    {
+        "name": "Principal Engineer",
+        "slug": "principal-engineer"
+    },
+    {
+        "name": "Site Reliability Engineer",
+        "slug": "sre"
+    },
+    {
+        "name": "Platform Engineer",
+        "slug": "platform-engineer"
+    },
+    {
+        "name": "Infrastructure Engineer",
+        "slug": "infrastructure-engineer"
+    },
+    {
+        "name": "Release Engineer",
+        "slug": "release-engineer"
+    },
+    {
+        "name": "Build Engineer",
+        "slug": "build-engineer"
+    },
+    {
+        "name": "Support Engineer",
+        "slug": "support-engineer"
+    },
+    {
+        "name": "Customer Success Engineer",
+        "slug": "customer-success-engineer"
+    },
+    {
+        "name": "Solutions Architect",
+        "slug": "solutions-architect"
+    },
+    {
+        "name": "Enterprise Architect",
+        "slug": "enterprise-architect"
+    },
+    {
+        "name": "Technical Lead",
+        "slug": "tech-lead"
+    },
+    {
+        "name": "Team Lead",
+        "slug": "team-lead"
+    },
+    {
+        "name": "Research Scientist",
+        "slug": "research-scientist"
+    },
+    {
+        "name": "Data Analyst",
+        "slug": "data-analyst"
+    },
+    {
+        "name": "Business Intelligence Analyst",
+        "slug": "bi-analyst"
+    },
+    {
+        "name": "Marketing Analyst",
+        "slug": "marketing-analyst"
+    },
+    {
+        "name": "Financial Analyst",
+        "slug": "financial-analyst"
+    },
+    {
+        "name": "Operations Analyst",
+        "slug": "operations-analyst"
+    },
+    {
+        "name": "Sales Engineer",
+        "slug": "sales-engineer"
+    },
+    {
+        "name": "Pre-Sales Engineer",
+        "slug": "pre-sales-engineer"
+    },
+    {
+        "name": "Post-Sales Engineer",
+        "slug": "post-sales-engineer"
+    },
+    {
+        "name": "Implementation Engineer",
+        "slug": "implementation-engineer"
+    },
+    {
+        "name": "Integration Engineer",
+        "slug": "integration-engineer"
+    },
+    {
+        "name": "API Developer",
+        "slug": "api-developer"
+    },
+    {
+        "name": "Game Developer",
+        "slug": "game-developer"
+    },
+    {
+        "name": "Embedded Systems Engineer",
+        "slug": "embedded-engineer"
+    },
+    {
+        "name": "Firmware Engineer",
+        "slug": "firmware-engineer"
+    },
+    {
+        "name": "Hardware Engineer",
+        "slug": "hardware-engineer"
+    },
+    {
+        "name": "Electrical Engineer",
+        "slug": "electrical-engineer"
+    },
+    {
+        "name": "Mechanical Engineer",
+        "slug": "mechanical-engineer"
+    },
+    {
+        "name": "Civil Engineer",
+        "slug": "civil-engineer"
+    },
+    {
+        "name": "Chemical Engineer",
+        "slug": "chemical-engineer"
+    },
+    {
+        "name": "Biomedical Engineer",
+        "slug": "biomedical-engineer"
+    },
+    {
+        "name": "Industrial Engineer",
+        "slug": "industrial-engineer"
+    },
+    {
+        "name": "Quality Assurance Manager",
+        "slug": "qa-manager"
+    },
+    {
+        "name": "Compliance Officer",
+        "slug": "compliance-officer"
+    },
+    {
+        "name": "Risk Analyst",
+        "slug": "risk-analyst"
+    },
+    {
+        "name": "Auditor",
+        "slug": "auditor"
+    },
+    {
+        "name": "Accountant",
+        "slug": "accountant"
+    },
+    {
+        "name": "Tax Specialist",
+        "slug": "tax-specialist"
+    },
+    {
+        "name": "Financial Advisor",
+        "slug": "financial-advisor"
+    },
+    {
+        "name": "Investment Banker",
+        "slug": "investment-banker"
+    },
+    {
+        "name": "Portfolio Manager",
+        "slug": "portfolio-manager"
+    },
+    {
+        "name": "Trader",
+        "slug": "trader"
+    },
+    {
+        "name": "Actuary",
+        "slug": "actuary"
+    },
+    {
+        "name": "Underwriter",
+        "slug": "underwriter"
+    },
+    {
+        "name": "Claims Adjuster",
+        "slug": "claims-adjuster"
+    },
+    {
+        "name": "Loan Officer",
+        "slug": "loan-officer"
+    },
+    {
+        "name": "Mortgage Broker",
+        "slug": "mortgage-broker"
+    },
+    {
+        "name": "Real Estate Agent",
+        "slug": "real-estate-agent"
+    },
+    {
+        "name": "Property Manager",
+        "slug": "property-manager"
+    },
+    {
+        "name": "Facilities Manager",
+        "slug": "facilities-manager"
+    },
+    {
+        "name": "Office Manager",
+        "slug": "office-manager"
+    },
+    {
+        "name": "Executive Assistant",
+        "slug": "executive-assistant"
+    },
+    {
+        "name": "Administrative Assistant",
+        "slug": "administrative-assistant"
+    },
+    {
+        "name": "Receptionist",
+        "slug": "receptionist"
+    },
+    {
+        "name": "HR Manager",
+        "slug": "hr-manager"
+    },
+    {
+        "name": "HR Specialist",
+        "slug": "hr-specialist"
+    },
+    {
+        "name": "Recruiter",
+        "slug": "recruiter"
+    },
+    {
+        "name": "Talent Acquisition Specialist",
+        "slug": "talent-acquisition"
+    },
+    {
+        "name": "Training Coordinator",
+        "slug": "training-coordinator"
+    },
+    {
+        "name": "Learning & Development Specialist",
+        "slug": "learning-development"
+    },
+    {
+        "name": "Compensation Analyst",
+        "slug": "compensation-analyst"
+    },
+    {
+        "name": "Benefits Administrator",
+        "slug": "benefits-administrator"
+    },
+    {
+        "name": "Employee Relations Specialist",
+        "slug": "employee-relations"
+    },
+    {
+        "name": "Diversity & Inclusion Manager",
+        "slug": "diversity-inclusion-manager"
+    },
+    {
+        "name": "Organizational Development Specialist",
+        "slug": "od-specialist"
+    },
+    {
+        "name": "Change Management Consultant",
+        "slug": "change-management"
+    },
+    {
+        "name": "Management Consultant",
+        "slug": "management-consultant"
+    },
+    {
+        "name": "Strategy Consultant",
+        "slug": "strategy-consultant"
+    },
+    {
+        "name": "Operations Consultant",
+        "slug": "operations-consultant"
+    },
+    {
+        "name": "IT Consultant",
+        "slug": "it-consultant"
+    },
+    {
+        "name": "Technology Consultant",
+        "slug": "technology-consultant"
+    },
+    {
+        "name": "Digital Transformation Consultant",
+        "slug": "digital-transformation"
+    },
+    {
+        "name": "Process Improvement Specialist",
+        "slug": "process-improvement"
+    },
+    {
+        "name": "Lean Six Sigma Specialist",
+        "slug": "lean-six-sigma"
+    },
+    {
+        "name": "Supply Chain Manager",
+        "slug": "supply-chain-manager"
+    },
+    {
+        "name": "Logistics Coordinator",
+        "slug": "logistics-coordinator"
+    },
+    {
+        "name": "Procurement Specialist",
+        "slug": "procurement-specialist"
+    },
+    {
+        "name": "Purchasing Agent",
+        "slug": "purchasing-agent"
+    },
+    {
+        "name": "Inventory Manager",
+        "slug": "inventory-manager"
+    },
+    {
+        "name": "Warehouse Manager",
+        "slug": "warehouse-manager"
+    },
+    {
+        "name": "Distribution Manager",
+        "slug": "distribution-manager"
+    },
+    {
+        "name": "Transportation Manager",
+        "slug": "transportation-manager"
+    },
+    {
+        "name": "Fleet Manager",
+        "slug": "fleet-manager"
+    },
+    {
+        "name": "Shipping Coordinator",
+        "slug": "shipping-coordinator"
+    },
+    {
+        "name": "Import/Export Specialist",
+        "slug": "import-export"
+    },
+    {
+        "name": "Customs Broker",
+        "slug": "customs-broker"
+    },
+    {
+        "name": "Freight Forwarder",
+        "slug": "freight-forwarder"
+    },
+    {
+        "name": "Marketing Manager",
+        "slug": "marketing-manager"
+    },
+    {
+        "name": "Marketing Coordinator",
+        "slug": "marketing-coordinator"
+    },
+    {
+        "name": "Marketing Specialist",
+        "slug": "marketing-specialist"
+    },
+    {
+        "name": "Digital Marketing Specialist",
+        "slug": "digital-marketing"
+    },
+    {
+        "name": "Content Marketing Manager",
+        "slug": "content-marketing"
+    },
+    {
+        "name": "SEO Specialist",
+        "slug": "seo-specialist"
+    },
+    {
+        "name": "SEM Specialist",
+        "slug": "sem-specialist"
+    },
+    {
+        "name": "Social Media Manager",
+        "slug": "social-media-manager"
+    },
+    {
+        "name": "Community Manager",
+        "slug": "community-manager"
+    },
+    {
+        "name": "Brand Manager",
+        "slug": "brand-manager"
+    },
+    {
+        "name": "Product Marketing Manager",
+        "slug": "product-marketing"
+    },
+    {
+        "name": "Growth Marketing Manager",
+        "slug": "growth-marketing"
+    },
+    {
+        "name": "Email Marketing Specialist",
+        "slug": "email-marketing"
+    },
+    {
+        "name": "Marketing Automation Specialist",
+        "slug": "marketing-automation"
+    },
+    {
+        "name": "CRM Manager",
+        "slug": "crm-manager"
+    },
+    {
+        "name": "Sales Manager",
+        "slug": "sales-manager"
+    },
+    {
+        "name": "Sales Representative",
+        "slug": "sales-representative"
+    },
+    {
+        "name": "Account Executive",
+        "slug": "account-executive"
+    },
+    {
+        "name": "Account Manager",
+        "slug": "account-manager"
+    },
+    {
+        "name": "Business Development Manager",
+        "slug": "business-development"
+    },
+    {
+        "name": "Partnership Manager",
+        "slug": "partnership-manager"
+    },
+    {
+        "name": "Channel Manager",
+        "slug": "channel-manager"
+    },
+    {
+        "name": "Regional Sales Manager",
+        "slug": "regional-sales"
+    },
+    {
+        "name": "National Sales Manager",
+        "slug": "national-sales"
+    },
+    {
+        "name": "VP of Sales",
+        "slug": "vp-sales"
+    },
+    {
+        "name": "Chief Revenue Officer",
+        "slug": "cro"
+    },
+    {
+        "name": "Customer Success Manager",
+        "slug": "customer-success"
+    },
+    {
+        "name": "Customer Support Manager",
+        "slug": "customer-support"
+    },
+    {
+        "name": "Customer Support Representative",
+        "slug": "customer-support-rep"
+    },
+    {
+        "name": "Technical Support Specialist",
+        "slug": "technical-support"
+    },
+    {
+        "name": "Help Desk Technician",
+        "slug": "help-desk"
+    },
+    {
+        "name": "IT Support Specialist",
+        "slug": "it-support"
+    },
+    {
+        "name": "Service Desk Analyst",
+        "slug": "service-desk"
+    },
+    {
+        "name": "Field Service Technician",
+        "slug": "field-service"
+    },
+    {
+        "name": "Installation Technician",
+        "slug": "installation-technician"
+    },
+    {
+        "name": "Maintenance Technician",
+        "slug": "maintenance-technician"
+    },
+    {
+        "name": "Repair Technician",
+        "slug": "repair-technician"
+    },
+    {
+        "name": "Operations Manager",
+        "slug": "operations-manager"
+    },
+    {
+        "name": "Operations Director",
+        "slug": "operations-director"
+    },
+    {
+        "name": "COO",
+        "slug": "coo"
+    },
+    {
+        "name": "General Manager",
+        "slug": "general-manager"
+    },
+    {
+        "name": "Plant Manager",
+        "slug": "plant-manager"
+    },
+    {
+        "name": "Production Manager",
+        "slug": "production-manager"
+    },
+    {
+        "name": "Manufacturing Engineer",
+        "slug": "manufacturing-engineer"
+    },
+    {
+        "name": "Process Engineer",
+        "slug": "process-engineer"
+    },
+    {
+        "name": "Quality Engineer",
+        "slug": "quality-engineer"
+    },
+    {
+        "name": "Safety Manager",
+        "slug": "safety-manager"
+    },
+    {
+        "name": "Environmental Engineer",
+        "slug": "environmental-engineer"
+    },
+    {
+        "name": "Sustainability Manager",
+        "slug": "sustainability-manager"
+    },
+    {
+        "name": "Energy Manager",
+        "slug": "energy-manager"
+    },
+    {
+        "name": "Facilities Engineer",
+        "slug": "facilities-engineer"
+    },
+    {
+        "name": "Construction Manager",
+        "slug": "construction-manager"
+    },
+    {
+        "name": "Project Engineer",
+        "slug": "project-engineer"
+    },
+    {
+        "name": "Site Manager",
+        "slug": "site-manager"
+    },
+    {
+        "name": "Estimator",
+        "slug": "estimator"
+    },
+    {
+        "name": "Surveyor",
+        "slug": "surveyor"
+    },
+    {
+        "name": "Architect",
+        "slug": "architect"
+    },
+    {
+        "name": "Interior Designer",
+        "slug": "interior-designer"
+    },
+    {
+        "name": "Landscape Architect",
+        "slug": "landscape-architect"
+    },
+    {
+        "name": "Urban Planner",
+        "slug": "urban-planner"
+    },
+    {
+        "name": "Graphic Designer",
+        "slug": "graphic-designer"
+    },
+    {
+        "name": "Visual Designer",
+        "slug": "visual-designer"
+    },
+    {
+        "name": "Interaction Designer",
+        "slug": "interaction-designer"
+    },
+    {
+        "name": "Motion Designer",
+        "slug": "motion-designer"
+    },
+    {
+        "name": "3D Artist",
+        "slug": "3d-artist"
+    },
+    {
+        "name": "Animator",
+        "slug": "animator"
+    },
+    {
+        "name": "Illustrator",
+        "slug": "illustrator"
+    },
+    {
+        "name": "Photographer",
+        "slug": "photographer"
+    },
+    {
+        "name": "Videographer",
+        "slug": "videographer"
+    },
+    {
+        "name": "Video Editor",
+        "slug": "video-editor"
+    },
+    {
+        "name": "Sound Engineer",
+        "slug": "sound-engineer"
+    },
+    {
+        "name": "Music Producer",
+        "slug": "music-producer"
+    },
+    {
+        "name": "Audio Engineer",
+        "slug": "audio-engineer"
+    },
+    {
+        "name": "Writer",
+        "slug": "writer"
+    },
+    {
+        "name": "Editor",
+        "slug": "editor"
+    },
+    {
+        "name": "Copywriter",
+        "slug": "copywriter"
+    },
+    {
+        "name": "Content Writer",
+        "slug": "content-writer"
+    },
+    {
+        "name": "Journalist",
+        "slug": "journalist"
+    },
+    {
+        "name": "Reporter",
+        "slug": "reporter"
+    },
+    {
+        "name": "Producer",
+        "slug": "producer"
+    },
+    {
+        "name": "Director",
+        "slug": "director-creative"
+    },
+    {
+        "name": "Actor",
+        "slug": "actor"
+    },
+    {
+        "name": "Performer",
+        "slug": "performer"
+    },
+    {
+        "name": "Event Coordinator",
+        "slug": "event-coordinator"
+    },
+    {
+        "name": "Event Manager",
+        "slug": "event-manager"
+    },
+    {
+        "name": "Wedding Planner",
+        "slug": "wedding-planner"
+    },
+    {
+        "name": "Conference Coordinator",
+        "slug": "conference-coordinator"
+    },
+    {
+        "name": "Meeting Planner",
+        "slug": "meeting-planner"
+    },
+    {
+        "name": "Travel Agent",
+        "slug": "travel-agent"
+    },
+    {
+        "name": "Tour Guide",
+        "slug": "tour-guide"
+    },
+    {
+        "name": "Hotel Manager",
+        "slug": "hotel-manager"
+    },
+    {
+        "name": "Restaurant Manager",
+        "slug": "restaurant-manager"
+    },
+    {
+        "name": "Chef",
+        "slug": "chef"
+    },
+    {
+        "name": "Sous Chef",
+        "slug": "sous-chef"
+    },
+    {
+        "name": "Line Cook",
+        "slug": "line-cook"
+    },
+    {
+        "name": "Bartender",
+        "slug": "bartender"
+    },
+    {
+        "name": "Server",
+        "slug": "server"
+    },
+    {
+        "name": "Host/Hostess",
+        "slug": "host"
+    },
+    {
+        "name": "Barista",
+        "slug": "barista"
+    },
+    {
+        "name": "Sommelier",
+        "slug": "sommelier"
+    },
+    {
+        "name": "Nutritionist",
+        "slug": "nutritionist"
+    },
+    {
+        "name": "Dietitian",
+        "slug": "dietitian"
+    },
+    {
+        "name": "Personal Trainer",
+        "slug": "personal-trainer"
+    },
+    {
+        "name": "Fitness Instructor",
+        "slug": "fitness-instructor"
+    },
+    {
+        "name": "Yoga Instructor",
+        "slug": "yoga-instructor"
+    },
+    {
+        "name": "Physical Therapist",
+        "slug": "physical-therapist"
+    },
+    {
+        "name": "Occupational Therapist",
+        "slug": "occupational-therapist"
+    },
+    {
+        "name": "Speech Therapist",
+        "slug": "speech-therapist"
+    },
+    {
+        "name": "Massage Therapist",
+        "slug": "massage-therapist"
+    },
+    {
+        "name": "Chiropractor",
+        "slug": "chiropractor"
+    },
+    {
+        "name": "Nurse",
+        "slug": "nurse"
+    },
+    {
+        "name": "Registered Nurse",
+        "slug": "rn"
+    },
+    {
+        "name": "Nurse Practitioner",
+        "slug": "np"
+    },
+    {
+        "name": "Physician Assistant",
+        "slug": "pa"
+    },
+    {
+        "name": "Doctor",
+        "slug": "doctor"
+    },
+    {
+        "name": "Surgeon",
+        "slug": "surgeon"
+    },
+    {
+        "name": "Dentist",
+        "slug": "dentist"
+    },
+    {
+        "name": "Pharmacist",
+        "slug": "pharmacist"
+    },
+    {
+        "name": "Veterinarian",
+        "slug": "veterinarian"
+    },
+    {
+        "name": "Psychologist",
+        "slug": "psychologist"
+    },
+    {
+        "name": "Therapist",
+        "slug": "therapist"
+    },
+    {
+        "name": "Counselor",
+        "slug": "counselor"
+    },
+    {
+        "name": "Social Worker",
+        "slug": "social-worker"
+    },
+    {
+        "name": "Case Manager",
+        "slug": "case-manager"
+    },
+    {
+        "name": "Teacher",
+        "slug": "teacher"
+    },
+    {
+        "name": "Professor",
+        "slug": "professor"
+    },
+    {
+        "name": "Instructor",
+        "slug": "instructor"
+    },
+    {
+        "name": "Tutor",
+        "slug": "tutor"
+    },
+    {
+        "name": "School Counselor",
+        "slug": "school-counselor"
+    },
+    {
+        "name": "Librarian",
+        "slug": "librarian"
+    },
+    {
+        "name": "Researcher",
+        "slug": "researcher"
+    },
+    {
+        "name": "Lab Technician",
+        "slug": "lab-technician"
+    },
+    {
+        "name": "Scientist",
+        "slug": "scientist"
+    },
+    {
+        "name": "Biologist",
+        "slug": "biologist"
+    },
+    {
+        "name": "Chemist",
+        "slug": "chemist"
+    },
+    {
+        "name": "Physicist",
+        "slug": "physicist"
+    },
+    {
+        "name": "Mathematician",
+        "slug": "mathematician"
+    },
+    {
+        "name": "Statistician",
+        "slug": "statistician"
+    },
+    {
+        "name": "Economist",
+        "slug": "economist"
+    },
+    {
+        "name": "Sociologist",
+        "slug": "sociologist"
+    },
+    {
+        "name": "Anthropologist",
+        "slug": "anthropologist"
+    },
+    {
+        "name": "Historian",
+        "slug": "historian"
+    },
+    {
+        "name": "Political Scientist",
+        "slug": "political-scientist"
+    },
+    {
+        "name": "Geographer",
+        "slug": "geographer"
+    },
+    {
+        "name": "Geologist",
+        "slug": "geologist"
+    },
+    {
+        "name": "Meteorologist",
+        "slug": "meteorologist"
+    },
+    {
+        "name": "Astronomer",
+        "slug": "astronomer"
+    },
+    {
+        "name": "Lawyer",
+        "slug": "lawyer"
+    },
+    {
+        "name": "Attorney",
+        "slug": "attorney"
+    },
+    {
+        "name": "Paralegal",
+        "slug": "paralegal"
+    },
+    {
+        "name": "Legal Assistant",
+        "slug": "legal-assistant"
+    },
+    {
+        "name": "Judge",
+        "slug": "judge"
+    },
+    {
+        "name": "Mediator",
+        "slug": "mediator"
+    },
+    {
+        "name": "Arbitrator",
+        "slug": "arbitrator"
+    },
+    {
+        "name": "Court Reporter",
+        "slug": "court-reporter"
+    },
+    {
+        "name": "Bailiff",
+        "slug": "bailiff"
+    },
+    {
+        "name": "Police Officer",
+        "slug": "police-officer"
+    },
+    {
+        "name": "Detective",
+        "slug": "detective"
+    },
+    {
+        "name": "Firefighter",
+        "slug": "firefighter"
+    },
+    {
+        "name": "Paramedic",
+        "slug": "paramedic"
+    },
+    {
+        "name": "EMT",
+        "slug": "emt"
+    },
+    {
+        "name": "Security Guard",
+        "slug": "security-guard"
+    },
+    {
+        "name": "Military Officer",
+        "slug": "military-officer"
+    },
+    {
+        "name": "Soldier",
+        "slug": "soldier"
+    },
+    {
+        "name": "Pilot",
+        "slug": "pilot"
+    },
+    {
+        "name": "Flight Attendant",
+        "slug": "flight-attendant"
+    },
+    {
+        "name": "Air Traffic Controller",
+        "slug": "air-traffic-controller"
+    },
+    {
+        "name": "Ship Captain",
+        "slug": "ship-captain"
+    },
+    {
+        "name": "Sailor",
+        "slug": "sailor"
+    },
+    {
+        "name": "Railroad Engineer",
+        "slug": "railroad-engineer"
+    },
+    {
+        "name": "Train Conductor",
+        "slug": "train-conductor"
+    },
+    {
+        "name": "Bus Driver",
+        "slug": "bus-driver"
+    },
+    {
+        "name": "Truck Driver",
+        "slug": "truck-driver"
+    },
+    {
+        "name": "Delivery Driver",
+        "slug": "delivery-driver"
+    },
+    {
+        "name": "Courier",
+        "slug": "courier"
+    },
+    {
+        "name": "Postal Worker",
+        "slug": "postal-worker"
+    },
+    {
+        "name": "Farmer",
+        "slug": "farmer"
+    },
+    {
+        "name": "Rancher",
+        "slug": "rancher"
+    },
+    {
+        "name": "Agricultural Worker",
+        "slug": "agricultural-worker"
+    },
+    {
+        "name": "Forester",
+        "slug": "forester"
+    },
+    {
+        "name": "Logger",
+        "slug": "logger"
+    },
+    {
+        "name": "Fisherman",
+        "slug": "fisherman"
+    },
+    {
+        "name": "Miner",
+        "slug": "miner"
+    },
+    {
+        "name": "Welder",
+        "slug": "welder"
+    },
+    {
+        "name": "Electrician",
+        "slug": "electrician"
+    },
+    {
+        "name": "Plumber",
+        "slug": "plumber"
+    },
+    {
+        "name": "Carpenter",
+        "slug": "carpenter"
+    },
+    {
+        "name": "Mason",
+        "slug": "mason"
+    },
+    {
+        "name": "Roofer",
+        "slug": "roofer"
+    },
+    {
+        "name": "Painter",
+        "slug": "painter"
+    },
+    {
+        "name": "HVAC Technician",
+        "slug": "hvac-technician"
+    },
+    {
+        "name": "Locksmith",
+        "slug": "locksmith"
+    },
+    {
+        "name": "Glazier",
+        "slug": "glazier"
+    },
+    {
+        "name": "Tile Setter",
+        "slug": "tile-setter"
+    },
+    {
+        "name": "Flooring Installer",
+        "slug": "flooring-installer"
+    },
+    {
+        "name": "Drywall Installer",
+        "slug": "drywall-installer"
+    },
+    {
+        "name": "Insulation Worker",
+        "slug": "insulation-worker"
+    },
+    {
+        "name": "Concrete Finisher",
+        "slug": "concrete-finisher"
+    },
+    {
+        "name": "Ironworker",
+        "slug": "ironworker"
+    },
+    {
+        "name": "Pipefitter",
+        "slug": "pipefitter"
+    },
+    {
+        "name": "Steamfitter",
+        "slug": "steamfitter"
+    },
+    {
+        "name": "Sheet Metal Worker",
+        "slug": "sheet-metal-worker"
+    },
+    {
+        "name": "Machinist",
+        "slug": "machinist"
+    },
+    {
+        "name": "Tool and Die Maker",
+        "slug": "tool-die-maker"
+    },
+    {
+        "name": "CNC Operator",
+        "slug": "cnc-operator"
+    },
+    {
+        "name": "Assembly Worker",
+        "slug": "assembly-worker"
+    },
+    {
+        "name": "Factory Worker",
+        "slug": "factory-worker"
+    },
+    {
+        "name": "Production Worker",
+        "slug": "production-worker"
+    },
+    {
+        "name": "Packaging Worker",
+        "slug": "packaging-worker"
+    },
+    {
+        "name": "Material Handler",
+        "slug": "material-handler"
+    },
+    {
+        "name": "Forklift Operator",
+        "slug": "forklift-operator"
+    },
+    {
+        "name": "Crane Operator",
+        "slug": "crane-operator"
+    },
+    {
+        "name": "Heavy Equipment Operator",
+        "slug": "heavy-equipment-operator"
+    },
+    {
+        "name": "Landscaper",
+        "slug": "landscaper"
+    },
+    {
+        "name": "Groundskeeper",
+        "slug": "groundskeeper"
+    },
+    {
+        "name": "Gardener",
+        "slug": "gardener"
+    },
+    {
+        "name": "Tree Trimmer",
+        "slug": "tree-trimmer"
+    },
+    {
+        "name": "Pest Control Worker",
+        "slug": "pest-control"
+    },
+    {
+        "name": "Janitor",
+        "slug": "janitor"
+    },
+    {
+        "name": "Cleaner",
+        "slug": "cleaner"
+    },
+    {
+        "name": "Housekeeper",
+        "slug": "housekeeper"
+    },
+    {
+        "name": "Laundry Worker",
+        "slug": "laundry-worker"
+    },
+    {
+        "name": "Dry Cleaning Worker",
+        "slug": "dry-cleaning"
+    },
+    {
+        "name": "Tailor",
+        "slug": "tailor"
+    },
+    {
+        "name": "Seamstress",
+        "slug": "seamstress"
+    },
+    {
+        "name": "Upholsterer",
+        "slug": "upholsterer"
+    },
+    {
+        "name": "Shoemaker",
+        "slug": "shoemaker"
+    },
+    {
+        "name": "Jeweler",
+        "slug": "jeweler"
+    },
+    {
+        "name": "Watchmaker",
+        "slug": "watchmaker"
+    },
+    {
+        "name": "Florist",
+        "slug": "florist"
+    },
+    {
+        "name": "Baker",
+        "slug": "baker"
+    },
+    {
+        "name": "Butcher",
+        "slug": "butcher"
+    },
+    {
+        "name": "Food Processor",
+        "slug": "food-processor"
+    },
+    {
+        "name": "Brewer",
+        "slug": "brewer"
+    },
+    {
+        "name": "Winemaker",
+        "slug": "winemaker"
+    },
+    {
+        "name": "Distiller",
+        "slug": "distiller"
+    },
+    {
+        "name": "Other",
+        "slug": "other"
+    }
+]

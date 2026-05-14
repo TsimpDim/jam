@@ -52,3 +52,17 @@
     max-width: 320px;
   }
 }
+
+.cv-review-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--clr-gray-200);
+}
+
+.cv-review-actions .btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}

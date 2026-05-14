@@ -2,14 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
-import { CV, UserInfo } from 'src/app/interfaces';
+import { CV, CVReview, UserInfo } from 'src/app/interfaces';
 import { CvUploadModalComponent } from '../../modals/cv-upload-modal/cv-upload-modal.component';
+import { CVReviewModalComponent } from '../../modals/cv-review-request-modal/cv-review-request-modal.component';
+import { CvReviewResultModalComponent } from '../../modals/cv-review-result-modal/cv-review-result-modal.component';
 import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-cv',
   standalone: true,
-  imports: [CommonModule, ClarityModule, CvUploadModalComponent],
+  imports: [
+    CommonModule,
+    ClarityModule,
+    CvUploadModalComponent,
+    CVReviewModalComponent,
+    CvReviewResultModalComponent,
+  ],
   templateUrl: './cv.component.html',
   styleUrls: ['./cv.component.scss'],
 })
@@ -22,6 +30,9 @@ export class CvComponent implements OnInit {
   // Modal state
   showUploadForm: boolean = false;
   editingCV: CV | null = null;
+  showReviewRequestModal: boolean = false;
+  showReviewResultModal: boolean = false;
+  selectedReviewForView: CVReview | null = null;
 
   // User info / quota
   userInfo: UserInfo | null = null;
@@ -30,6 +41,10 @@ export class CvComponent implements OnInit {
 
   // Download state
   downloadingId: number | null = null;
+
+  // CV Review state
+  cvReviews: Map<number, CVReview[]> = new Map();
+  requestingReviewCvId: number | null = null;
 
   constructor(
     private jamService: JamService,
@@ -60,12 +75,36 @@ export class CvComponent implements OnInit {
       next: (data) => {
         this.cvs = data;
         this.loading = false;
+        for (const cv of this.cvs) {
+          this.loadReviewsForCV(cv.id);
+        }
       },
       error: (error) => {
         console.error('Error loading CVs:', error);
         this.loading = false;
       },
     });
+  }
+
+  loadReviewsForCV(cvId: number): void {
+    this.jamService.getCVReviews(cvId).subscribe({
+      next: (reviews) => {
+        this.cvReviews.set(cvId, reviews);
+      },
+      error: (error) => {
+        console.error('Error loading reviews for CV:', error);
+      },
+    });
+  }
+
+  getCompletedReviewForCV(cvId: number): CVReview | null {
+    const reviews = this.cvReviews.get(cvId) || [];
+    return reviews.find((r) => r.is_done) || null;
+  }
+
+  isCVReviewProcessing(cvId: number): boolean {
+    const reviews = this.cvReviews.get(cvId) || [];
+    return (reviews.find((r) => !r.is_done) || null) !== null;
   }
 
   openUploadForm(): void {
@@ -99,12 +138,19 @@ export class CvComponent implements OnInit {
     this.editingCV = null;
   }
 
-  deleteCV(cv: CV): void {
+  onCvDeleted(): void {
+    if (!this.editingCV) return;
+
+    const cv = this.editingCV;
+
     if (!confirm(`Are you sure you want to delete "${cv.key}"?`)) {
       return;
     }
 
+    this.showUploadForm = false;
+    this.editingCV = null;
     this.loading = true;
+
     this.jamService.deleteCV(cv.id).subscribe({
       next: () => {
         this.loading = false;
@@ -154,5 +200,62 @@ export class CvComponent implements OnInit {
     if (!fileName) return '';
     const parts = fileName.split('.');
     return parts.length > 1 ? parts.pop()?.toUpperCase() || '' : '';
+  }
+
+  // CV Review methods
+  openReviewRequestModal(cvId: number): void {
+    this.requestingReviewCvId = cvId;
+    this.showReviewRequestModal = true;
+  }
+
+  onReviewRequestSubmitted(payload: {
+    industry: number;
+    experienceLevel: number;
+    roles: number[];
+  }): void {
+    if (!this.requestingReviewCvId) return;
+
+    const reviewPayload = {
+      cv: this.requestingReviewCvId,
+      industry: payload.industry,
+      experience_level: payload.experienceLevel,
+      roles: payload.roles,
+    };
+
+    this.jamService.requestCVReview(reviewPayload).subscribe({
+      next: (review) => {
+        this.showReviewRequestModal = false;
+        this.requestingReviewCvId = null;
+        this.snackbarService.showSuccess(
+          'Your CV is being reviewed, this might take a while. Your results will appear here afterwards.'
+        );
+        this.loadReviewsForCV(review.cv);
+      },
+      error: (error) => {
+        this.requestingReviewCvId = null;
+        const errorMsg =
+          error.error?.error ||
+          'An error occurred while requesting the review.';
+        this.snackbarService.showError(errorMsg);
+      },
+    });
+  }
+
+  onReviewRequestModalClosed(): void {
+    this.showReviewRequestModal = false;
+    this.requestingReviewCvId = null;
+  }
+
+  viewReviewResult(cvId: number): void {
+    const completedReview = this.getCompletedReviewForCV(cvId);
+    if (completedReview) {
+      this.selectedReviewForView = completedReview;
+      this.showReviewResultModal = true;
+    }
+  }
+
+  onReviewResultModalClosed(): void {
+    this.showReviewResultModal = false;
+    this.selectedReviewForView = null;
   }
 }

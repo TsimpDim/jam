@@ -14,5 +14,4 @@ services:
 
 networks:
   jam:
-    external:
-      name: jam
+    external: true

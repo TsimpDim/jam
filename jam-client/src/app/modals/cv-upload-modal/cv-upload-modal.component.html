@@ -48,6 +48,15 @@
     ></clr-spinner>
     <button
       type="button"
+      class="btn btn-danger-outline"
+      (click)="delete()"
+      [disabled]="uploading"
+      *ngIf="isEditMode"
+    >
+      Delete
+    </button>
+    <button
+      type="button"
       class="btn btn-outline"
       (click)="close()"
       [disabled]="uploading"

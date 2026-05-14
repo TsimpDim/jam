@@ -4,6 +4,7 @@ import {
   barsIcon,
   blockIcon,
   blocksGroupIcon,
+  boltIcon,
   calendarIcon,
   checkCircleIcon,
   clipboardIcon,
@@ -60,6 +61,7 @@ export function registerIcons(): void {
     plusIcon,
     searchIcon,
     trashIcon,
-    uploadIcon
+    uploadIcon,
+    boltIcon
   );
 }

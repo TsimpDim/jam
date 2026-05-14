@@ -3,12 +3,12 @@ from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 
 router = DefaultRouter()
-router.register(r"groups", GroupsViewSet, basename="group")
-router.register(r"steps", StepViewSet, basename="step")
-router.register(r"jobapps", JobApplicationViewSet, basename="jobapp")
+router.register(r"groups", GroupsViewSet, basename="groups")
+router.register(r"steps", StepViewSet, basename="steps")
+router.register(r"jobapps", JobApplicationViewSet, basename="jobapps")
 router.register(r"timeline", TimelineViewSet, basename="timeline")
 router.register(r"leads", LeadViewSet, basename="leads")
-router.register(r"cv", CVViewSet, basename="cv")
+router.register(r"cvs", CVViewSet, basename="cvs")
 
 urlpatterns = [
     path("", include(router.urls)),

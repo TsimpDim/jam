@@ -1,0 +1,105 @@
+<clr-modal
+  [(clrModalOpen)]="open"
+  [clrModalClosable]="!submitting"
+  (clrModalOpenChange)="onModalOpenChange($event)"
+>
+  <h3 class="modal-title">Request CV Review</h3>
+  <div class="modal-body">
+    <form class="clr-form form-grid" [formGroup]="form">
+      <div class="clr-form-control">
+        <label>Industry *</label>
+        <clr-select-container>
+          <select clrSelect formControlName="industry">
+            <option [value]="null">Select an industry</option>
+            <option *ngFor="let ind of industries" [value]="ind.id">
+              {{ ind.name }}
+            </option>
+          </select>
+        </clr-select-container>
+        <clr-control-helper
+          >Select the industry you are applying to</clr-control-helper
+        >
+        <clr-control-error
+          *ngIf="form.get('industry')?.touched && form.get('industry')?.invalid"
+          >Industry is required.</clr-control-error
+        >
+      </div>
+
+      <div class="clr-form-control">
+        <label>Experience Level *</label>
+        <clr-select-container>
+          <select clrSelect formControlName="experienceLevel">
+            <option [value]="null">Select experience level</option>
+            <option *ngFor="let level of experienceLevels" [value]="level.id">
+              {{ level.name }}
+            </option>
+          </select>
+        </clr-select-container>
+        <clr-control-helper
+          >Select the level of experience for the role</clr-control-helper
+        >
+        <clr-control-error
+          *ngIf="
+            form.get('experienceLevel')?.touched &&
+            form.get('experienceLevel')?.invalid
+          "
+          >Experience level is required.</clr-control-error
+        >
+      </div>
+
+      <div class="clr-form-control">
+        <label>Roles *</label>
+        <clr-combobox-container>
+          <clr-combobox [clrMulti]="true" formControlName="roles">
+            <ng-container *clrOptionSelected="let selectedRole">
+              {{ selectedRole?.name }}
+            </ng-container>
+            <clr-options>
+              <clr-option
+                *clrOptionItems="let role of allRoles; field: 'name'"
+                [clrValue]="role"
+              >
+                {{ role.name }}
+              </clr-option>
+            </clr-options>
+          </clr-combobox>
+          <clr-control-helper
+            >Select up to 3 roles your CV is aimed at</clr-control-helper
+          >
+          <clr-control-error
+            *ngIf="form.get('roles')?.touched && form.get('roles')?.errors?.['minRoles']"
+            >At least one role is required.</clr-control-error
+          >
+          <clr-control-error
+            *ngIf="form.get('roles')?.touched && form.get('roles')?.errors?.['maxRoles']"
+            >You can select only up to 3 roles.</clr-control-error
+          >
+        </clr-combobox-container>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <clr-spinner
+      *ngIf="submitting"
+      [clrMedium]="true"
+      [clrInline]="true"
+      [clrInverse]="true"
+    ></clr-spinner>
+    <button
+      type="button"
+      class="btn btn-outline"
+      (click)="close()"
+      [disabled]="submitting"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="submit()"
+      [disabled]="submitting"
+    >
+      Submit
+    </button>
+  </div>
+</clr-modal>

@@ -1,0 +1,41 @@
+<clr-modal
+  [(clrModalOpen)]="open"
+  [clrModalSize]="'lg'"
+  [clrModalClosable]="true"
+>
+  <h3 class="modal-title">CV Review Results</h3>
+  <div class="modal-body" *ngIf="review">
+    <div class="review-details-header">
+      <h4>Request Details</h4>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">Industry:</span>
+          <span class="detail-value">{{ review.industry_name }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Experience Level:</span>
+          <span class="detail-value">{{ review.experience_level_name }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Roles:</span>
+          <span class="detail-value">{{ review.roles_names.join(', ') }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Requested:</span>
+          <span class="detail-value">{{ review.created_at | date:'medium' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-result-content" [innerHTML]="renderedHtml"></div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="close()"
+    >
+      Close
+    </button>
+  </div>
+</clr-modal>

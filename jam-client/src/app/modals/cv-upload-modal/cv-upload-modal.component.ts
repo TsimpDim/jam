@@ -59,6 +59,7 @@ export class CvUploadModalComponent implements OnChanges {
   @Input() open: boolean = false;
   @Input() editCV: CV | null = null;
   @Output() uploaded = new EventEmitter<void>();
+  @Output() deleted = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
   form: FormGroup;
@@ -140,6 +141,10 @@ export class CvUploadModalComponent implements OnChanges {
         },
       });
     }
+  }
+
+  delete(): void {
+    this.deleted.emit();
   }
 
   close(): void {

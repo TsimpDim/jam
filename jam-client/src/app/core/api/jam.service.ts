@@ -2,7 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { GroupReorderPayload, UserInfo } from '../../interfaces';
+import {
+  CVReview,
+  ExperienceLevel,
+  GroupReorderPayload,
+  Industry,
+  Role,
+  UserInfo,
+} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -308,14 +315,14 @@ export class JamService {
   }
 
   getCVs() {
-    return this.runHttpCall('GET', environment.apiUrl + '/jam/cv/');
+    return this.runHttpCall('GET', environment.apiUrl + '/jam/cvs/');
   }
 
   createCV(key: string, file: File) {
     const formData = new FormData();
     formData.append('key', key);
     formData.append('file', file);
-    return this.http.post(environment.apiUrl + '/jam/cv/', formData);
+    return this.http.post(environment.apiUrl + '/jam/cvs/', formData);
   }
 
   updateCV(cvId: number, key: string, file?: File) {
@@ -325,7 +332,7 @@ export class JamService {
       formData.append('file', file);
     }
     return this.http.patch(
-      environment.apiUrl + '/jam/cv/' + cvId + '/',
+      environment.apiUrl + '/jam/cvs/' + cvId + '/',
       formData
     );
   }
@@ -333,13 +340,13 @@ export class JamService {
   deleteCV(cvId: number) {
     return this.runHttpCall(
       'DELETE',
-      environment.apiUrl + '/jam/cv/' + cvId + '/'
+      environment.apiUrl + '/jam/cvs/' + cvId + '/'
     );
   }
 
   downloadCV(cvId: number): Observable<Blob> {
     return this.http.get(
-      environment.apiUrl + '/jam/cv/' + cvId + '/download/',
+      environment.apiUrl + '/jam/cvs/' + cvId + '/download/',
       {
         responseType: 'blob',
       }
@@ -348,6 +355,48 @@ export class JamService {
 
   getUserInfo(): Observable<UserInfo> {
     return this.runHttpCall('GET', environment.apiUrl + '/auth/me/');
+  }
+
+  // CV Review endpoints
+  getCVReviews(cvId?: number): Observable<CVReview[]> {
+    let url = environment.apiUrl + '/special/cv-reviews/';
+    if (cvId) {
+      url += '?cv=' + cvId;
+    }
+    return this.runHttpCall('GET', url);
+  }
+
+  requestCVReview(payload: {
+    cv: number;
+    industry: number;
+    experience_level: number;
+    roles: number[];
+  }): Observable<CVReview> {
+    return this.runHttpCall(
+      'POST',
+      environment.apiUrl + '/special/cv-reviews/',
+      payload
+    );
+  }
+
+  getIndustries(): Observable<Industry[]> {
+    return this.runHttpCall('GET', environment.apiUrl + '/special/industries/');
+  }
+
+  getExperienceLevels(): Observable<ExperienceLevel[]> {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/special/experience-levels/'
+    );
+  }
+
+  getRoles(term: string | undefined = undefined): Observable<Role[]> {
+    let url = environment.apiUrl + '/special/roles/';
+    if (term) {
+      url += `?search=${encodeURIComponent(term)}`;
+    }
+
+    return this.runHttpCall('GET', url);
   }
 
   runHttpCall(

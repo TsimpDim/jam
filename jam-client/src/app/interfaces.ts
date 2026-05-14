@@ -138,3 +138,38 @@ export interface UserInfo {
   cv_limit: number;
   cv_count: number;
 }
+
+export interface Industry {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface ExperienceLevel {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface Role {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface CVReview {
+  id: number;
+  cv: number;
+  cv_key: string;
+  cv_file: string;
+  industry: number;
+  industry_name: string;
+  experience_level: number;
+  experience_level_name: string;
+  roles: number[];
+  roles_names: string[];
+  review_result: string | null;
+  is_done: boolean;
+  created_at: string;
+  completed_at: string | null;
+}
