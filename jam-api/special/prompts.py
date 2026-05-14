@@ -22,4 +22,5 @@ def build_cv_review_prompt(roles: str, industry: str, experience_level: str) -> 
 
     Structure your response with an executive summary first (assessing overall market readiness for {roles}), followed by a detailed breakdown of the 15 points, and conclude with the top 3 immediate action items the candidate must take to be highly competitive in the {industry} market.
     Format your response with Markdown.
+    Reply as if you're talking to the candidate directly.
     """
