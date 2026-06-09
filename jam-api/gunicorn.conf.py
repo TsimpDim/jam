@@ -1,5 +1,3 @@
-"""Gunicorn prod config file"""
-
 import os
 
 # Dynamic settings module (default to full)
@@ -12,7 +10,7 @@ wsgi_app = "core.asgi:application"
 loglevel = "info"
 
 # The number of worker processes for handling requests
-workers = 2
+workers = 1
 
 # The socket to bind
 #bind = "/run/gunicorn.sock"
