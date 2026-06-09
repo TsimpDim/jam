@@ -1,5 +1,10 @@
 """Gunicorn prod config file"""
 
+import os
+
+# Dynamic settings module (default to full)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.full")
+
 # Django WSGI application path in pattern MODULE_NAME:VARIABLE_NAME
 wsgi_app = "core.asgi:application"
 

@@ -42,7 +42,7 @@ export class AuthService {
 
   async login(username: string, password: string): Promise<void> {
     const json = await firstValueFrom(
-      this.http.post<TokenResponse>(`${environment.apiUrl}/auth/token/`, {
+      this.http.post<TokenResponse>(`${environment.apiUrl}/auth/login/`, {
         username,
         password,
       })
@@ -60,7 +60,7 @@ export class AuthService {
     const token = this.authTokenSubject.value;
     if (token) {
       await firstValueFrom(
-        this.http.post(`${environment.apiUrl}/auth/token/logout/`, {})
+        this.http.post(`${environment.apiUrl}/auth/logout/`, {})
       ).catch(() => {
         // Proceed with local logout even if the server call fails
       });

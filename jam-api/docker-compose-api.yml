@@ -3,9 +3,8 @@ services:
     build: .
     container_name: jobappman-api
     command: >
-      sh -c "python manage.py createsuperuser --noinput;
-      python manage.py migrate;
-      python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py migrate --settings=core.settings.full;
+      python manage.py runserver 0.0.0.0:8000 --settings=core.settings.full"
     volumes:
       - .:/jobappman
     ports:
@@ -27,6 +26,28 @@ services:
       jam:
         aliases:
           - "api.jam.local"
+
+  api-lite:
+    build: .
+    container_name: jobappman-api-lite
+    command: >
+      sh -c "python manage.py migrate --settings=core.settings.lite;
+      python manage.py runserver 0.0.0.0:8000 --settings=core.settings.lite"
+    volumes:
+      - .:/jobappman
+    ports:
+      - "8002:8000"
+    environment:
+      - DB_NAME=jobappman
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_HOST=jam-db
+      - SECRET_KEY=django1234
+      - DEBUG=*
+    networks:
+      jam:
+        aliases:
+          - "api-lite.jam.local"
 
 networks:
   jam:

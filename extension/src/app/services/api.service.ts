@@ -31,7 +31,6 @@ export interface JobApplication {
   applied_through?: string | null;
   external_link?: string | null;
   notes?: string | null;
-  date?: string;
   group: number;
   initial_step: number;
   lead?: number | null;
@@ -55,29 +54,29 @@ export class ApiService {
 
   getGroups(): Promise<Group[]> {
     return firstValueFrom(
-      this.http.get<Group[]>(`${this.baseUrl}/jam/groups/`)
+      this.http.get<Group[]>(`${this.baseUrl}/groups/`)
     );
   }
 
   getSteps(): Promise<Step[]> {
-    return firstValueFrom(this.http.get<Step[]>(`${this.baseUrl}/jam/steps/`));
+    return firstValueFrom(this.http.get<Step[]>(`${this.baseUrl}/steps/`));
   }
 
   getLeads(): Promise<Lead[]> {
     return firstValueFrom(
-      this.http.get<Lead[]>(`${this.baseUrl}/jam/leads/?all=true`)
+      this.http.get<Lead[]>(`${this.baseUrl}/leads/`)
     );
   }
 
   createJobApplication(data: Partial<JobApplication>): Promise<JobApplication> {
     return firstValueFrom(
-      this.http.post<JobApplication>(`${this.baseUrl}/jam/jobapps/`, data)
+      this.http.post<JobApplication>(`${this.baseUrl}/applications/add/`, data)
     );
   }
 
   createLead(data: Partial<Lead>): Promise<Lead> {
     return firstValueFrom(
-      this.http.post<Lead>(`${this.baseUrl}/jam/leads/`, data)
+      this.http.post<Lead>(`${this.baseUrl}/leads/add/`, data)
     );
   }
 }

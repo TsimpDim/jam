@@ -125,36 +125,6 @@ class RegisterView(generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
         )
 
-
-# Extension views (Knox token)
-@method_decorator(csrf_exempt, name='dispatch')
-class TokenView(generics.GenericAPIView):
-    """Extension: issue a Knox token. No session created."""
-    authentication_classes = []
-    permission_classes = [permissions.AllowAny]
-
-    def post(self, request):
-        user = _authenticate_or_error(request)
-        _, token = AuthToken.objects.create(user)
-        return Response({"token": token, "user": {"pk": user.pk, "username": user.username}})
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class TokenLogoutView(generics.GenericAPIView):
-    """Extension: revoke the current Knox token."""
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = []
-
-    def post(self, request):
-        if not hasattr(request, "auth") or request.auth is None:
-            return Response(
-                {"detail": "No token to revoke."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        request.auth.delete()
-        return Response({"detail": "Successfully logged out."})
-
-
 # Shared views
 class MeView(generics.GenericAPIView):
     """Shared: returns the authenticated user regardless of auth mechanism."""
@@ -210,7 +180,6 @@ class PasswordResetConfirmSerializer(Serializer):
         user.save(update_fields=["password"])
         return user
 
-
 class PasswordResetRequestView(generics.GenericAPIView):
     """Accepts an email, generates a reset token, and sends a password reset email."""
     authentication_classes = []
@@ -248,7 +217,6 @@ class PasswordResetRequestView(generics.GenericAPIView):
             {"detail": "If an account with that email exists, a password reset link has been sent."},
             status=status.HTTP_200_OK,
         )
-
 
 class PasswordResetConfirmView(generics.GenericAPIView):
     """Validates the reset token and updates the user's password."""
