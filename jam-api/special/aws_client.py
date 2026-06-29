@@ -4,19 +4,19 @@ from botocore.config import Config
 class AwsClient:
     __bedrock: boto3 = None
 
-    AWS_MODEL_ID = 'eu.amazon.nova-2-lite-v1:0'
-    AWS_REGION = 'eu-west-1'
+    AWS_MODEL_ID = 'us.anthropic.claude-haiku-4-5-20251001-v1:0'
+    AWS_US_REGION = 'us-east-1'
     AWS_RESPONSE_MAX_TOKENS_CV_REVIEW = 5000
 
     @staticmethod
     def get_or_create_bedrock_client():
         if not AwsClient.__bedrock:
             AwsClient.__bedrock = boto3.client('bedrock-runtime', config=Config(
-                region_name = AwsClient.AWS_REGION
+                region_name = AwsClient.AWS_US_REGION,
+                read_timeout = 300
             ))
         
         return AwsClient.__bedrock
-
 
     @staticmethod
     def converse(messages):

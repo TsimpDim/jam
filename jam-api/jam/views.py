@@ -565,6 +565,12 @@ class LeadViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.applications.update(lead=None)
+        return super().destroy(request, *args, **kwargs)
+
+
 class CVViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = CVSerializer

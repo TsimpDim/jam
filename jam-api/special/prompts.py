@@ -24,3 +24,92 @@ def build_cv_review_prompt(roles: str, industry: str, experience_level: str) -> 
     Format your response with Markdown.
     Reply as if you're talking to the candidate directly.
     """
+
+def _format_search_results(search_results: list[dict]) -> str:
+    if not search_results:
+        return "No search results available."
+    lines = []
+    for i, r in enumerate(search_results, 1):
+        lines.append(f"{i}. Title: {r.get('title', 'N/A')}")
+        lines.append(f"   URL: {r.get('url', 'N/A')}")
+        lines.append(f"   Snippet: {r.get('snippet', 'N/A')}")
+        lines.append("")
+    return "\n".join(lines)
+
+def build_lead_generation_prompt(existing_lead_companies: set[str], industries: list[str], experience_level: str, countries: list[str], cities: list[str], modes: list[str], company_sizes: list[str], roles: list[str], company_leads_only: bool, search_results: list[dict] = None) -> str:
+    industries_str = ', '.join(industries) if industries else 'all industries'
+    countries_str = ', '.join(countries) if countries else 'any country'
+    cities_str = ', '.join(cities) if cities else 'any city'
+    search_results_str = _format_search_results(search_results or [])
+
+    if company_leads_only:
+        return f"""
+You are an expert executive recruiter and corporate market researcher.
+
+## CRITICAL RULE
+Below you will find real search results from the web. You MUST use ONLY these results as your source of companies and URLs. DO NOT invent, hallucinate, or fabricate any company names, URLs, or data. If a company or URL is not in the search results below, you MUST NOT include it.
+
+## Search Results (Real Web Data)
+<search_results>
+{search_results_str}
+</search_results>
+
+## Search Criteria
+- Industries: {industries_str}
+- Countries: {countries_str}
+- Cities: {cities_str}
+- Modes: {', '.join(modes)}
+- Company Sizes: {', '.join(company_sizes)}
+- Existing leads to avoid: {existing_lead_companies}
+
+## Task
+From the search results above, select up to 15 companies that best match the criteria. Extract the company name from the title/snippet. Use the EXACT URL from the search results.
+
+## Output Format
+Output ONLY a valid JSON array. No thinking tags, no explanation, no markdown. Start with [ and end with ].
+
+Each object must have:
+- "company": company name (max 40 chars)
+- "location": specific job location from criteria (max 50 chars)
+- "external_link": exact URL from search results (max 500 chars)
+- "notes": brief explanation of why this company matches (size, mode, industry)
+
+If a search result is a job board aggregator (like LinkedIn, Indeed, Glassdoor), extract the ACTUAL company name mentioned in the title or snippet, and use the URL that points to that company's careers page.
+"""
+    else:
+        return f"""
+You are an expert executive recruiter and corporate market researcher.
+
+## CRITICAL RULE
+Below you will find real search results from the web. You MUST use ONLY these results as your source of companies, job postings, and URLs. DO NOT invent, hallucinate, or fabricate any company names, job titles, URLs, or data. If a job posting or URL is not in the search results below, you MUST NOT include it.
+
+## Search Results (Real Web Data)
+<search_results>
+{search_results_str}
+</search_results>
+
+## Search Criteria
+- Industries: {industries_str}
+- Countries: {countries_str}
+- Cities: {cities_str}
+- Modes: {', '.join(modes)}
+- Company Sizes: {', '.join(company_sizes)}
+- Roles: {', '.join(roles) if roles else 'any role'}
+- Experience Level: {experience_level}
+- Existing leads to avoid: {existing_lead_companies}
+
+## Task
+From the search results above, select up to 15 job postings that best match the criteria. Extract the exact job title from the title/snippet. Use the EXACT URL from the search results.
+
+## Output Format
+Output ONLY a valid JSON array. No thinking tags, no explanation, no markdown. Start with [ and end with ].
+
+Each object must have:
+- "company": company name (max 40 chars)
+- "location": specific job location from criteria (max 50 chars)
+- "external_link": exact URL from search results (max 500 chars)
+- "notes": brief explanation of why this role matches
+- "role": exact job title from search results (max 100 chars)
+
+If a search result is a job board aggregator (like LinkedIn, Indeed, Glassdoor), extract the ACTUAL company name and job title mentioned in the title or snippet.
+"""

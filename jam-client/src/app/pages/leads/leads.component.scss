@@ -8,14 +8,6 @@
     float: right;
 }
 
-.card-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid #eee;
-}
-
 .application-mini {
     display: flex;
     justify-content: space-between;
@@ -98,4 +90,13 @@
         color: #374151;
         font-size: 0.8rem;
     }
+}
+
+.generation-badge {
+    margin-left: 0.5rem;
+    background-color: var(--clr-color-danger-500, #e62700);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 0.15em 0.5em;
+    border-radius: 10px;
 }

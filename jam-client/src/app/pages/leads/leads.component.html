@@ -12,8 +12,42 @@
         <button class="button btn btn-outline" (click)="toggleViewMode()">
           {{ viewingArchived ? "Show Active" : "Show Archived" }}
         </button>
+        <button
+          class="button btn btn-secondary"
+          (click)="openLeadGenerationModal()"
+          [disabled]="
+            (inProgressCount > 0 && !userInfo?.is_premium) ||
+            hasReachedDailyQuota
+          "
+        >
+          <cds-icon
+            *ngIf="inProgressCount === 0 || userInfo?.is_premium"
+            shape="bolt"
+          ></cds-icon>
+          <cds-icon
+            *ngIf="inProgressCount > 0 && !userInfo?.is_premium"
+            shape="spinner"
+            class="is-solid spin"
+          ></cds-icon>
+          {{
+            hasReachedDailyQuota
+              ? "Lead generation quota reached"
+              : "Generate Leads"
+          }}
+          <span
+            *ngIf="inProgressCount > 0"
+            role="tooltip"
+            aria-haspopup="true"
+            class="tooltip tooltip-sm badge generation-badge"
+          >
+            {{ inProgressCount }}
+            <span class="tooltip-content"
+              >{{ inProgressCount }} lead generation requests in progress</span
+            >
+          </span>
+        </button>
 
-        <p class="empty-message" *ngIf="leads.length === 0">
+        <p class="empty-message" *ngIf="leads?.length === 0">
           Nothing's here so far :(<br />Use the 'create new' button to get
           started!
         </p>
@@ -24,7 +58,11 @@
           *ngFor="let lead of leads"
         >
           <div class="card-header">
-            {{ lead.company }} - {{ lead.role }}
+            <cds-icon shape="bolt" *ngIf="lead.generated"></cds-icon>
+            {{ lead.company
+            }}<ng-container *ngIf="lead.location">
+              - {{ lead.location }}</ng-container
+            ><ng-container *ngIf="lead.role"> - {{ lead.role }}</ng-container>
             <span class="badge" *ngIf="lead.group_name">{{
               lead.group_name
             }}</span>
@@ -52,7 +90,7 @@
             </div>
           </div>
           <div
-            class="card-footer"
+            class="card-block"
             *ngIf="lead.applications && lead.applications.length > 0"
           >
             <div class="application-mini" *ngFor="let app of lead.applications">
@@ -67,6 +105,15 @@
               </span>
             </div>
           </div>
+          <div class="card-footer">
+            <button
+              class="btn btn-sm btn-link"
+              (click)="deleteLead(lead.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="trash"></cds-icon>
+              Delete
+            </button>
+          </div>
         </div>
       </div>
 
@@ -76,7 +123,6 @@
 
         <div class="modal-body">
           <form class="clr-form form-grid lead-form" [formGroup]="leadForm">
-            <!-- ── Position ───────────────────────────────── -->
             <div class="form-section-header">
               <cds-icon shape="id-badge" size="14"></cds-icon>
               Position
@@ -207,6 +253,12 @@
           </button>
         </div>
       </clr-modal>
+
+      <app-lead-generation-modal
+        [open]="showLeadGenerationModal"
+        (submitted)="onLeadGenerationSubmitted($event)"
+        (closed)="onLeadGenerationModalClosed()"
+      ></app-lead-generation-modal>
     </div>
   </div>
 </div>

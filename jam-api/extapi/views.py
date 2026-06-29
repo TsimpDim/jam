@@ -1,6 +1,4 @@
-import logging
 from datetime import date
-
 from django.contrib.auth import authenticate, get_user_model
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
@@ -15,9 +13,8 @@ from extapi.serializers import (
     LeadSerializer,
     StepSerializer,
 )
-from jam.models import Group, JobApplication, Lead, Step
+from jam.models import Group, Lead, Step
 
-logger = logging.getLogger(__name__)
 User = get_user_model()
 
 

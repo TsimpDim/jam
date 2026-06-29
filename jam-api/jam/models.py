@@ -28,14 +28,15 @@ class Step(models.Model):
 
 class Lead(models.Model):
     company = models.CharField(max_length=40, null=False)
-    role = models.CharField(max_length=255, null=False)
+    role = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=50, null=True, blank=True)
     external_link = models.URLField(max_length=500, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     archived = models.BooleanField(default=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, blank=True)
+    generated = models.BooleanField(default=False)
 
 class JobApplication(models.Model):
     company = models.CharField(max_length=40, null=False)

@@ -10,11 +10,18 @@ import {
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { LeadGenerationModalComponent } from 'src/app/modals/lead-generation-modal/lead-generation-modal.component';
+import { UserInfo } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-leads',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ClarityModule,
+    LeadGenerationModalComponent,
+  ],
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
 })
@@ -27,11 +34,15 @@ export class LeadsComponent implements OnInit {
   selectedLead: any = null;
   viewingArchived: boolean = false;
   applications: any[] = [];
+  showLeadGenerationModal: boolean = false;
+  inProgressCount: number = 0;
+  userInfo: UserInfo | null = null;
+  hasReachedDailyQuota: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private jamService: JamService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
   ) {
     this.leadForm = this.formBuilder.group({
       company: new FormControl('', [Validators.required]),
@@ -51,6 +62,30 @@ export class LeadsComponent implements OnInit {
   ngOnInit(): void {
     this.getLeads();
     this.getGroups();
+    this.loadUserInfo();
+  }
+
+  loadUserInfo(): void {
+    this.jamService.getUserInfo().subscribe({
+      next: (data) => {
+        this.userInfo = data;
+        this.loadLeadGenerationStatus(!data.is_premium);
+      },
+    });
+  }
+
+  loadLeadGenerationStatus(checkQuota: boolean): void {
+    this.jamService.getLeadGenerationRequests().subscribe((requests) => {
+      this.inProgressCount = requests.filter(
+        (req) => req.is_done === false,
+      ).length;
+      if (checkQuota) {
+        const today = new Date().toISOString().split('T')[0];
+        this.hasReachedDailyQuota = requests.some((req) =>
+          req.created_at.startsWith(today),
+        );
+      }
+    });
   }
 
   toggleViewMode() {
@@ -104,7 +139,9 @@ export class LeadsComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        this.snackbarService.showError('An error occurred while deleting the lead.');
+        this.snackbarService.showError(
+          'An error occurred while deleting the lead.',
+        );
       },
       complete: () => {
         this.loading = false;
@@ -122,13 +159,15 @@ export class LeadsComponent implements OnInit {
           this.viewingArchived = false;
         }
         this.snackbarService.showSuccess(
-          newArchivedState ? 'Lead archived.' : 'Lead unarchived.'
+          newArchivedState ? 'Lead archived.' : 'Lead unarchived.',
         );
         this.getLeads();
       },
       error: () => {
         this.loading = false;
-        this.snackbarService.showError('An error occurred while updating the lead.');
+        this.snackbarService.showError(
+          'An error occurred while updating the lead.',
+        );
       },
       complete: () => {
         this.loading = false;
@@ -146,7 +185,7 @@ export class LeadsComponent implements OnInit {
         this.leadForm.value.externalLink,
         this.leadForm.value.role,
         this.leadForm.value.company,
-        this.leadForm.value.group
+        this.leadForm.value.group,
       )
       .subscribe({
         next: () => {
@@ -160,8 +199,8 @@ export class LeadsComponent implements OnInit {
           this.snackbarService.showError(
             this.snackbarService.getErrorMessage(
               e,
-              'An error occurred while creating the lead.'
-            )
+              'An error occurred while creating the lead.',
+            ),
           );
         },
         complete: () => {
@@ -182,7 +221,7 @@ export class LeadsComponent implements OnInit {
         this.leadForm.value.role,
         this.leadForm.value.company,
         archived,
-        this.leadForm.value.group
+        this.leadForm.value.group,
       )
       .subscribe({
         next: () => {
@@ -196,8 +235,8 @@ export class LeadsComponent implements OnInit {
           this.snackbarService.showError(
             this.snackbarService.getErrorMessage(
               e,
-              'An error occurred while updating the lead.'
-            )
+              'An error occurred while updating the lead.',
+            ),
           );
         },
         complete: () => {
@@ -236,5 +275,46 @@ export class LeadsComponent implements OnInit {
     };
     this.leadForm.reset(formData);
     this.openModal();
+  }
+
+  openLeadGenerationModal() {
+    this.showLeadGenerationModal = true;
+  }
+
+  onLeadGenerationSubmitted(payload: any) {
+    this.loading = true;
+    this.jamService.createLeadGenerationRequest(payload).subscribe({
+      next: () => {
+        this.snackbarService.showSuccess(
+          'Lead generation request submitted successfully.',
+        );
+        this.snackbarService.showInfo(
+          'Please come back in a few minutes to view the results.',
+        );
+        this.showLeadGenerationModal = false;
+        this.loading = false;
+        this.inProgressCount++;
+        if (!this.userInfo?.is_premium) {
+          this.hasReachedDailyQuota = true;
+        }
+      },
+      error: (e) => {
+        this.loading = false;
+        this.showLeadGenerationModal = false;
+        this.snackbarService.showError(
+          this.snackbarService.getErrorMessage(
+            e,
+            'An error occurred while submitting the lead generation request.',
+          ),
+        );
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    });
+  }
+
+  onLeadGenerationModalClosed() {
+    this.showLeadGenerationModal = false;
   }
 }

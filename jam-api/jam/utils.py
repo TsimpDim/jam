@@ -2,10 +2,7 @@ import re
 import requests
 import json
 from bs4 import BeautifulSoup
-import logging
 from collections import deque
-
-logger = logging.getLogger(__name__)
 
 def fetch_job_ad_snapshot(url: str):
     """
@@ -26,7 +23,7 @@ def fetch_job_ad_snapshot(url: str):
             response = requests.get(url, timeout=15, headers=headers)
             response.raise_for_status()
         except Exception as e:
-            logger.error(f"Request failed for {url}: {e}")
+            print(f"Request failed for {url}: {e}")
             return None
         
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -51,7 +48,7 @@ def fetch_job_ad_snapshot(url: str):
                             desc_soup = BeautifulSoup(description, 'html.parser')
                             text = desc_soup.get_text(separator='\n\n', strip=True)
                             if len(text) > 100:
-                                logger.info(f"Extracted job ad from JSON-LD for {url}")
+                                print(f"Extracted job ad from JSON-LD for {url}")
                                 return text[:75000]
             except Exception:
                 continue
@@ -65,7 +62,7 @@ def fetch_job_ad_snapshot(url: str):
         if meta_desc and meta_desc.get('content'):
             content = meta_desc.get('content')
             if len(content) > 500: # Only if it's substantial, otherwise it's just a summary
-                logger.info(f"Extracted job ad from Meta Tags for {url}")
+                print(f"Extracted job ad from Meta Tags for {url}")
                 return content[:75000]
 
         # Strategy 3: Heuristic HTML Scraping (Improved)
@@ -141,7 +138,7 @@ def fetch_job_ad_snapshot(url: str):
         return None
 
     except Exception as e:
-        logger.error(f"Error fetching job ad snapshot from {url}: {e}")
+        print(f"Error fetching job ad snapshot from {url}: {e}")
         return None
 
 

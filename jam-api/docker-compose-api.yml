@@ -27,12 +27,12 @@ services:
         aliases:
           - "api.jam.local"
 
-  api-lite:
+  extapi:
     build: .
-    container_name: jobappman-api-lite
+    container_name: jobappman-extapi
     command: >
-      sh -c "python manage.py migrate --settings=core.settings.lite;
-      python manage.py runserver 0.0.0.0:8000 --settings=core.settings.lite"
+      sh -c "python manage.py migrate --settings=core.extapi;
+      python manage.py runserver 0.0.0.0:8000 --settings=core.extapi"
     volumes:
       - .:/jobappman
     ports:
@@ -47,7 +47,7 @@ services:
     networks:
       jam:
         aliases:
-          - "api-lite.jam.local"
+          - "extapi.jam.local"
 
 networks:
   jam:

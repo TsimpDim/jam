@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from .models import CVReview, Industry, ExperienceLevel, Role
-from .serializers import CVReviewSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer
+from .models import CVReview, LeadGenerationRequest, Industry, ExperienceLevel, Role, Country, City
+from .serializers import CVReviewSerializer, LeadGenerationRequestSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer, CountrySerializer, CitySerializer
 from jam.models import CV, UserProfile
 
 
@@ -32,6 +32,25 @@ class RoleViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+class CountryViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CountrySerializer
+    queryset = Country.objects.all()
+
+
+class CityViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CitySerializer
+    queryset = City.objects.select_related('country').all()
+
+    def get_queryset(self):
+        queryset = City.objects.select_related('country').all()
+        country = self.request.query_params.get('country')
+        if country:
+            queryset = queryset.filter(country__slug=country)
+        return queryset
+
+
 class CVReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = CVReviewSerializer
@@ -48,24 +67,60 @@ class CVReviewViewSet(viewsets.ModelViewSet):
         if not cv_id:
             return Response({'error': 'CV ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if CV belongs to user
         try:
             cv = CV.objects.get(id=cv_id, user=request.user)
         except CV.DoesNotExist:
             return Response({'error': 'CV not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Check if there's already a pending review for this CV
         pending_review = CVReview.objects.filter(user=request.user, cv=cv, is_done=False).first()
         if pending_review:
             return Response({'error': 'You already have a pending review for this CV.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check daily limit for non-premium users
         user_profile = UserProfile.objects.get(user=request.user)
         if not user_profile.is_premium:
             today = timezone.now().date()
             today_reviews = CVReview.objects.filter(user=request.user, created_at__date=today).count()
             if today_reviews >= 1:
                 return Response({'error': 'Free users can only request 1 CV review per day.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        data = request.data.copy()
+        data["user"] = request.user.id
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class LeadGenerationRequestViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LeadGenerationRequestSerializer
+    http_method_names = ['get', 'post', 'head', 'options']
+
+    def get_queryset(self):
+        qs = LeadGenerationRequest.objects.filter(
+            user=self.request.user
+        ).prefetch_related(
+            'roles', 'countries', 'cities',
+            'industries', 'experience_level',
+        )
+        return qs
+
+    def create(self, request, *args, **kwargs):
+        countries = request.data.get('countries')
+        if not countries or len(countries) == 0:
+            return Response({'error': 'At least one country is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user_profile = UserProfile.objects.get(user=request.user)
+        if not user_profile.is_premium:
+            today = timezone.now().date()
+            today_requests = LeadGenerationRequest.objects.filter(user=request.user, created_at__date=today).count()
+            if today_requests >= 1:
+                return Response({'error': 'Free users can only request 1 lead generation per day.'}, status=status.HTTP_400_BAD_REQUEST)
 
         data = request.data.copy()
         data["user"] = request.user.id

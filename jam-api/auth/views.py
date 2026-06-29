@@ -1,9 +1,5 @@
-import logging
-
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
-
-logger = logging.getLogger(__name__)
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.middleware.csrf import get_token
@@ -75,7 +71,7 @@ class LoginView(generics.GenericAPIView):
         csrf_token = get_token(request)
 
         # DEBUG: log cookie settings to diagnose 403 after login
-        logger.warning(
+        print(
             "[DEBUG LoginView] SESSION_COOKIE_DOMAIN=%r SESSION_COOKIE_SAMESITE=%r "
             "SESSION_COOKIE_SECURE=%r CSRF_COOKIE_DOMAIN=%r session_key=%r "
             "request.scheme=%r HTTP_X_FORWARDED_PROTO=%r csrftoken(first8)=%s",

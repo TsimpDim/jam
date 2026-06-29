@@ -7,8 +7,11 @@ import {
   ExperienceLevel,
   GroupReorderPayload,
   Industry,
+  LeadGenerationRequest,
   Role,
   UserInfo,
+  City,
+  Country,
 } from '../../interfaces';
 
 @Injectable({
@@ -397,6 +400,42 @@ export class JamService {
     }
 
     return this.runHttpCall('GET', url);
+  }
+
+  getCities(countrySlug?: string): Observable<City[]> {
+    let url = environment.apiUrl + '/special/cities/';
+    if (countrySlug) {
+      url += `?country=${encodeURIComponent(countrySlug)}`;
+    }
+    return this.runHttpCall('GET', url);
+  }
+
+  getCountries(): Observable<Country[]> {
+    return this.runHttpCall('GET', environment.apiUrl + '/special/countries/');
+  }
+
+  createLeadGenerationRequest(payload: {
+    countries: number[];
+    cities?: number[];
+    company_leads_only: boolean;
+    roles?: number[];
+    modes: string[];
+    experience_level: number[];
+    industries?: number[];
+    company_sizes: string[];
+  }): Observable<LeadGenerationRequest> {
+    return this.runHttpCall(
+      'POST',
+      environment.apiUrl + '/special/lead-generation-requests/',
+      payload
+    );
+  }
+
+  getLeadGenerationRequests(): Observable<LeadGenerationRequest[]> {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/special/lead-generation-requests/'
+    );
   }
 
   runHttpCall(

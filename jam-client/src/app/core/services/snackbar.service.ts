@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface SnackbarMessage {
   id: number;
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'info';
   message: string;
 }
 
@@ -14,6 +14,7 @@ export interface SnackbarMessage {
 export class SnackbarService {
   private static readonly MAX_SNACKBARS = 3;
   private static readonly SUCCESS_DURATION = 4000;
+  private static readonly INFO_DURATION = 10000;
   private static readonly ERROR_DURATION = 8000;
 
   private snackbars = new BehaviorSubject<SnackbarMessage[]>([]);
@@ -21,6 +22,10 @@ export class SnackbarService {
 
   showSuccess(message: string): void {
     this.show(message, 'success', SnackbarService.SUCCESS_DURATION);
+  }
+
+  showInfo(message: string): void {
+    this.show(message, 'info', SnackbarService.INFO_DURATION);
   }
 
   showError(message: string): void {
@@ -76,8 +81,8 @@ export class SnackbarService {
 
   private show(
     message: string,
-    type: 'success' | 'error',
-    duration: number
+    type: 'success' | 'error' | 'info',
+    duration: number,
   ): void {
     const id = Date.now() + Math.random();
     const current = this.snackbars.getValue();

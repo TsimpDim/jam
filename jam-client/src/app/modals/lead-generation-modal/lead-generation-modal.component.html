@@ -1,0 +1,286 @@
+<clr-modal
+  [(clrModalOpen)]="open"
+  (clrModalOpenChange)="onModalOpenChange($event)"
+  [clrModalSize]="'lg'"
+  class="lead-generation-modal"
+>
+  <h3 class="modal-title">Generate Leads</h3>
+  <div class="modal-body">
+    <form class="clr-form form-grid" [formGroup]="form">
+      <div class="clr-form-control form-field-full company-leads-section">
+        <clr-checkbox-container>
+          <label>Company Leads Only</label>
+          <clr-checkbox-wrapper>
+            <input
+              type="checkbox"
+              clrCheckbox
+              formControlName="companyLeadsOnly"
+            />
+          </clr-checkbox-wrapper>
+          <clr-control-helper
+            >When enabled, generates company-level leads without specific roles
+            or experience level</clr-control-helper
+          >
+        </clr-checkbox-container>
+      </div>
+
+      <div class="search-inputs-group">
+        <div class="clr-form-control">
+          <label>Country *</label>
+          <clr-combobox-container>
+            <clr-combobox
+              #countryCombo
+              [clrMulti]="true"
+              formControlName="countries"
+              (clrSelectionChange)="clearSearch(countryCombo)"
+            >
+              <ng-container *clrOptionSelected="let selectedCountry">
+                {{ selectedCountry?.name }}
+              </ng-container>
+              <clr-options>
+                <clr-option
+                  *clrOptionItems="
+                    let country of availableCountries;
+                    field: 'name'
+                  "
+                  [clrValue]="country"
+                >
+                  {{ country.name }}
+                </clr-option>
+              </clr-options>
+            </clr-combobox>
+            <clr-control-helper
+              >Select target countries for lead generation</clr-control-helper
+            >
+            <clr-control-error
+              *ngIf="
+                form.get('countries')?.touched &&
+                form.get('countries')?.errors?.['minCountries']
+              "
+              >At least one country is required.</clr-control-error
+            >
+          </clr-combobox-container>
+        </div>
+
+        <div class="clr-form-control">
+          <label>Cities</label>
+          <clr-combobox-container>
+            <clr-combobox
+              #cityCombo
+              [clrMulti]="true"
+              formControlName="cities"
+              (clrSelectionChange)="clearSearch(cityCombo)"
+            >
+              <ng-container *clrOptionSelected="let selectedCity">
+                {{ selectedCity?.name }}
+                <span
+                  *ngIf="selectedCity?.country_name"
+                  class="city-country-label"
+                >
+                  ({{ selectedCity.country_name }})
+                </span>
+              </ng-container>
+              <clr-options>
+                <clr-option
+                  *clrOptionItems="let city of availableCities; field: 'name'"
+                  [clrValue]="city"
+                >
+                  {{ city.name }}
+                  <span *ngIf="city.country_name" class="city-country-label">
+                    ({{ city.country_name }})
+                  </span>
+                </clr-option>
+              </clr-options>
+            </clr-combobox>
+            <clr-control-helper
+              >Optional: filter leads by specific cities</clr-control-helper
+            >
+          </clr-combobox-container>
+        </div>
+
+        <div
+          class="clr-form-control"
+          *ngIf="!form.get('companyLeadsOnly')?.value"
+        >
+          <label>Roles *</label>
+          <clr-combobox-container>
+            <clr-combobox
+              #roleCombo
+              [clrMulti]="true"
+              formControlName="roles"
+              (clrSelectionChange)="clearSearch(roleCombo)"
+            >
+              <ng-container *clrOptionSelected="let selectedRole">
+                {{ selectedRole?.name }}
+              </ng-container>
+              <clr-options>
+                <clr-option
+                  *clrOptionItems="let role of availableRoles; field: 'name'"
+                  [clrValue]="role"
+                >
+                  {{ role.name }}
+                </clr-option>
+              </clr-options>
+            </clr-combobox>
+            <clr-control-helper
+              >Select roles for lead generation</clr-control-helper
+            >
+            <clr-control-error
+              *ngIf="
+                form.get('roles')?.touched &&
+                form.get('roles')?.errors?.['minRoles']
+              "
+              >At least one role is required.</clr-control-error
+            >
+          </clr-combobox-container>
+        </div>
+
+        <div
+          class="clr-form-control"
+          *ngIf="!form.get('companyLeadsOnly')?.value"
+        >
+          <label>Experience Level *</label>
+          <clr-combobox-container>
+            <clr-combobox
+              #experienceCombo
+              [clrMulti]="true"
+              formControlName="experienceLevel"
+              (clrSelectionChange)="clearSearch(experienceCombo)"
+            >
+              <ng-container *clrOptionSelected="let selectedLevel">
+                {{ selectedLevel?.name }}
+              </ng-container>
+              <clr-options>
+                <clr-option
+                  *clrOptionItems="
+                    let level of availableExperienceLevels;
+                    field: 'name'
+                  "
+                  [clrValue]="level"
+                >
+                  {{ level.name }}
+                </clr-option>
+              </clr-options>
+            </clr-combobox>
+            <clr-control-helper>Select experience levels</clr-control-helper>
+            <clr-control-error
+              *ngIf="
+                form.get('experienceLevel')?.touched &&
+                form.get('experienceLevel')?.errors?.['minExperienceLevels']
+              "
+              >At least one experience level is required.</clr-control-error
+            >
+          </clr-combobox-container>
+        </div>
+
+        <div class="clr-form-control">
+          <label>Industries</label>
+          <clr-combobox-container>
+            <clr-combobox
+              #industryCombo
+              [clrMulti]="true"
+              formControlName="industries"
+              (clrSelectionChange)="clearSearch(industryCombo)"
+            >
+              <ng-container *clrOptionSelected="let selectedIndustry">
+                {{ selectedIndustry?.name }}
+              </ng-container>
+              <clr-options>
+                <clr-option
+                  *clrOptionItems="
+                    let industry of availableIndustries;
+                    field: 'name'
+                  "
+                  [clrValue]="industry"
+                >
+                  {{ industry.name }}
+                </clr-option>
+              </clr-options>
+            </clr-combobox>
+            <clr-control-helper
+              >Select industries or leave empty for all</clr-control-helper
+            >
+          </clr-combobox-container>
+        </div>
+      </div>
+
+      <div class="checkbox-sections">
+        <div class="clr-form-control">
+          <label>Modes *</label>
+          <div class="checkbox-group">
+            <clr-checkbox-wrapper *ngFor="let mode of modeOptions">
+              <input
+                type="checkbox"
+                clrCheckbox
+                [value]="mode"
+                [checked]="selectedModes.includes(mode)"
+                (change)="onModeChange(mode, $any($event.target).checked)"
+              />
+              <label>{{ mode }}</label>
+            </clr-checkbox-wrapper>
+          </div>
+          <clr-control-helper>Select work modes</clr-control-helper>
+          <clr-control-error
+            *ngIf="
+              form.get('modes')?.touched &&
+              form.get('modes')?.errors?.['minModes']
+            "
+            >At least one mode is required.</clr-control-error
+          >
+        </div>
+
+        <div class="clr-form-control">
+          <label>Company Sizes *</label>
+          <div class="checkbox-group">
+            <clr-checkbox-wrapper *ngFor="let size of companySizeOptions">
+              <input
+                type="checkbox"
+                clrCheckbox
+                [value]="size"
+                [checked]="selectedCompanySizes.includes(size)"
+                (change)="
+                  onCompanySizeChange(size, $any($event.target).checked)
+                "
+              />
+              <label>{{ size }}</label>
+            </clr-checkbox-wrapper>
+          </div>
+          <clr-control-helper
+            >Select company sizes to target</clr-control-helper
+          >
+          <clr-control-error
+            *ngIf="
+              form.get('companySizes')?.touched &&
+              form.get('companySizes')?.errors?.['minCompanySizes']
+            "
+            >At least one company size is required.</clr-control-error
+          >
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <clr-spinner
+      *ngIf="submitting"
+      [clrMedium]="true"
+      [clrInline]="true"
+      [clrInverse]="true"
+    ></clr-spinner>
+    <button
+      type="button"
+      class="btn btn-outline"
+      (click)="close()"
+      [disabled]="submitting"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="submit()"
+      [disabled]="submitting"
+    >
+      Submit
+    </button>
+  </div>
+</clr-modal>

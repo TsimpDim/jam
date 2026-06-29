@@ -1,16 +1,24 @@
-<div class="snackbar-container" *ngIf="snackbars$ | async as snackbars; else empty">
+<div
+  class="snackbar-container"
+  *ngIf="snackbars$ | async as snackbars; else empty"
+>
   <div
     class="snackbar"
     *ngFor="let snackbar of snackbars"
     [ngClass]="{
       'snackbar--success': snackbar.type === 'success',
-      'snackbar--error': snackbar.type === 'error'
+      'snackbar--error': snackbar.type === 'error',
+      'snackbar--info': snackbar.type === 'info',
     }"
   >
-    <div class="snackbar__icon" [ngClass]="{
-      'snackbar__icon--success': snackbar.type === 'success',
-      'snackbar__icon--error': snackbar.type === 'error'
-    }">
+    <div
+      class="snackbar__icon"
+      [ngClass]="{
+        'snackbar__icon--success': snackbar.type === 'success',
+        'snackbar__icon--error': snackbar.type === 'error',
+        'snackbar__icon--info': snackbar.type === 'info',
+      }"
+    >
       <svg
         *ngIf="snackbar.type === 'success'"
         xmlns="http://www.w3.org/2000/svg"
@@ -35,9 +43,38 @@
           d="M18 2a16 16 0 1 0 0 32 16 16 0 0 0 0-32zm7.1 22.9L22.9 27 18 22.1 13.1 27 10.9 24.9 15.8 20 10.9 15.1 13.1 13 18 17.9 22.9 13 25.1 15.1 20.2 20l4.9 4.9z"
         />
       </svg>
+      <svg
+        *ngIf="snackbar.type === 'info'"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 36 36"
+        focusable="false"
+        aria-hidden="true"
+      >
+        <circle
+          cx="18"
+          cy="18"
+          r="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        />
+        <circle cx="18" cy="12" r="1.5" fill="currentColor" />
+        <rect
+          x="16.5"
+          y="17"
+          width="3"
+          height="10"
+          rx="0.5"
+          fill="currentColor"
+        />
+      </svg>
     </div>
     <span class="snackbar__message">{{ snackbar.message }}</span>
-    <button class="snackbar__close" (click)="dismiss(snackbar.id)" aria-label="Close">
+    <button
+      class="snackbar__close"
+      (click)="dismiss(snackbar.id)"
+      aria-label="Close"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 36 36"

@@ -59,6 +59,7 @@ export interface Lead {
   archived?: boolean;
   date?: string;
   applications?: JobApplication[];
+  generated?: boolean;
 }
 
 export interface JobAdSnapshot {
@@ -169,6 +170,42 @@ export interface CVReview {
   roles: number[];
   roles_names: string[];
   review_result: string | null;
+  is_done: boolean;
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface City {
+  id: number;
+  name: string;
+  slug: string;
+  country: number | null;
+  country_name: string | null;
+}
+
+export interface Country {
+  id: number;
+  name: string;
+  slug: string;
+  code: string;
+}
+
+export interface LeadGenerationRequest {
+  id: number;
+  countries: number[];
+  countries_names: string[];
+  cities: number[];
+  cities_names: string[];
+  company_leads_only: boolean;
+  roles: number[];
+  roles_names: string[];
+  modes: string[];
+  experience_level: number[];
+  experience_level_names: string[];
+  industries: number[];
+  industries_names: string[];
+  company_sizes: string[];
+  result: string | null;
   is_done: boolean;
   created_at: string;
   completed_at: string | null;

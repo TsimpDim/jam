@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Group, Step, Lead, JobApplication, JobAdSnapshot, CV, UserProfile, Timeline
 
-
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'user', 'position')
@@ -22,6 +21,11 @@ class LeadAdmin(admin.ModelAdmin):
     list_filter = ('archived', 'user', 'group')
     search_fields = ('company', 'role', 'location')
     date_hierarchy = 'date'
+
+    def delete_queryset(self, request, queryset):
+        from .models import JobApplication
+        JobApplication.objects.filter(lead__in=queryset).update(lead=None)
+        super().delete_queryset(request, queryset)
 
 
 @admin.register(JobApplication)
