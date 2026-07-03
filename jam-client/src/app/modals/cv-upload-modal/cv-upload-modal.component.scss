@@ -7,9 +7,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: #f0f7fa;
+  background: var(--color-success-bg);
   border-radius: 4px;
-  color: #038103;
+  color: var(--color-success-text);
   font-size: 0.9rem;
   margin-top: 0.75rem;
 }

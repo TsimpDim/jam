@@ -1,15 +1,56 @@
-/* Restore JAM! purple header color (Clarity v17 changed header-3 default to azure-900) */
 :root {
   --clr-header-3-bg-color: #320047;
-}
 
-/* Restore heading font weights */
-:root {
   --cds-alias-typography-display-font-weight: 400;
   --cds-alias-typography-headline-font-weight: 400;
   --cds-alias-typography-title-font-weight: 400;
   --cds-alias-typography-section-font-weight: 400;
   --cds-alias-typography-subsection-font-weight: 400;
+
+  --color-plum-deep: #320047;
+  --color-plum-light: #4d0070;
+  --color-plum-dark: #1f002d;
+  --color-white: #ffffff;
+  --color-surface-tinted: #f8f9fa;
+  --color-surface-ai: #f5f0ff;
+  --color-ink-primary: #1a1a1a;
+  --color-ink-secondary: #565656;
+  --color-ink-muted: #767676;
+  --color-border: #e0e0e0;
+  --color-border-light: rgba(50, 0, 71, 0.1);
+
+  --color-success-bg: #e8f5e9;
+  --color-success-text: #2e7d32;
+  --color-interview-bg: #fff3e0;
+  --color-interview-text: #f57c00;
+  --color-applied-bg: #e3f2fd;
+  --color-applied-text: #1976d2;
+  --color-lead-bg: #fef3c7;
+  --color-lead-text: #d97706;
+  --color-error-bg: #fff5f5;
+  --color-error-text: #ef4444;
+  --color-error-border: rgba(239, 68, 68, 0.15);
+
+  --color-ai-violet: #8b5cf6;
+  --color-ai-violet-light: #a855f7;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  --shadow-ambient: 0 2px 8px rgba(50, 0, 71, 0.08);
+  --shadow-elevated: 0 4px 16px rgba(50, 0, 71, 0.12);
+  --shadow-prominent: 0 8px 32px rgba(50, 0, 71, 0.16);
+
+  --gradient-brand: linear-gradient(135deg, #320047 0%, #4d0070 100%);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-standard: 200ms;
+  --duration-slow: 300ms;
 }
 
 * {
@@ -90,7 +131,7 @@ html, body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--color-ink-muted);
 
   &:first-child {
     margin-top: 0;
@@ -100,11 +141,11 @@ html, body {
     content: '';
     flex: 1;
     height: 1px;
-    background: #e5e7eb;
+    background: var(--color-border);
   }
 
   cds-icon {
-    color: #320047;
+    color: var(--color-plum-deep);
     flex-shrink: 0;
   }
 }
@@ -186,7 +227,7 @@ html, body {
 
 /* Active sort dropdown item styling - Clarity dropdown menus render outside component scope */
 .dropdown-item.active {
-  background-color: #e0e0e0;
+  background-color: var(--color-border);
   font-weight: bold;
 }
 

@@ -958,7 +958,7 @@ section[id] {
 /* === Footer === */
 .footer {
     padding: 4rem 0 2rem;
-    background: var(--color-ink-primary);
+    background: var(--color-plum-dark);
     color: var(--color-white);
 }
 

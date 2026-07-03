@@ -17,7 +17,7 @@
     justify-content: center;
     gap: 1em;
     padding: 4em 1.5em;
-    color: #666;
+    color: var(--color-ink-secondary);
 
     .loading-icon {
         opacity: 0.4;
@@ -26,7 +26,7 @@
 
     .loading-text {
         font-size: 1rem;
-        color: #999;
+        color: var(--color-ink-muted);
     }
 }
 
@@ -60,35 +60,30 @@
     gap: 1em;
     margin-bottom: 1.5em;
     padding: 1em;
-    background: #f8f9fa;
+    background: var(--color-surface-tinted);
     border-radius: 8px;
-}
-
-.filter-label {
-    font-weight: 500;
-    color: #333;
 }
 
 .filter-select {
     padding: 0.5em 1em;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 4px;
     font-size: 0.9rem;
-    background: white;
+    background: var(--color-white);
     cursor: pointer;
     min-width: 180px;
 
     &:focus {
         outline: none;
-        border-color: #0072a3;
-        box-shadow: 0 0 0 2px rgba(0, 114, 163, 0.1);
+        border-color: var(--color-plum-deep);
+        box-shadow: 0 0 0 2px rgba(50, 0, 71, 0.1);
     }
 }
 
 // Hero Metrics
 .hero-metrics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 1em;
     margin-bottom: 2em;
 }
@@ -97,45 +92,45 @@
     display: flex;
     align-items: center;
     padding: 1.25em;
-    background: white;
+    background: var(--color-white);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border);
     transition: transform 0.2s, box-shadow 0.2s;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-elevated);
     }
 
     &.pending {
-        border-left: 4px solid #db4848;
+        border-color: rgba(219, 72, 72, 0.25);
+        background: rgba(219, 72, 72, 0.04);
         .metric-icon {
             background: rgba(219, 72, 72, 0.1);
-            svg { fill: #db4848; }
+            color: #db4848;
         }
     }
 
     &.total {
-        border-left: 4px solid #666;
         .metric-icon {
-            background: rgba(102, 102, 102, 0.1);
-            svg { fill: #666; }
+            background: rgba(50, 0, 71, 0.08);
+            color: var(--color-plum-deep);
         }
     }
 
     &.completed {
-        border-left: 4px solid #34A853;
+        border-color: rgba(52, 168, 83, 0.2);
+        background: rgba(52, 168, 83, 0.04);
         .metric-icon {
             background: rgba(52, 168, 83, 0.1);
-            svg { fill: #34A853; }
+            color: #34A853;
         }
     }
 
     &.leads {
-        border-left: 4px solid #0072a3;
         .metric-icon {
-            background: rgba(0, 114, 163, 0.1);
-            svg { fill: #0072a3; }
+            background: rgba(50, 0, 71, 0.08);
+            color: var(--color-plum-deep);
         }
     }
 }
@@ -146,7 +141,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f0f0f0;
+    background: rgba(50, 0, 71, 0.06);
     border-radius: 50%;
     margin-right: 1em;
     flex-shrink: 0;
@@ -154,7 +149,6 @@
     svg {
         width: 24px;
         height: 24px;
-        fill: #666;
     }
 }
 
@@ -166,17 +160,17 @@
 .metric-value {
     font-size: 1.75rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-ink-primary);
     line-height: 1.2;
 }
 
 .metric-label {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--color-ink-secondary);
     margin-top: 0.25em;
 }
 
-// Secondary Metrics Row
+// Secondary Metrics Row — integrated alongside primary charts
 .secondary-metrics {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -189,26 +183,26 @@
     flex-direction: column;
     align-items: center;
     padding: 1.25em;
-    background: #f8f9fa;
+    background: var(--color-surface-tinted);
     border-radius: 12px;
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-ambient);
     }
 }
 
 .secondary-metric-value {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-ink-primary);
 }
 
 .secondary-metric-label {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--color-ink-secondary);
     margin-top: 0.25em;
 }
 
@@ -216,11 +210,11 @@
 .section-title {
     margin-top: 1.5em;
     margin-bottom: 1em;
-    color: #333;
+    color: var(--color-ink-primary);
     font-weight: 500;
     font-size: 1.25rem;
     padding-bottom: 0.5em;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid var(--color-border);
 }
 
 // Charts Grid
@@ -232,14 +226,14 @@
 }
 
 .chart-card {
-    background: white;
+    background: var(--color-white);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border);
     padding: 1.25em;
     transition: box-shadow 0.2s;
 
     &:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-ambient);
     }
 }
 
@@ -254,13 +248,13 @@
     margin: 0;
     font-size: 1rem;
     font-weight: 500;
-    color: #333;
+    color: var(--color-ink-primary);
 }
 
 .toggle-group {
     display: flex;
     gap: 0;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
     overflow: hidden;
 }
@@ -268,24 +262,23 @@
 .toggle-btn {
     padding: 0.4em 0.8em;
     border: none;
-    background: #f5f5f5;
-    color: #666;
+    background: var(--color-surface-tinted);
+    color: var(--color-ink-secondary);
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s;
 
     &:first-child {
-        border-right: 1px solid #ddd;
+        border-right: 1px solid var(--color-border);
     }
 
     &:hover {
-        background: #e8e8e8;
+        background: var(--color-border);
     }
 
     &.active {
-        background: #0072a3;
-        color: white;
-        border-color: #0072a3;
+        background: var(--color-plum-deep);
+        color: var(--color-white);
     }
 }
 
@@ -302,15 +295,15 @@
 
 // Detail Cards
 .detail-card {
-    background: white;
+    background: var(--color-white);
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border);
     padding: 1.25em;
     margin-bottom: 1.5em;
     transition: box-shadow 0.2s;
 
     &:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-ambient);
     }
 }
 
@@ -318,7 +311,7 @@
     margin: 0 0 1em 0;
     font-size: 1rem;
     font-weight: 500;
-    color: #333;
+    color: var(--color-ink-primary);
 }
 
 // Table
@@ -332,41 +325,39 @@
     table-layout: auto;
 
     th {
-        background-color: #fafafa;
+        background-color: var(--color-surface-tinted);
         font-size: 0.9rem;
         font-weight: 500;
         padding: 0.75em 1em;
         text-align: left;
-        border-bottom: 2px solid #eee;
+        border-bottom: 2px solid var(--color-border);
         white-space: nowrap;
     }
 
     td {
         font-size: 0.9rem;
         padding: 0.75em 1em;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--color-border);
     }
 
     tbody tr:hover {
-        background-color: #f8f9fa;
+        background-color: var(--color-surface-tinted);
     }
 }
 
 // Responsive
 @media (max-width: 768px) {
     .hero-metrics {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .charts-grid {
         grid-template-columns: 1fr;
     }
+}
 
-    .funnel-stages {
-        flex-direction: column;
-    }
-
-    .funnel-arrow {
-        transform: rotate(90deg);
+@media (max-width: 480px) {
+    .hero-metrics {
+        grid-template-columns: 1fr;
     }
 }

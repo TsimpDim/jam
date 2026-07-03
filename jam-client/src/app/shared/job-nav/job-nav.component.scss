@@ -60,18 +60,18 @@
             .add-icon {
                 margin-left: auto;
                 cursor: pointer;
-                color: #666;
+                color: var(--color-ink-secondary);
                 width: 14px;
                 height: 14px;
                 flex-shrink: 0;
 
                 &:hover {
-                    color: #320047;
+                    color: var(--color-plum-deep);
                 }
             }
 
             .drag-icon {
-                color: #999;
+                color: var(--color-ink-muted);
                 font-size: 0.75rem;
                 cursor: grab;
                 flex-shrink: 0;
@@ -80,7 +80,7 @@
                 height: 14px;
 
                 &:hover {
-                    color: #0072a3;
+                    color: var(--color-plum-deep);
                 }
             }
 
@@ -93,13 +93,13 @@
 
             .edit-icon {
                 cursor: pointer;
-                color: #666;
+                color: var(--color-ink-secondary);
                 width: 14px;
                 height: 14px;
                 flex-shrink: 0;
 
                 &:hover {
-                    color: #0072a3;
+                    color: var(--color-plum-deep);
                 }
             }
         }
@@ -129,9 +129,6 @@
             max-width: none;
             margin: 0;
 
-            // First button (Add Application) grows to fill all remaining space.
-            // Override Clarity's default `.btn { max-width: 15rem; min-width: 3rem; }`
-            // which otherwise caps the btn-group width when the nav is expanded.
             > .btn {
                 flex: 1 1 auto;
                 min-width: 0;
@@ -143,7 +140,6 @@
                 text-overflow: ellipsis;
             }
 
-            // The clr-dropdown wraps the toggle button - constrain both to ~30px
             clr-dropdown {
                 flex: 0 0 30px;
                 width: 30px;
@@ -213,14 +209,14 @@
                 height: inherit;
                 padding: 0.25rem 0.5rem;
                 padding-right: 2rem;
-                border: 1px solid #ccc;
+                border: 1px solid var(--color-border);
                 border-radius: 4px;
                 font-size: .6rem;
                 font-weight: 300;
 
                 &:focus {
                     outline: none;
-                    border-color: #0072a3;
+                    border-color: var(--color-plum-deep);
                 }
             }
 
@@ -229,7 +225,7 @@
                 right: 0.5rem;
                 top: 65%;
                 transform: translateY(-65%);
-                color: #666;
+                color: var(--color-ink-secondary);
             }
         }
     }
@@ -250,7 +246,7 @@
     transition: background-color 0.15s ease;
 
     &:hover {
-        background-color: rgba(0, 114, 163, 0.15);
+        background-color: rgba(50, 0, 71, 0.15);
     }
 
     cds-icon {
@@ -270,7 +266,7 @@
     background-color: white;
     font-size: 0.6rem;
     font-weight: 500;
-    color: #320047;
+    color: var(--color-plum-deep);
     text-align: center;
     width: 80%;
     max-height: none;
@@ -284,7 +280,7 @@
     &:hover {
         cursor: pointer;
         box-shadow: 0 5px 0 0 rgba(211, 211, 211, .6);
-        color: #320047;
+        color: var(--color-plum-deep);
     }
 
     &:active {
@@ -295,7 +291,7 @@
 .no-results {
     padding: 1rem;
     text-align: center;
-    color: #666;
+    color: var(--color-ink-secondary);
 }
 
 .group-actions {
@@ -309,14 +305,14 @@
         align-items: center;
         justify-content: center;
         gap: 0.25rem;
-        color: #666;
-        border: 1px dashed #ccc;
+        color: var(--color-ink-secondary);
+        border: 1px dashed var(--color-border);
         border-radius: 4px;
 
         &:hover {
-            color: #0072a3;
-            border-color: #0072a3;
-            background-color: rgba(0, 114, 163, 0.05);
+            color: var(--color-plum-deep);
+            border-color: var(--color-plum-deep);
+            background-color: rgba(50, 0, 71, 0.05);
         }
 
         cds-icon {
@@ -327,8 +323,8 @@
 }
 
 .drag-placeholder {
-    background: #e0e0e0;
-    border: dotted #999;
+    background: var(--color-border);
+    border: dotted var(--color-ink-muted);
     border-radius: 4px;
     min-height: 40px;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
@@ -345,7 +341,7 @@
     min-width: 100px;
 
     .drag-preview-icon {
-        color: #0072a3;
+        color: var(--color-plum-deep);
         width: 14px;
         height: 14px;
     }
@@ -353,11 +349,10 @@
     .drag-preview-name {
         font-size: 0.75rem;
         font-weight: 500;
-        color: #333;
+        color: var(--color-ink-primary);
     }
 }
 
-// Scoped ::ng-deep for elements generated internally by Clarity UI
 :host ::ng-deep {
     .job-nav-container clr-vertical-nav .nav-group-text {
         padding: 0;
@@ -369,14 +364,12 @@
         display: none;
     }
 
-    // Style for active sort dropdown item
     clr-dropdown-menu .dropdown-item.active {
-        background-color: #e0e0e0;
+        background-color: var(--color-border);
         font-weight: bold;
     }
 }
 
-// CDK Drag & Drop Overlays attached outside the component (to the <body>)
 ::ng-deep {
     .cdk-drag-preview {
         box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
@@ -389,7 +382,7 @@
         min-width: 120px;
 
         .drag-preview-icon {
-            color: #0072a3;
+            color: var(--color-plum-deep);
             width: 14px;
             height: 14px;
         }
@@ -397,7 +390,7 @@
         .drag-preview-name {
             font-size: 0.75rem;
             font-weight: 500;
-            color: #333;
+            color: var(--color-ink-primary);
         }
     }
 

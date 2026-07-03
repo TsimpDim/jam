@@ -15,7 +15,7 @@
     font-size: 0.85em;
     
     .app-company {
-        color: #666;
+        color: var(--color-ink-secondary);
     }
 }
 
@@ -24,7 +24,7 @@
     margin-top: 5em;
     width: 50%;
     font-size: 2em;
-    color: #cccc;
+    color: var(--color-ink-muted);
     user-select: none;
     text-align: center;
 }
@@ -32,23 +32,23 @@
 .applications-section {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border);
     
     h4 {
         margin-bottom: 0.5rem;
-        color: #333;
+        color: var(--color-ink-primary);
     }
 }
 
 .application-card {
-    background: #f5f5f5;
+    background: var(--color-surface-tinted);
     border-radius: 4px;
     padding: 0.75rem;
     margin-bottom: 0.5rem;
     
     .application-header {
         font-weight: 500;
-        color: #333;
+        color: var(--color-ink-primary);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -62,8 +62,8 @@
 .no-applications {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #ddd;
-    color: #666;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-ink-secondary);
     font-style: italic;
 }
 
@@ -87,7 +87,7 @@
 
     .clr-control-label {
         font-weight: 500;
-        color: #374151;
+        color: var(--color-ink-secondary);
         font-size: 0.8rem;
     }
 }
