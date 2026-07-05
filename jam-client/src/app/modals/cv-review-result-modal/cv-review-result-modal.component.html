@@ -1,5 +1,6 @@
 <clr-modal
-  [(clrModalOpen)]="open"
+  [clrModalOpen]="open"
+  (clrModalOpenChange)="onClrModalOpenChange($event)"
   [clrModalSize]="'lg'"
   [clrModalClosable]="true"
 >

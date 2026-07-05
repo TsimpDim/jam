@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <clr-modal [(clrModalOpen)]="modalIsOpen">
+      <clr-modal [clrModalOpen]="modalIsOpen" (clrModalOpenChange)="modalIsOpen = $event">
         <h3 class="modal-title" *ngIf="selectedStep !== null">Edit Step</h3>
         <h3 class="modal-title" *ngIf="selectedStep === null">Add Step</h3>
       

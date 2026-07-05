@@ -1,4 +1,4 @@
-<clr-modal [(clrModalOpen)]="isOpen" [clrModalClosable]="false">
+<clr-modal [clrModalOpen]="isOpen" (clrModalOpenChange)="onClrModalOpenChange($event)" [clrModalClosable]="false">
   <h3 class="modal-title" *ngIf="group === null">Add Group</h3>
   <h3 class="modal-title" *ngIf="group !== null">Edit Group</h3>
 

@@ -92,6 +92,12 @@ export class TimelineModalComponent implements OnInit {
     this.onClose.emit();
   }
 
+  onClrModalOpenChange(open: boolean) {
+    if (!open) {
+      this.onClose.emit();
+    }
+  }
+
   submitTimelineStepForm() {
     if (this.timelineStepForm.invalid) {
       this.timelineStepForm.markAllAsTouched();

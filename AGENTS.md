@@ -58,3 +58,44 @@ docker exec jobappman-client ng test
 - **Backend:** Django 4.2, DRF 3.16, MySQL, Knox auth
 - **Frontend:** Angular 19.2, Clarity UI 17, Chart.js, D3.js
 - **Infrastructure:** Docker Compose, Gunicorn
+
+## Frontend Code Rules
+
+### Never use two-way binding with Clarity components
+
+Do not use `[(clrModalOpen)]`, `[(clrAlertClosed)]`, or any other `[(x)]` two-way binding.
+This causes state desynchronization between parent and child components when modals/alerts
+are closed via ESC or the X button — the Clarity component updates the child's `@Input()`
+property internally, but the parent's state is never updated.
+
+Instead, always use one-way `[x]` binding with an explicit `(xChange)` handler:
+
+```html
+<!-- BAD -->
+<clr-modal [(clrModalOpen)]="isOpen">
+
+<!-- GOOD -->
+<clr-modal [clrModalOpen]="isOpen" (clrModalOpenChange)="onClrModalOpenChange($event)">
+```
+
+The handler should emit the parent's close event and clean up state:
+
+```typescript
+onClrModalOpenChange(open: boolean) {
+  if (!open) {
+    this.onClose.emit();
+    this.resetState();
+  }
+}
+```
+
+For modal components, also ensure `ngOnChanges` re-initializes state when either
+`isOpen` or the data input changes, to handle same-object reference reuse.
+
+```typescript
+ngOnChanges(changes: SimpleChanges) {
+  if ((changes['isOpen'] || changes['data']) && this.isOpen && this.data) {
+    // re-initialize state
+  }
+}
+```

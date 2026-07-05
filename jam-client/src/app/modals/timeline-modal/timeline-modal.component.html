@@ -1,4 +1,4 @@
-<clr-modal [(clrModalOpen)]="isOpen" [clrModalClosable]="false">
+<clr-modal [clrModalOpen]="isOpen" (clrModalOpenChange)="onClrModalOpenChange($event)" [clrModalClosable]="false">
   <h3 class="modal-title" *ngIf="timelineStep === null">Add Step</h3>
   <h3 class="modal-title" *ngIf="timelineStep !== null">Edit Step</h3>
 

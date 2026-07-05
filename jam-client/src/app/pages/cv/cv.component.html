@@ -10,7 +10,8 @@
           [clrAlertClosable]="true"
           [clrAlertType]="'danger'"
           *ngIf="errorMessage"
-          [(clrAlertClosed)]="showErrorAlert"
+          [clrAlertClosed]="showErrorAlert"
+          (clrAlertClosedChange)="showErrorAlert = $event"
         >
           <clr-alert-item>
             <span class="alert-text">{{ errorMessage }}</span>

@@ -218,7 +218,7 @@ export class ApplicationsComponent implements OnInit {
       return;
     }
 
-    this.selectedTimelineStepForNotes = found;
+    this.selectedTimelineStepForNotes = { ...found };
     this.noteViewModalIsOpen = true;
   }
 

@@ -36,11 +36,15 @@ export class NoteViewModalComponent implements OnChanges {
   constructor(private jamService: JamService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['timelineStep'] && this.timelineStep) {
+    const shouldInit =
+      (changes['isOpen'] || changes['timelineStep']) &&
+      this.isOpen &&
+      this.timelineStep;
+    if (shouldInit) {
       this.noteText = this.timelineStep.notes || '';
       this.editText = this.noteText;
-      // If no notes exist, immediately start editing
       this.isEditing = !this.noteText;
+      this.isSaving = false;
     }
   }
 
@@ -52,6 +56,13 @@ export class NoteViewModalComponent implements OnChanges {
   resetState() {
     this.isEditing = false;
     this.isSaving = false;
+  }
+
+  onClrModalOpenChange(open: boolean) {
+    if (!open) {
+      this.onClose.emit();
+      this.resetState();
+    }
   }
 
   startEditing() {
@@ -80,6 +91,7 @@ export class NoteViewModalComponent implements OnChanges {
     if (this.isSaving) return;
     if (this.editText.length === 0 || this.editText === this.noteText) {
       this.closeModal();
+      return;
     }
 
     this.isSaving = true;

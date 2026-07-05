@@ -77,6 +77,12 @@ export class GroupModalComponent implements OnInit, OnChanges {
     this.onClose.emit();
   }
 
+  onClrModalOpenChange(open: boolean) {
+    if (!open) {
+      this.onClose.emit();
+    }
+  }
+
   submitGroupForm() {
     if (this.groupForm.invalid) {
       this.groupForm.markAllAsTouched();

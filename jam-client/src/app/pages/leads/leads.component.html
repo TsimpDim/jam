@@ -117,7 +117,7 @@
         </div>
       </div>
 
-      <clr-modal [(clrModalOpen)]="modalIsOpen" [clrModalSize]="'lg'">
+      <clr-modal [clrModalOpen]="modalIsOpen" (clrModalOpenChange)="modalIsOpen = $event" [clrModalSize]="'lg'">
         <h3 class="modal-title" *ngIf="selectedLead !== null">Edit Lead</h3>
         <h3 class="modal-title" *ngIf="selectedLead === null">Add Lead</h3>
 

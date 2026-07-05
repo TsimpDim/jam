@@ -134,6 +134,12 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.onClose.emit();
   }
 
+  onClrModalOpenChange(open: boolean) {
+    if (!open) {
+      this.onClose.emit();
+    }
+  }
+
   ngOnInit(): void {
     this.getInitialSteps();
     this.getGroups();

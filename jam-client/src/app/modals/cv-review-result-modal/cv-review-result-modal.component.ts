@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   CUSTOM_ELEMENTS_SCHEMA,
   OnChanges,
   SimpleChanges,
@@ -22,6 +24,7 @@ import { marked } from 'marked';
 export class CvReviewResultModalComponent implements OnChanges {
   @Input() open: boolean = false;
   @Input() review: CVReview | null = null;
+  @Output() closed = new EventEmitter<void>();
   renderedHtml: SafeHtml = '';
 
   constructor(private sanitizer: DomSanitizer) {}
@@ -35,7 +38,9 @@ export class CvReviewResultModalComponent implements OnChanges {
     }
   }
 
-  close(): void {
-    this.open = false;
+  onClrModalOpenChange(open: boolean): void {
+    if (!open) {
+      this.closed.emit();
+    }
   }
 }

@@ -191,7 +191,7 @@
     >
     </app-note-view-modal>
 
-    <clr-modal [(clrModalOpen)]="snapshotModalIsOpen" [clrModalSize]="'lg'">
+    <clr-modal [clrModalOpen]="snapshotModalIsOpen" (clrModalOpenChange)="snapshotModalIsOpen = $event" [clrModalSize]="'lg'">
       <h3 class="modal-title">Job Ad</h3>
       <div class="modal-body">
         <div
