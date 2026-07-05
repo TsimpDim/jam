@@ -167,6 +167,27 @@ export class CvComponent implements OnInit {
     });
   }
 
+  deleteCV(cv: CV): void {
+    if (!confirm(`Are you sure you want to delete "${cv.key}"?`)) {
+      return;
+    }
+    this.loading = true;
+    this.jamService.deleteCV(cv.id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.snackbarService.showSuccess('CV deleted successfully.');
+        this.loadCVs();
+        this.loadUserInfo();
+      },
+      error: () => {
+        this.loading = false;
+        this.snackbarService.showError(
+          'An error occurred while deleting the CV.'
+        );
+      },
+    });
+  }
+
   downloadCV(cv: CV): void {
     if (this.downloadingId !== null) return;
     this.downloadingId = cv.id;

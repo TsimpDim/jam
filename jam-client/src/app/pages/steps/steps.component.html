@@ -18,6 +18,15 @@
               {{step.notes}}
             </div>
           </div>
+          <div class="card-footer">
+            <button
+              class="btn btn-sm btn-link"
+              (click)="deleteStep(step.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="trash"></cds-icon>
+              Delete
+            </button>
+          </div>
         </div>
       </div>
 

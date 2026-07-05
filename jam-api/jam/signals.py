@@ -15,7 +15,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=JobApplication)
 def create_first_hist(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.initial_step is not None:
         t = Timeline(
             user=instance.user,
             group=instance.group,

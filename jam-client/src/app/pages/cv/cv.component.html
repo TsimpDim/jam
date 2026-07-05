@@ -53,13 +53,17 @@
           </button>
         </div>
 
-        <div class="card clickable" (click)="openUpdateForm(cv)" *ngFor="let cv of cvs">
+        <div
+          class="card clickable"
+          (click)="openUpdateForm(cv)"
+          *ngFor="let cv of cvs"
+        >
           <div class="card-header">
             <cds-icon shape="file" class="cv-file-icon"></cds-icon>
             {{ cv.key }}
             <span class="badge">{{ getFileExtension(cv.file) }}</span>
             <span class="badge"
-              >Uploaded {{ cv.created_at | date : "mediumDate" }}</span
+              >Uploaded {{ cv.created_at | date: "mediumDate" }}</span
             >
           </div>
           <div class="card-block">
@@ -109,6 +113,13 @@
             >
               <cds-icon shape="eye"></cds-icon>
               View Last CV Review
+            </button>
+            <button
+              class="btn btn-sm btn-link"
+              (click)="deleteCV(cv); $event.stopPropagation()"
+            >
+              <cds-icon shape="trash"></cds-icon>
+              Delete
             </button>
           </div>
         </div>

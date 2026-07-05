@@ -46,7 +46,7 @@ class JobApplication(models.Model):
     applied_through = models.CharField(max_length=50, null=True, blank=True)
     external_link = models.URLField(max_length=500, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
-    initial_step = models.ForeignKey(Step, on_delete=models.DO_NOTHING, null=False)
+    initial_step = models.ForeignKey(Step, on_delete=models.SET_NULL, null=True)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lead = models.ForeignKey(Lead, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='applications')
@@ -98,7 +98,7 @@ class UserProfile(models.Model):
 class Timeline(models.Model):
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=False)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    step = models.ForeignKey(Step, on_delete=models.DO_NOTHING)
+    step = models.ForeignKey(Step, on_delete=models.CASCADE)
     application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
     date = models.DateField()
     date_relevant = models.BooleanField(null=False, blank=False, default=True)
