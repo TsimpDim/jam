@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from jam.models import CV
+from jam.models import CV, Lead
 
 
 class Industry(models.Model):
@@ -103,3 +103,19 @@ class LeadGenerationRequest(models.Model):
     def __str__(self):
         locs = ", ".join([c.name for c in self.countries.all()[:3]])
         return f"{self.user.username} - {locs}" if locs else self.user.username
+
+
+class CoverLetterGenerationRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letter_requests')
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='cover_letter_requests')
+    lead = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name='cover_letter_requests')
+    result = models.TextField(null=True, blank=True)
+    is_done = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.cv.key} - {self.lead.company}"

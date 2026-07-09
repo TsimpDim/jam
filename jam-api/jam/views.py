@@ -8,12 +8,13 @@ from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
     JobAdSnapshotSerializer,
+    LeadSnapshotSerializer,
     StepSerializer,
     TimelineSerializer,
     LeadSerializer,
     CVSerializer
 )
-from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead, CV, UserProfile
+from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV, UserProfile
 from .utils import remove_circular_links
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -569,6 +570,19 @@ class LeadViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.applications.update(lead=None)
         return super().destroy(request, *args, **kwargs)
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="snapshot",
+        permission_classes=[IsAuthenticated],
+    )
+    def snapshot(self, request, pk=None):
+        try:
+            snap = LeadSnapshot.objects.get(lead_id=pk)
+            return Response(LeadSnapshotSerializer(snap).data)
+        except LeadSnapshot.DoesNotExist:
+            return Response({'detail': 'Not found'}, status=404)
 
 
 class CVViewSet(viewsets.ModelViewSet):

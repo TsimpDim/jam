@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   CVReview,
+  CoverLetterGenerationRequest,
   ExperienceLevel,
   GroupReorderPayload,
   Industry,
@@ -47,6 +48,13 @@ export class JamService {
     return this.runHttpCall(
       'GET',
       environment.apiUrl + '/jam/jobapps/' + jobAppId + '/ad-snapshot/'
+    );
+  }
+
+  getLeadSnapshot(leadId: number) {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/jam/leads/' + leadId + '/snapshot/'
     );
   }
 
@@ -435,6 +443,24 @@ export class JamService {
     return this.runHttpCall(
       'GET',
       environment.apiUrl + '/special/lead-generation-requests/'
+    );
+  }
+
+  createCoverLetterRequest(payload: {
+    cv: number;
+    lead: number;
+  }): Observable<CoverLetterGenerationRequest> {
+    return this.runHttpCall(
+      'POST',
+      environment.apiUrl + '/special/cover-letter-requests/',
+      payload
+    );
+  }
+
+  getCoverLetterRequests(): Observable<CoverLetterGenerationRequest[]> {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/special/cover-letter-requests/'
     );
   }
 

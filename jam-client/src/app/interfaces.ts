@@ -69,6 +69,13 @@ export interface JobAdSnapshot {
   date_captured?: string;
 }
 
+export interface LeadSnapshot {
+  id: number;
+  lead: number;
+  text: string;
+  fetched_at: string;
+}
+
 export interface SourceEffectiveness {
   total: number;
   completed: number;
@@ -205,6 +212,19 @@ export interface LeadGenerationRequest {
   industries: number[];
   industries_names: string[];
   company_sizes: string[];
+  result: string | null;
+  is_done: boolean;
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface CoverLetterGenerationRequest {
+  id: number;
+  cv: number;
+  cv_key: string;
+  lead: number;
+  lead_company: string;
+  lead_role: string;
   result: string | null;
   is_done: boolean;
   created_at: string;

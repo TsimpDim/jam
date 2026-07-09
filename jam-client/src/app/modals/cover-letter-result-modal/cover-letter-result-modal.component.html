@@ -1,0 +1,39 @@
+<clr-modal
+  [clrModalOpen]="open"
+  (clrModalOpenChange)="onClrModalOpenChange($event)"
+  [clrModalSize]="'lg'"
+  [clrModalClosable]="true"
+>
+  <h3 class="modal-title">Generated Cover Letter</h3>
+  <div class="modal-body" *ngIf="request">
+    <div class="result-details-header">
+      <h4>Request Details</h4>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">CV:</span>
+          <span class="detail-value">{{ request.cv_key }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Company:</span>
+          <span class="detail-value">{{ request.lead_company }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Role:</span>
+          <span class="detail-value">{{ request.lead_role }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Requested:</span>
+          <span class="detail-value">{{ request.created_at | date:'medium' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Completed:</span>
+          <span class="detail-value">{{ request.completed_at | date:'medium' }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="result-content" [innerHTML]="renderedHtml"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="close()">Close</button>
+  </div>
+</clr-modal>

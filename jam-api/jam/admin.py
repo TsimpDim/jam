@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Group, Step, Lead, JobApplication, JobAdSnapshot, CV, UserProfile, Timeline
+from .models import Group, Step, Lead, JobApplication, JobAdSnapshot, LeadSnapshot, CV, UserProfile, Timeline
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
@@ -41,6 +41,14 @@ class JobAdSnapshotAdmin(admin.ModelAdmin):
     list_display = ('job_application', 'fetched_at')
     list_filter = ('fetched_at',)
     search_fields = ('job_application__company', 'job_application__role')
+    date_hierarchy = 'fetched_at'
+
+
+@admin.register(LeadSnapshot)
+class LeadSnapshotAdmin(admin.ModelAdmin):
+    list_display = ('lead', 'fetched_at')
+    list_filter = ('fetched_at',)
+    search_fields = ('lead__company',)
     date_hierarchy = 'fetched_at'
 
 

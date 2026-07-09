@@ -68,6 +68,11 @@ class JobAdSnapshot(models.Model):
     text = models.TextField()
     fetched_at = models.DateTimeField(auto_now_add=True)
 
+class LeadSnapshot(models.Model):
+    lead = models.OneToOneField(Lead, on_delete=models.CASCADE, related_name='snapshot')
+    text = models.TextField()
+    fetched_at = models.DateTimeField(auto_now_add=True)
+
 class CV(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cvs')
     key = models.CharField(max_length=70)

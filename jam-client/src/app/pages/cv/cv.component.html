@@ -75,6 +75,13 @@
           <div class="card-footer">
             <button
               class="btn btn-sm btn-link"
+              (click)="openUpdateForm(cv); $event.stopPropagation()"
+            >
+              <cds-icon shape="pencil"></cds-icon>
+              Edit
+            </button>
+            <button
+              class="btn btn-sm btn-link"
               (click)="downloadCV(cv); $event.stopPropagation()"
               [disabled]="downloadingId === cv.id"
             >
@@ -117,7 +124,8 @@
             </button>
             <button
               class="btn btn-sm btn-link"
-              (click)="deleteCV(cv); $event.stopPropagation()"
+              (click)="openDeleteConfirm(cv); $event.stopPropagation()"
+              style="margin-left: auto"
             >
               <cds-icon shape="trash"></cds-icon>
               Delete
@@ -148,3 +156,12 @@
   [review]="selectedReviewForView"
   (closed)="onReviewResultModalClosed()"
 ></app-cv-review-result-modal>
+
+<app-confirm-modal
+  [open]="confirmModalOpen"
+  title="Delete CV"
+  message="Are you sure you want to delete this CV?"
+  verb="Delete"
+  (closed)="onDeleteCancelled()"
+  (confirmed)="onDeleteConfirmed()"
+></app-confirm-modal>

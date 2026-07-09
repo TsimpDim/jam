@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CVReview, LeadGenerationRequest, Industry, ExperienceLevel, Role, Country, City
+from .models import CVReview, LeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
 
 
 class IndustrySerializer(serializers.ModelSerializer):
@@ -104,5 +104,25 @@ class LeadGenerationRequestSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id',
             'countries_names', 'cities_names', 'roles_names', 'industries_names', 'experience_level_names',
+            'result', 'is_done', 'created_at', 'completed_at'
+        ]
+
+
+class CoverLetterGenerationRequestSerializer(serializers.ModelSerializer):
+    cv_key = serializers.CharField(source='cv.key', read_only=True)
+    lead_company = serializers.CharField(source='lead.company', read_only=True)
+    lead_role = serializers.CharField(source='lead.role', read_only=True)
+
+    class Meta:
+        model = CoverLetterGenerationRequest
+        fields = [
+            'id', 'cv', 'cv_key',
+            'lead', 'lead_company', 'lead_role',
+            'result', 'is_done',
+            'created_at', 'completed_at'
+        ]
+        read_only_fields = [
+            'id',
+            'cv_key', 'lead_company', 'lead_role',
             'result', 'is_done', 'created_at', 'completed_at'
         ]

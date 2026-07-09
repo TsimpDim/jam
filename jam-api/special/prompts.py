@@ -25,6 +25,37 @@ def build_cv_review_prompt(roles: str, industry: str, experience_level: str) -> 
     Reply as if you're talking to the candidate directly.
     """
 
+def build_cover_letter_prompt(company: str, role: str, location: str, notes: str, snapshot_text: str = '') -> str:
+    role_display = role if role else "the position"
+    location_display = f" in {location}" if location else ""
+    notes_display = f"\nAdditional context about the lead: {notes}" if notes else ""
+
+    job_description_block = ""
+    if snapshot_text:
+        job_description_block = f"""
+
+            ## Job Description (from the job posting URL)
+            {snapshot_text}
+
+            Use the job description above to tailor the cover letter to the specific requirements,
+            responsibilities, and qualifications mentioned. Highlight how the candidate's CV matches
+            these requirements."""
+
+    return f"""You are an expert cover letter writer. Write a professional, compelling cover letter for a candidate applying to **{company}** for the role of **{role_display}**{location_display}.{notes_display}{job_description_block}
+
+        The candidate's CV is attached. Tailor the cover letter specifically to this company and role based on the CV content.
+
+        Guidelines:
+        - Keep the cover letter professional, concise, and engaging
+        - Highlight relevant skills and experience from the CV that match this specific role and company
+        - Use a standard business letter format with proper salutation and closing
+        - Do NOT use placeholder text like "[Your Name]" or "[Date]" — use actual content from the CV when possible, or omit if not available
+        - Aim for 3-4 paragraphs (250-400 words)
+        - End with a call to action expressing interest in an interview
+
+        Format your response with Markdown."""
+
+
 def _format_search_results(search_results: list[dict]) -> str:
     if not search_results:
         return "No search results available."
@@ -35,6 +66,7 @@ def _format_search_results(search_results: list[dict]) -> str:
         lines.append(f"   Snippet: {r.get('snippet', 'N/A')}")
         lines.append("")
     return "\n".join(lines)
+
 
 def build_lead_generation_prompt(existing_lead_companies: set[str], industries: list[str], experience_level: str, countries: list[str], cities: list[str], modes: list[str], company_sizes: list[str], roles: list[str], company_leads_only: bool, search_results: list[dict] = None) -> str:
     industries_str = ', '.join(industries) if industries else 'all industries'

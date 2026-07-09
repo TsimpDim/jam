@@ -6,6 +6,7 @@ import { CV, CVReview, UserInfo } from 'src/app/interfaces';
 import { CvUploadModalComponent } from '../../modals/cv-upload-modal/cv-upload-modal.component';
 import { CVReviewModalComponent } from '../../modals/cv-review-request-modal/cv-review-request-modal.component';
 import { CvReviewResultModalComponent } from '../../modals/cv-review-result-modal/cv-review-result-modal.component';
+import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
 import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
@@ -17,6 +18,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
     CvUploadModalComponent,
     CVReviewModalComponent,
     CvReviewResultModalComponent,
+    ConfirmModalComponent,
   ],
   templateUrl: './cv.component.html',
   styleUrls: ['./cv.component.scss'],
@@ -45,6 +47,8 @@ export class CvComponent implements OnInit {
   // CV Review state
   cvReviews: Map<number, CVReview[]> = new Map();
   requestingReviewCvId: number | null = null;
+  confirmModalOpen: boolean = false;
+  cvToDelete: CV | null = null;
 
   constructor(
     private jamService: JamService,
@@ -143,10 +147,6 @@ export class CvComponent implements OnInit {
 
     const cv = this.editingCV;
 
-    if (!confirm(`Are you sure you want to delete "${cv.key}"?`)) {
-      return;
-    }
-
     this.showUploadForm = false;
     this.editingCV = null;
     this.loading = true;
@@ -167,10 +167,25 @@ export class CvComponent implements OnInit {
     });
   }
 
-  deleteCV(cv: CV): void {
-    if (!confirm(`Are you sure you want to delete "${cv.key}"?`)) {
-      return;
+  openDeleteConfirm(cv: CV) {
+    this.cvToDelete = cv;
+    this.confirmModalOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    if (this.cvToDelete !== null) {
+      this.deleteCV(this.cvToDelete);
     }
+    this.confirmModalOpen = false;
+    this.cvToDelete = null;
+  }
+
+  onDeleteCancelled() {
+    this.confirmModalOpen = false;
+    this.cvToDelete = null;
+  }
+
+  deleteCV(cv: CV): void {
     this.loading = true;
     this.jamService.deleteCV(cv.id).subscribe({
       next: () => {

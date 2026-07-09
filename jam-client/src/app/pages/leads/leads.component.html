@@ -108,7 +108,38 @@
           <div class="card-footer">
             <button
               class="btn btn-sm btn-link"
-              (click)="deleteLead(lead.id); $event.stopPropagation()"
+              (click)="selectLead(lead.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="pencil"></cds-icon>
+              Edit
+            </button>
+            <button
+              *ngIf="lead.snapshot"
+              class="btn btn-sm btn-link"
+              (click)="openSnapshotModal(lead.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="details"></cds-icon>
+              View Snapshot
+            </button>
+            <button
+              class="btn btn-sm btn-link"
+              (click)="openCoverLetterModal(lead.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="bolt"></cds-icon>
+              Generate Cover Letter
+            </button>
+            <button
+              *ngIf="getCompletedCoverLetterForLead(lead.id)"
+              class="btn btn-sm btn-link"
+              (click)="viewCoverLetterResult(lead.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="eye"></cds-icon>
+              View Generated Cover Letter
+            </button>
+            <button
+              class="btn btn-sm btn-link"
+              (click)="openDeleteConfirm(lead.id); $event.stopPropagation()"
+              style="margin-left: auto"
             >
               <cds-icon shape="trash"></cds-icon>
               Delete
@@ -117,7 +148,11 @@
         </div>
       </div>
 
-      <clr-modal [clrModalOpen]="modalIsOpen" (clrModalOpenChange)="modalIsOpen = $event" [clrModalSize]="'lg'">
+      <clr-modal
+        [clrModalOpen]="modalIsOpen"
+        (clrModalOpenChange)="modalIsOpen = $event"
+        [clrModalSize]="'lg'"
+      >
         <h3 class="modal-title" *ngIf="selectedLead !== null">Edit Lead</h3>
         <h3 class="modal-title" *ngIf="selectedLead === null">Add Lead</h3>
 
@@ -259,6 +294,66 @@
         (submitted)="onLeadGenerationSubmitted($event)"
         (closed)="onLeadGenerationModalClosed()"
       ></app-lead-generation-modal>
+
+      <app-cover-letter-generation-modal
+        [open]="showCoverLetterModal"
+        [leadId]="coverLetterLeadId"
+        (submitted)="onCoverLetterSubmitted($event)"
+        (closed)="onCoverLetterModalClosed()"
+      ></app-cover-letter-generation-modal>
+
+      <clr-modal
+        [clrModalOpen]="snapshotModalIsOpen"
+        (clrModalOpenChange)="snapshotModalIsOpen = $event"
+        [clrModalSize]="'lg'"
+      >
+        <h3 class="modal-title">Lead Snapshot</h3>
+        <div class="modal-body">
+          <div
+            *ngIf="loadingSnapshot"
+            style="font-size: 1px"
+            class="progress loop"
+          >
+            <progress></progress>
+          </div>
+          <div
+            *ngIf="!loadingSnapshot && leadSnapshot"
+            class="snapshot-content"
+          >
+            <p class="snapshot-date">
+              Fetched at: {{ leadSnapshot.fetched_at | date: "medium" }}
+            </p>
+            <pre class="snapshot-text">{{ leadSnapshot.text }}</pre>
+          </div>
+          <div *ngIf="!loadingSnapshot && !leadSnapshot" class="no-snapshot">
+            <p>No lead snapshot available yet.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="closeSnapshotModal()"
+          >
+            Close
+          </button>
+        </div>
+      </clr-modal>
+
+      <app-cover-letter-result-modal
+        [open]="showCoverLetterResultModal"
+        [request]="selectedCoverLetterForView"
+        (closed)="onCoverLetterResultModalClosed()"
+      ></app-cover-letter-result-modal>
+
+      <app-confirm-modal
+        [open]="confirmModalOpen"
+        title="Delete Lead"
+        message="Are you sure you want to delete this lead?"
+        verb="Delete"
+        (closed)="onDeleteCancelled()"
+        (confirmed)="onDeleteConfirmed()"
+      ></app-confirm-modal>
     </div>
   </div>
 </div>

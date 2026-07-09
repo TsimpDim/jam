@@ -11,7 +11,10 @@ import {
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { LeadGenerationModalComponent } from 'src/app/modals/lead-generation-modal/lead-generation-modal.component';
-import { UserInfo } from 'src/app/interfaces';
+import { CoverLetterGenerationModalComponent } from 'src/app/modals/cover-letter-generation-modal/cover-letter-generation-modal.component';
+import { CoverLetterResultModalComponent } from 'src/app/modals/cover-letter-result-modal/cover-letter-result-modal.component';
+import { ConfirmModalComponent } from 'src/app/modals/confirm-modal/confirm-modal.component';
+import { UserInfo, CoverLetterGenerationRequest } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-leads',
@@ -21,6 +24,9 @@ import { UserInfo } from 'src/app/interfaces';
     ReactiveFormsModule,
     ClarityModule,
     LeadGenerationModalComponent,
+    CoverLetterGenerationModalComponent,
+    CoverLetterResultModalComponent,
+    ConfirmModalComponent,
   ],
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
@@ -35,6 +41,16 @@ export class LeadsComponent implements OnInit {
   viewingArchived: boolean = false;
   applications: any[] = [];
   showLeadGenerationModal: boolean = false;
+  showCoverLetterModal: boolean = false;
+  coverLetterLeadId: number | null = null;
+  snapshotModalIsOpen: boolean = false;
+  leadSnapshot: any = null;
+  loadingSnapshot: boolean = false;
+  coverLetterRequests: Map<number, CoverLetterGenerationRequest[]> = new Map();
+  showCoverLetterResultModal: boolean = false;
+  selectedCoverLetterForView: CoverLetterGenerationRequest | null = null;
+  confirmModalOpen: boolean = false;
+  leadToDelete: number | null = null;
   inProgressCount: number = 0;
   userInfo: UserInfo | null = null;
   hasReachedDailyQuota: boolean = false;
@@ -63,6 +79,7 @@ export class LeadsComponent implements OnInit {
     this.getLeads();
     this.getGroups();
     this.loadUserInfo();
+    this.loadCoverLetterRequests();
   }
 
   loadUserInfo(): void {
@@ -127,6 +144,23 @@ export class LeadsComponent implements OnInit {
         this.groups = data;
       },
     });
+  }
+
+  openDeleteConfirm(leadId: number) {
+    this.leadToDelete = leadId;
+    this.confirmModalOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    if (this.leadToDelete !== null) {
+      this.deleteLead(this.leadToDelete);
+    }
+    this.confirmModalOpen = false;
+  }
+
+  onDeleteCancelled() {
+    this.confirmModalOpen = false;
+    this.leadToDelete = null;
   }
 
   deleteLead(leadId: number) {
@@ -316,5 +350,94 @@ export class LeadsComponent implements OnInit {
 
   onLeadGenerationModalClosed() {
     this.showLeadGenerationModal = false;
+  }
+
+  openCoverLetterModal(leadId: number) {
+    this.coverLetterLeadId = leadId;
+    this.showCoverLetterModal = true;
+  }
+
+  onCoverLetterSubmitted(payload: { cv: number; lead: number }) {
+    this.loading = true;
+    this.jamService.createCoverLetterRequest(payload).subscribe({
+      next: () => {
+        this.snackbarService.showSuccess(
+          'Cover letter generation request submitted successfully.',
+        );
+        this.snackbarService.showInfo(
+          'Please come back in a few minutes to view the result.',
+        );
+        this.showCoverLetterModal = false;
+        this.loading = false;
+        this.loadCoverLetterRequests();
+      },
+      error: (e) => {
+        this.loading = false;
+        this.showCoverLetterModal = false;
+        this.snackbarService.showError(
+          this.snackbarService.getErrorMessage(
+            e,
+            'An error occurred while submitting the cover letter request.',
+          ),
+        );
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    });
+  }
+
+  onCoverLetterModalClosed() {
+    this.showCoverLetterModal = false;
+    this.coverLetterLeadId = null;
+  }
+
+  loadCoverLetterRequests(): void {
+    this.jamService.getCoverLetterRequests().subscribe((requests) => {
+      this.coverLetterRequests.clear();
+      for (const req of requests) {
+        const arr = this.coverLetterRequests.get(req.lead) || [];
+        arr.push(req);
+        this.coverLetterRequests.set(req.lead, arr);
+      }
+    });
+  }
+
+  getCompletedCoverLetterForLead(leadId: number): CoverLetterGenerationRequest | null {
+    const requests = this.coverLetterRequests.get(leadId) || [];
+    return requests.find((r) => r.is_done) || null;
+  }
+
+  viewCoverLetterResult(leadId: number): void {
+    const completed = this.getCompletedCoverLetterForLead(leadId);
+    if (completed) {
+      this.selectedCoverLetterForView = completed;
+      this.showCoverLetterResultModal = true;
+    }
+  }
+
+  onCoverLetterResultModalClosed(): void {
+    this.showCoverLetterResultModal = false;
+    this.selectedCoverLetterForView = null;
+  }
+
+  openSnapshotModal(leadId: number) {
+    this.loadingSnapshot = true;
+    this.snapshotModalIsOpen = true;
+    this.jamService.getLeadSnapshot(leadId).subscribe({
+      next: (data: any) => {
+        this.loadingSnapshot = false;
+        this.leadSnapshot = data;
+      },
+      error: () => {
+        this.loadingSnapshot = false;
+        this.leadSnapshot = null;
+      },
+    });
+  }
+
+  closeSnapshotModal() {
+    this.snapshotModalIsOpen = false;
+    this.leadSnapshot = null;
   }
 }

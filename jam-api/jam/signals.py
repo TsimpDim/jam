@@ -1,7 +1,7 @@
 import logging
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, UserProfile
+from .models import Group, Lead, JobApplication, JobAdSnapshot, Step, Timeline, UserProfile
 from django.contrib.auth.models import User
 import threading
 import jam.utils as utils
@@ -45,6 +45,28 @@ def create_job_ad_snapshot(sender, instance, created, **kwargs):
         except Exception as e:
             print(f"Error creating snapshot: {e}")
     
+    thread = threading.Thread(target=fetch)
+    thread.start()
+
+
+@receiver(post_save, sender=Lead)
+def create_lead_snapshot(sender, instance, created, **kwargs):
+    if instance.external_link is None or instance.external_link.strip() == '':
+        return
+
+    def fetch():
+        try:
+            from .models import LeadSnapshot
+            text = utils.fetch_job_ad_snapshot(instance.external_link)
+            if text:
+                LeadSnapshot.objects.update_or_create(
+                    lead=instance,
+                    defaults={'text': text}
+                )
+                print(f"Snapshot created/updated for lead {instance.id}")
+        except Exception as e:
+            print(f"Error creating lead snapshot: {e}")
+
     thread = threading.Thread(target=fetch)
     thread.start()
 

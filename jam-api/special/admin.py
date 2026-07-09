@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CVReview, Industry, ExperienceLevel, LeadGenerationRequest, Role, City, Country
+from .models import CVReview, Industry, ExperienceLevel, LeadGenerationRequest, CoverLetterGenerationRequest, Role, City, Country
 
 
 @admin.register(Industry)
@@ -88,3 +88,12 @@ class LeadGenerationRequestAdmin(admin.ModelAdmin):
     @admin.display(description="Company Sizes")
     def get_company_sizes(self, obj):
         return ", ".join(obj.company_sizes) if obj.company_sizes else "—"
+
+
+@admin.register(CoverLetterGenerationRequest)
+class CoverLetterGenerationRequestAdmin(admin.ModelAdmin):
+    list_display = ('user', 'cv', 'lead', 'is_done', 'created_at', 'completed_at')
+    list_filter = ('is_done', 'user')
+    search_fields = ('user__username', 'cv__key', 'lead__company')
+    date_hierarchy = 'created_at'
+    readonly_fields = ('result', 'created_at', 'completed_at')

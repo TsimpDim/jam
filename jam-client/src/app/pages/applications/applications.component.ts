@@ -7,11 +7,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { ClarityIcons, detailsIcon, lightbulbIcon } from '@cds/core/icon';
 import { JobNavComponent } from '../../shared/job-nav/job-nav.component';
 import { JobModalComponent } from '../../modals/job-modal/job-modal.component';
 import { TimelineModalComponent } from '../../modals/timeline-modal/timeline-modal.component';
 import { NoteViewModalComponent } from '../../modals/note-view-modal/note-view-modal.component';
+import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
 ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
 
 @Component({
@@ -24,6 +26,7 @@ ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
     JobModalComponent,
     TimelineModalComponent,
     NoteViewModalComponent,
+    ConfirmModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './applications.component.html',
@@ -46,6 +49,7 @@ export class ApplicationsComponent implements OnInit {
   public snapshotModalIsOpen: boolean = false;
   public jobAdSnapshot: any = null;
   public loadingSnapshot: boolean = false;
+  public confirmModalOpen: boolean = false;
   public timelineLayout: string = 'horizontal';
   public currentSort: string = 'id';
   public noteViewModalIsOpen: boolean = false;
@@ -53,7 +57,7 @@ export class ApplicationsComponent implements OnInit {
   public showFullNotes: boolean = false;
   private readonly MAX_JOB_APP_NOTE_LINES = 15;
 
-  constructor(private jamService: JamService) {}
+  constructor(private jamService: JamService, private snackbarService: SnackbarService) {}
 
   isNotesLong(notes: string): boolean {
     if (!notes) return false;
@@ -240,5 +244,32 @@ export class ApplicationsComponent implements OnInit {
   closeSnapshotModal() {
     this.snapshotModalIsOpen = false;
     this.jobAdSnapshot = null;
+  }
+
+  deleteSelectedApplication() {
+    this.confirmModalOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    this.confirmModalOpen = false;
+    this.loadingSelectedApplication = true;
+    this.jamService.deleteJobApplication(this.selectedApp.id).subscribe({
+      next: () => {
+        this.snackbarService.showSuccess('Job application deleted successfully.');
+        this.selectedApp = null;
+        this.loadingSelectedApplication = false;
+        this.getApplications();
+      },
+      error: () => {
+        this.loadingSelectedApplication = false;
+        this.snackbarService.showError(
+          'An error occurred while deleting the job application.',
+        );
+      },
+    });
+  }
+
+  onDeleteCancelled() {
+    this.confirmModalOpen = false;
   }
 }

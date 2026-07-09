@@ -1,0 +1,19 @@
+<clr-modal
+  [clrModalOpen]="open"
+  (clrModalOpenChange)="onModalOpenChange($event)"
+  [clrModalSize]="'sm'"
+  [clrModalClosable]="false"
+>
+  <h3 class="modal-title">{{ title }}</h3>
+  <div class="modal-body">
+    <p>{{ message }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="cancel()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-danger" (click)="confirm()">
+      {{ verb }}
+    </button>
+  </div>
+</clr-modal>

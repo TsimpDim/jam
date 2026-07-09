@@ -100,3 +100,29 @@
     padding: 0.15em 0.5em;
     border-radius: 10px;
 }
+
+.snapshot-content {
+    .snapshot-date {
+        color: var(--color-ink-secondary);
+        font-size: 0.85em;
+        margin-bottom: 1rem;
+    }
+
+    .snapshot-text {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-height: 60vh;
+        overflow-y: auto;
+        background: var(--color-surface-tinted);
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+}
+
+.no-snapshot {
+    color: var(--color-ink-secondary);
+    font-style: italic;
+}

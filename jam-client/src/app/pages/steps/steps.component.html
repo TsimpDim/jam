@@ -21,7 +21,15 @@
           <div class="card-footer">
             <button
               class="btn btn-sm btn-link"
-              (click)="deleteStep(step.id); $event.stopPropagation()"
+              (click)="selectStep(step.id); $event.stopPropagation()"
+            >
+              <cds-icon shape="pencil"></cds-icon>
+              Edit
+            </button>
+            <button
+              class="btn btn-sm btn-link"
+              (click)="openDeleteConfirm(step.id); $event.stopPropagation()"
+              style="margin-left: auto"
             >
               <cds-icon shape="trash"></cds-icon>
               Delete
@@ -109,13 +117,22 @@
           <clr-spinner *ngIf="loading" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
 
           <button type="button" class="btn btn-danger-outline"
-          (click)="deleteStep(selectedStep.id)"
+          (click)="openDeleteConfirm(selectedStep.id)"
           *ngIf="selectedStep != null"
           >Delete</button>
           <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
           <button type="submit" class="btn btn-primary" (click)="submitForm()">Submit</button>
         </div>
       </clr-modal>
+
+      <app-confirm-modal
+        [open]="confirmModalOpen"
+        title="Delete Step"
+        message="Are you sure you want to delete this step?"
+        verb="Delete"
+        (closed)="onDeleteCancelled()"
+        (confirmed)="onDeleteConfirmed()"
+      ></app-confirm-modal>
     </div>
   </div>
 </div>

@@ -29,14 +29,6 @@
             <span class="badge" *ngIf="selectedApp.appliedThrough">
               Applied through: {{ selectedApp.appliedThrough }}
             </span>
-            <span
-              [ngClass]="{
-                badge: true,
-                'badge-light-blue': selectedApp.status !== 'FNISHED',
-                'badge-success': selectedApp.status === 'FINISHED'
-              }"
-              >{{ selectedApp.status }}</span
-            >
           </div>
           <div class="card-block" *ngIf="selectedApp.notes">
             <div class="card-text notes">
@@ -90,6 +82,15 @@
                 View Job Ad
               </button>
             </ng-container>
+
+            <button
+              class="btn btn-sm btn-link"
+              (click)="deleteSelectedApplication(); $event.stopPropagation()"
+              style="margin-left: auto"
+            >
+              <cds-icon shape="trash"></cds-icon>
+              Delete
+            </button>
           </div>
         </div>
 
@@ -191,7 +192,11 @@
     >
     </app-note-view-modal>
 
-    <clr-modal [clrModalOpen]="snapshotModalIsOpen" (clrModalOpenChange)="snapshotModalIsOpen = $event" [clrModalSize]="'lg'">
+    <clr-modal
+      [clrModalOpen]="snapshotModalIsOpen"
+      (clrModalOpenChange)="snapshotModalIsOpen = $event"
+      [clrModalSize]="'lg'"
+    >
       <h3 class="modal-title">Job Ad</h3>
       <div class="modal-body">
         <div
@@ -203,7 +208,7 @@
         </div>
         <div *ngIf="!loadingSnapshot && jobAdSnapshot" class="snapshot-content">
           <p class="snapshot-date">
-            Fetched at: {{ jobAdSnapshot.fetched_at | date : "medium" }}
+            Fetched at: {{ jobAdSnapshot.fetched_at | date: "medium" }}
           </p>
           <pre class="snapshot-text">{{ jobAdSnapshot.text }}</pre>
         </div>
@@ -224,5 +229,14 @@
         </button>
       </div>
     </clr-modal>
+
+    <app-confirm-modal
+      [open]="confirmModalOpen"
+      title="Delete Job Application"
+      message="Are you sure you want to delete this job application?"
+      verb="Delete"
+      (closed)="onDeleteCancelled()"
+      (confirmed)="onDeleteConfirmed()"
+    ></app-confirm-modal>
   </div>
 </div>

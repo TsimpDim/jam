@@ -1,0 +1,62 @@
+<clr-modal
+  [clrModalOpen]="open"
+  [clrModalClosable]="!submitting"
+  (clrModalOpenChange)="onModalOpenChange($event)"
+>
+  <h3 class="modal-title">Generate Cover Letter</h3>
+  <div class="modal-body">
+    <form class="clr-form form-grid" [formGroup]="form">
+      <div class="clr-form-control">
+        <label>Select CV *</label>
+        <clr-select-container>
+          <select clrSelect formControlName="cv">
+            <option [ngValue]="null">Select a CV</option>
+            <option *ngFor="let cv of cvs" [ngValue]="cv.id">
+              {{ cv.key }}
+            </option>
+          </select>
+        </clr-select-container>
+        <clr-control-helper
+          >Choose the CV to generate a cover letter for this lead</clr-control-helper
+        >
+        <clr-control-error
+          *ngIf="form.get('cv')?.touched && form.get('cv')?.invalid"
+          >A CV is required.</clr-control-error
+        >
+      </div>
+    </form>
+    <div *ngIf="cvs.length === 0" class="alert alert-info">
+      <div class="alert-items">
+        <div class="alert-item static">
+          <div class="alert-text">
+            No CVs found. Please upload a CV first.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <clr-spinner
+      *ngIf="submitting"
+      [clrMedium]="true"
+      [clrInline]="true"
+      [clrInverse]="true"
+    ></clr-spinner>
+    <button
+      type="button"
+      class="btn btn-outline"
+      (click)="close()"
+      [disabled]="submitting"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="submit()"
+      [disabled]="submitting || cvs.length === 0"
+    >
+      Generate
+    </button>
+  </div>
+</clr-modal>

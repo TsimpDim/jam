@@ -2,9 +2,9 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from .models import CVReview, LeadGenerationRequest, Industry, ExperienceLevel, Role, Country, City
-from .serializers import CVReviewSerializer, LeadGenerationRequestSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer, CountrySerializer, CitySerializer
-from jam.models import CV, UserProfile
+from .models import CVReview, LeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
+from .serializers import CVReviewSerializer, LeadGenerationRequestSerializer, CoverLetterGenerationRequestSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer, CountrySerializer, CitySerializer
+from jam.models import CV, Lead, UserProfile
 
 
 class IndustryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -121,6 +121,69 @@ class LeadGenerationRequestViewSet(viewsets.ModelViewSet):
             today_requests = LeadGenerationRequest.objects.filter(user=request.user, created_at__date=today).count()
             if today_requests >= 1:
                 return Response({'error': 'Free users can only request 1 lead generation per day.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        data = request.data.copy()
+        data["user"] = request.user.id
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class CoverLetterGenerationRequestViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CoverLetterGenerationRequestSerializer
+    http_method_names = ['get', 'post', 'head', 'options']
+
+    def get_queryset(self):
+        return CoverLetterGenerationRequest.objects.filter(
+            user=self.request.user
+        ).select_related('cv', 'lead')
+
+    def create(self, request, *args, **kwargs):
+        cv_id = request.data.get('cv')
+        lead_id = request.data.get('lead')
+
+        if not cv_id:
+            return Response({'error': 'CV ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not lead_id:
+            return Response({'error': 'Lead ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            cv = CV.objects.get(id=cv_id, user=request.user)
+        except CV.DoesNotExist:
+            return Response({'error': 'CV not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            lead = Lead.objects.get(id=lead_id, user=request.user)
+        except Lead.DoesNotExist:
+            return Response({'error': 'Lead not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        pending_request = CoverLetterGenerationRequest.objects.filter(
+            user=request.user, lead=lead, is_done=False
+        ).first()
+        if pending_request:
+            return Response(
+                {'error': 'You already have a pending cover letter generation for this lead.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user_profile = UserProfile.objects.get(user=request.user)
+        if not user_profile.is_premium:
+            today = timezone.now().date()
+            today_requests = CoverLetterGenerationRequest.objects.filter(
+                user=request.user, created_at__date=today
+            ).count()
+            if today_requests >= 1:
+                return Response(
+                    {'error': 'Free users can only request 1 cover letter per day.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
         data = request.data.copy()
         data["user"] = request.user.id

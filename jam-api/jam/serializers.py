@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Group, JobApplication, JobAdSnapshot, Step, Timeline, Lead, CV
+from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,6 +66,7 @@ class TimelineSerializer(serializers.ModelSerializer):
 class LeadSerializer(serializers.ModelSerializer):
     group_name = serializers.SerializerMethodField()
     applications = serializers.SerializerMethodField()
+    snapshot = serializers.SerializerMethodField()
 
     def get_group_name(self, obj):
         return obj.group.name if obj.group else None
@@ -73,6 +74,13 @@ class LeadSerializer(serializers.ModelSerializer):
     def get_applications(self, obj):
         apps = obj.applications.all()
         return JobApplicationSerializer(apps, many=True).data
+
+    def get_snapshot(self, obj):
+        try:
+            snap = obj.snapshot
+            return {'id': snap.id, 'fetched_at': snap.fetched_at}
+        except LeadSnapshot.DoesNotExist:
+            return None
 
     class Meta:
         model = Lead
@@ -82,4 +90,10 @@ class LeadSerializer(serializers.ModelSerializer):
 class JobAdSnapshotSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobAdSnapshot
+        fields = "__all__"
+
+
+class LeadSnapshotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LeadSnapshot
         fields = "__all__"

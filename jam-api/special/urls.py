@@ -1,10 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CVReviewViewSet, LeadGenerationRequestViewSet, IndustryViewSet, ExperienceLevelViewSet, RoleViewSet, CountryViewSet, CityViewSet
+from .views import CVReviewViewSet, LeadGenerationRequestViewSet, CoverLetterGenerationRequestViewSet, IndustryViewSet, ExperienceLevelViewSet, RoleViewSet, CountryViewSet, CityViewSet
 
 router = DefaultRouter()
 router.register(r'cv-reviews', CVReviewViewSet, basename='cv-reviews')
 router.register(r'lead-generation-requests', LeadGenerationRequestViewSet, basename='lead-generation-requests')
+router.register(r'cover-letter-requests', CoverLetterGenerationRequestViewSet, basename='cover-letter-requests')
 router.register(r'industries', IndustryViewSet, basename='industries')
 router.register(r'roles', RoleViewSet, basename='roles')
 router.register(r'experience-levels', ExperienceLevelViewSet, basename='experience-levels')

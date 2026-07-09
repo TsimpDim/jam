@@ -10,11 +10,12 @@ import {
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { ConfirmModalComponent } from 'src/app/modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-steps',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule, ConfirmModalComponent],
   templateUrl: './steps.component.html',
   styleUrls: ['./steps.component.scss'],
 })
@@ -31,6 +32,8 @@ export class StepsComponent implements OnInit {
     E: 'Ending Step',
   };
   selectedColor = 'grey';
+  confirmModalOpen: boolean = false;
+  stepToDelete: number | null = null;
   COLOR_HEXES = {
     red: '#db4848',
     grey: '#cccccc',
@@ -131,6 +134,24 @@ export class StepsComponent implements OnInit {
       ) || 'grey';
     this.stepForm.reset(this.selectedStep);
     this.openModal();
+  }
+
+  openDeleteConfirm(stepId: number) {
+    this.stepToDelete = stepId;
+    this.confirmModalOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    if (this.stepToDelete !== null) {
+      this.deleteStep(this.stepToDelete);
+    }
+    this.confirmModalOpen = false;
+    this.stepToDelete = null;
+  }
+
+  onDeleteCancelled() {
+    this.confirmModalOpen = false;
+    this.stepToDelete = null;
   }
 
   deleteStep(stepId: number) {
