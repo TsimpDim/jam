@@ -39,7 +39,17 @@
             (keyup)="onSearchKeyup($event)"
             class="search-input"
           />
-          <cds-icon shape="search" class="search-icon"></cds-icon>
+          <cds-icon
+            *ngIf="!searchQuery"
+            shape="search"
+            class="search-icon"
+          ></cds-icon>
+          <cds-icon
+            *ngIf="searchQuery"
+            shape="times"
+            class="search-icon clear-icon"
+            (click)="clearSearch()"
+          ></cds-icon>
         </div>
         <clr-dropdown id="filter">
           <button clrDropdownTrigger class="nav-link">

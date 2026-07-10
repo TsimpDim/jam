@@ -252,6 +252,11 @@ export class JobNavComponent implements OnInit {
     this.rebuildFilteredGroups();
   }
 
+  clearSearch() {
+    this.searchQuery = '';
+    this.rebuildFilteredGroups();
+  }
+
   toggleNavState(event: Event, groupName: string) {
     event.stopPropagation();
     // Toggle: if already expanded, collapse it; otherwise expand this group

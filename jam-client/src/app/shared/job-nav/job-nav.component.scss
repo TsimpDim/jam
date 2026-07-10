@@ -223,9 +223,17 @@
             .search-icon {
                 position: absolute;
                 right: 0.5rem;
-                top: 65%;
-                transform: translateY(-65%);
+                top: 50%;
+                transform: translateY(-50%);
                 color: var(--color-ink-secondary);
+            }
+
+            .clear-icon {
+                cursor: pointer;
+
+                &:hover {
+                    color: var(--color-ink-primary);
+                }
             }
         }
     }
