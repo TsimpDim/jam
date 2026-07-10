@@ -6,12 +6,12 @@
 
     &:hover {
         cursor: pointer;
-        outline: 3px solid #e5e5e5;
+        outline: 3px solid var(--color-border);
     }
 }
 
 .color-option-selected {
-    outline: 3px solid #9a9a9a;
+    outline: 3px solid var(--color-ink-secondary);
     outline-offset: 1px;
 }
 

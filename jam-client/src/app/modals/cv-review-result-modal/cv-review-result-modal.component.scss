@@ -1,13 +1,13 @@
 .review-details-header {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--clr-gray-300);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .review-details-header h4 {
   margin: 0 0 0.75rem 0;
   font-size: 1rem;
-  color: var(--clr-gray-700);
+  color: var(--color-ink-primary);
 }
 
 .detail-grid {
@@ -23,14 +23,14 @@
 
 .detail-label {
   font-size: 0.75rem;
-  color: var(--clr-gray-500);
+  color: var(--color-ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .detail-value {
   font-size: 0.9rem;
-  color: var(--clr-gray-800);
+  color: var(--color-ink-primary);
 }
 
 .review-result-content {

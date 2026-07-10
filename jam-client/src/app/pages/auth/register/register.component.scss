@@ -10,6 +10,7 @@
     flex-direction: row;
     width: 100%;
     min-height: 100vh;
+    background-color: var(--color-bg);
 }
 
 .login-wrapper .login {
@@ -36,12 +37,30 @@
     }
 
     .alert-text {
-        color: #000;
+        color: var(--color-ink-primary);
     }
 
     .clr-subtext,
     .clr-control-helper {
         color: rgba(255, 255, 255, 0.7);
+    }
+
+    input[clrInput],
+    input[clrPassword],
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        background-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border-bottom-color: rgba(255, 255, 255, 0.4);
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        &:focus {
+            border-bottom-color: #fff;
+        }
     }
 }
 
@@ -88,11 +107,11 @@
 }
 
 .alert-text {
-    color: black !important;
+    color: var(--color-ink-primary) !important;
 }
 
 .action {
-    background-color: white;
+    background-color: var(--color-bg-surface);
     font-size: 0.6rem;
     font-weight: 500;
     color: var(--color-plum-deep, #320047);
@@ -108,7 +127,7 @@
         cursor: pointer;
         box-shadow: 0 5px 0 0 rgba(211, 211, 211, .6);
         color: var(--color-plum-deep, #320047);
-        background-color: white;
+        background-color: var(--color-bg-surface);
     }
 
     &:active {

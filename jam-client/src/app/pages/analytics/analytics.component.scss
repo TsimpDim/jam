@@ -69,7 +69,8 @@
     border: 1px solid var(--color-border);
     border-radius: 4px;
     font-size: 0.9rem;
-    background: var(--color-white);
+    background: var(--color-bg-surface);
+    color: var(--color-ink-primary);
     cursor: pointer;
     min-width: 180px;
 
@@ -92,7 +93,7 @@
     display: flex;
     align-items: center;
     padding: 1.25em;
-    background: var(--color-white);
+    background: var(--color-bg-surface);
     border-radius: 12px;
     border: 1px solid var(--color-border);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -226,7 +227,7 @@
 }
 
 .chart-card {
-    background: var(--color-white);
+    background: var(--color-bg-surface);
     border-radius: 12px;
     border: 1px solid var(--color-border);
     padding: 1.25em;
@@ -278,7 +279,7 @@
 
     &.active {
         background: var(--color-plum-deep);
-        color: var(--color-white);
+        color: var(--color-bg);
     }
 }
 
@@ -295,7 +296,7 @@
 
 // Detail Cards
 .detail-card {
-    background: var(--color-white);
+    background: var(--color-bg-surface);
     border-radius: 12px;
     border: 1px solid var(--color-border);
     padding: 1.25em;

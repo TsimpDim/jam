@@ -11,7 +11,7 @@
 
 .company-leads-section {
   padding: 1.5rem;
-  background: var(--clr-global-line-color, #e0e0e0);
+  background: var(--color-surface-tinted);
   border-radius: 6px;
   margin-bottom: 0.5rem;
 }
@@ -53,7 +53,7 @@ clr-select-container {
 }
 
 .city-country-label {
-  color: var(--clr-global-text-color, #666);
+  color: var(--color-ink-muted);
   font-size: 0.85em;
   margin-left: 0.5rem;
 }

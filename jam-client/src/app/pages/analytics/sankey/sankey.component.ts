@@ -35,6 +35,10 @@ export class SankeyComponent
     | ElementRef<HTMLDivElement>
     | undefined;
 
+  private getCssVar(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#000';
+  }
+
   private renderTimeout: any = null;
 
   constructor(private jamService: JamService) {}
@@ -265,7 +269,7 @@ export class SankeyComponent
       )
       .attr('font-size', '12px')
       .attr('font-weight', '500')
-      .attr('fill', '#374151')
+      .attr('fill', this.getCssVar('--color-sankey-label'))
       .style('pointer-events', 'none')
       .text((d: any) => d.name);
 
@@ -282,7 +286,7 @@ export class SankeyComponent
         d.x0 < innerWidth / 2 ? 'start' : 'end'
       )
       .attr('font-size', '10.5px')
-      .attr('fill', '#9ca3af')
+      .attr('fill', this.getCssVar('--color-sankey-badge'))
       .style('pointer-events', 'none')
       .text((d: any) => `${d.value} apps`);
   }

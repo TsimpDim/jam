@@ -41,7 +41,7 @@
   margin: 1em;
 
   &:hover {
-    background-color: #f0f4ff;
+    background-color: var(--color-surface-tinted);
     border-color: var(--clr-interactive-focus, #cad9ff);
     box-shadow: 0 2px 8px rgba(85, 132, 255, 0.1);
   }
@@ -57,11 +57,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f7fb;
+  background: var(--color-surface-tinted);
   border-style: dashed;
 
   &:hover {
-    background-color: #eff3ff;
+    background-color: var(--color-surface-tinted);
     border-color: var(--clr-interactive-focus, #cad9ff);
   }
 }

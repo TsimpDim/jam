@@ -8,12 +8,12 @@ import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { ClarityModule } from '@clr/angular';
+import { ThemeService } from 'src/app/core/services/theme.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, ClarityModule],
+  imports: [CommonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss', '../shared.scss'],
@@ -23,7 +23,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription | undefined;
   mobileMenuOpen = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    public themeService: ThemeService
+  ) {}
   ngAfterViewInit(): void {
     this.routerSubscription = this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
