@@ -355,10 +355,57 @@
     .charts-grid {
         grid-template-columns: 1fr;
     }
+
+    .filter-bar-wrapper {
+        padding: 1em 1em 0;
+    }
+
+    .filter-bar {
+        padding: 0.75em;
+        gap: 0.5em;
+        margin-bottom: 1em;
+    }
+
+    .filter-select {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.82rem;
+    }
+
+    #container {
+        padding: 0 1em 1em;
+    }
+
+    .chart-header-with-toggle {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
 }
 
 @media (max-width: 480px) {
     .hero-metrics {
         grid-template-columns: 1fr;
+    }
+
+    .filter-bar-wrapper {
+        padding: 0.75em 0.75em 0;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        padding: 0.5em;
+    }
+
+    #container {
+        padding: 0 0.75em 0.75em;
+    }
+
+    .metric-card {
+        padding: 0.75em;
+    }
+
+    .chart-header-with-toggle {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

@@ -66,3 +66,60 @@
   align-items: center;
   gap: 0.25rem;
 }
+
+@media (max-width: 768px) {
+  .empty-state {
+    padding: 3rem 1rem;
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      max-width: 280px;
+    }
+  }
+
+  .cv-filename {
+    font-size: 0.78rem;
+  }
+
+  .card-header .badge {
+    font-size: 0.62rem;
+    padding: 0.25em 0.4em;
+  }
+}
+
+@media (max-width: 480px) {
+  .empty-state {
+    padding: 2rem 0.75rem;
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
+  }
+
+  .file-preview {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    font-size: 0.82rem;
+  }
+}

@@ -6,46 +6,48 @@
 
     <div class="content-area">
       <div class="clr-column">
-        <button class="button btn btn-primary" (click)="clearAndOpenModal()">
-          Create new
-        </button>
-        <button class="button btn btn-outline" (click)="toggleViewMode()">
-          {{ viewingArchived ? "Show Active" : "Show Archived" }}
-        </button>
-        <button
-          class="button btn btn-secondary"
-          (click)="openLeadGenerationModal()"
-          [disabled]="
-            (inProgressCount > 0 && !userInfo?.is_premium) ||
-            hasReachedDailyQuota
-          "
-        >
-          <cds-icon
-            *ngIf="inProgressCount === 0 || userInfo?.is_premium"
-            shape="bolt"
-          ></cds-icon>
-          <cds-icon
-            *ngIf="inProgressCount > 0 && !userInfo?.is_premium"
-            shape="spinner"
-            class="is-solid spin"
-          ></cds-icon>
-          {{
-            hasReachedDailyQuota
-              ? "Lead generation quota reached"
-              : "Generate Leads"
-          }}
-          <span
-            *ngIf="inProgressCount > 0"
-            role="tooltip"
-            aria-haspopup="true"
-            class="tooltip tooltip-sm badge generation-badge"
+        <div class="top-actions">
+          <button class="button btn btn-primary" (click)="clearAndOpenModal()">
+            Create new
+          </button>
+          <button class="button btn btn-outline" (click)="toggleViewMode()">
+            {{ viewingArchived ? "Show Active" : "Show Archived" }}
+          </button>
+          <button
+            class="button btn btn-secondary"
+            (click)="openLeadGenerationModal()"
+            [disabled]="
+              (inProgressCount > 0 && !userInfo?.is_premium) ||
+              hasReachedDailyQuota
+            "
           >
-            {{ inProgressCount }}
-            <span class="tooltip-content"
-              >{{ inProgressCount }} lead generation requests in progress</span
+            <cds-icon
+              *ngIf="inProgressCount === 0 || userInfo?.is_premium"
+              shape="bolt"
+            ></cds-icon>
+            <cds-icon
+              *ngIf="inProgressCount > 0 && !userInfo?.is_premium"
+              shape="spinner"
+              class="is-solid spin"
+            ></cds-icon>
+            {{
+              hasReachedDailyQuota
+                ? "Lead generation quota reached"
+                : "Generate Leads"
+            }}
+            <span
+              *ngIf="inProgressCount > 0"
+              role="tooltip"
+              aria-haspopup="true"
+              class="tooltip tooltip-sm badge generation-badge"
             >
-          </span>
-        </button>
+              {{ inProgressCount }}
+              <span class="tooltip-content"
+                >{{ inProgressCount }} lead generation requests in progress</span
+              >
+            </span>
+          </button>
+        </div>
 
         <p class="empty-message" *ngIf="leads?.length === 0">
           Nothing's here so far :(<br />Use the 'create new' button to get

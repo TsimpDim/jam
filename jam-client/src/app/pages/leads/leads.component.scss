@@ -126,3 +126,48 @@
     color: var(--color-ink-secondary);
     font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .content-area {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .empty-message {
+    width: 90%;
+    font-size: 1.5em;
+    margin-top: 2em;
+  }
+
+  .application-mini {
+    font-size: 0.78em;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-area {
+    padding: 0.5rem;
+  }
+
+  .empty-message {
+    width: 95%;
+    font-size: 1.2em;
+    margin-top: 1.5em;
+  }
+
+  .application-mini {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
+  .application-card {
+    padding: 0.5rem;
+  }
+
+  .snapshot-content .snapshot-text {
+    max-height: 40vh;
+    font-size: 0.82rem;
+    padding: 0.5rem;
+  }
+}

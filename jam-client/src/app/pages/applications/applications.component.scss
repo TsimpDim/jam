@@ -147,18 +147,39 @@ a:hover {
         align-items: flex-start !important;
     }
 
-    .clr-timeline-vertical .clr-timeline-step-header {
-        min-width: 70px;
-        padding-right: 8px;
+  .clr-timeline-vertical .clr-timeline-step-header {
+      min-width: 70px;
+      padding-right: 8px;
     }
 
     .clr-timeline-vertical .clr-timeline-step-body {
-        flex: 1;
-        min-width: 0;
+      flex: 1;
+      min-width: 0;
     }
 
     .clr-timeline-vertical #add-step-btn {
-        margin-top: 0;
-        margin-left: 7.4em;
+      margin-top: 0;
+      margin-left: 7.4em;
     }
+
+    .card-footer {
+      gap: 0.25rem;
+    }
+  }
+
+@media (max-width: 480px) {
+  .content-area {
+    padding: 0.5rem;
+  }
+
+  .snapshot-content .snapshot-text {
+    max-height: 40vh;
+    font-size: 0.82rem;
+    padding: 0.5rem;
+  }
+
+  .clr-timeline-step {
+    width: 100%;
+    max-width: 100%;
+  }
 }

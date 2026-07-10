@@ -18,7 +18,17 @@ import { GroupModalComponent } from '../../modals/group-modal/group-modal.compon
 
 const JOB_NAV_WIDTH_STORAGE_KEY = 'jam_job_nav_width';
 const JOB_NAV_MIN_WIDTH_PX = 220;
-const JOB_NAV_MAX_WIDTH_VW = 30;
+const JOB_NAV_MAX_WIDTH_SMALL_VW = 30;
+const JOB_NAV_MAX_WIDTH_NORMAL_VW = 50;
+function getNavMaxWidthVw(): number {
+  return window.innerWidth < 768
+    ? JOB_NAV_MAX_WIDTH_NORMAL_VW
+    : JOB_NAV_MAX_WIDTH_SMALL_VW;
+}
+
+function getNavMaxWidth(): number {
+  return Math.floor((window.innerWidth * getNavMaxWidthVw()) / 100);
+}
 const JOB_NAV_DEFAULT_WIDTH_PX = 280;
 const JOB_NAV_COLLAPSED_WIDTH_PX = 48;
 
@@ -150,9 +160,7 @@ export class JobNavComponent implements OnInit {
     const savedWidth = localStorage.getItem(JOB_NAV_WIDTH_STORAGE_KEY);
     if (savedWidth) {
       const parsed = parseInt(savedWidth, 10);
-      const maxWidth = Math.floor(
-        (window.innerWidth * JOB_NAV_MAX_WIDTH_VW) / 100
-      );
+      const maxWidth = getNavMaxWidth();
       if (!isNaN(parsed) && parsed >= JOB_NAV_MIN_WIDTH_PX) {
         this.navWidth = Math.min(parsed, maxWidth);
       }
@@ -171,9 +179,7 @@ export class JobNavComponent implements OnInit {
     if (!this.isDragging) return;
 
     const deltaX = event.clientX - this.startX;
-    const maxWidth = Math.floor(
-      (window.innerWidth * JOB_NAV_MAX_WIDTH_VW) / 100
-    );
+    const maxWidth = getNavMaxWidth();
     let newWidth = this.startWidth + deltaX;
 
     // Clamp between min and max
@@ -194,9 +200,7 @@ export class JobNavComponent implements OnInit {
   // make sure that it doesn't exceed the window's width
   @HostListener('window:resize')
   onWindowResize() {
-    const maxWidth = Math.floor(
-      (window.innerWidth * JOB_NAV_MAX_WIDTH_VW) / 100
-    );
+    const maxWidth = getNavMaxWidth();
     if (this.navWidth > maxWidth) {
       this.navWidth = maxWidth;
       localStorage.setItem(JOB_NAV_WIDTH_STORAGE_KEY, this.navWidth.toString());
@@ -235,7 +239,7 @@ export class JobNavComponent implements OnInit {
           ? apps.filter(
               (app: any) =>
                 app.company.toLowerCase().includes(query) ||
-                app.role.toLowerCase().includes(query)
+                app.role.toLowerCase().includes(query),
             )
           : apps;
         return { name: group.name, apps: filteredApps };
