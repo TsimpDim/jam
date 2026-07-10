@@ -45,18 +45,18 @@ resource "aws_security_group" "jam" {
 resource "aws_instance" "jam" {
   ami                    = var.ami
   instance_type          = var.instance-type
-  user_data              = <<EOF
-  #!/bin/bash
-  export DB_NAME=${var.db-name}
-  export DB_USER=${var.db-user}
-  export DB_PASSWORD=${var.db-password}
-  export DB_HOST=${var.db-host}
-  export SECRET_KEY=${var.secret-key}
-  mkdir -pv /var/{log,run}/gunicorn/
-  chown -cR ubuntu:ubuntu /var/{log,run}/gunicorn/
-  cd /projects/jam/jam-api
-  /home/ubuntu/.pyenv/shims/gunicorn -c gunicorn.conf.py 
-  EOF
+  user_data              = <<-EOF
+	#!/bin/bash
+	export DB_NAME=${var.db-name}
+	export DB_USER=${var.db-user}
+	export DB_PASSWORD=${var.db-password}
+	export DB_HOST=${var.db-host}
+	export SECRET_KEY=${var.secret-key}
+	mkdir -pv /var/{log,run}/gunicorn/
+	chown -cR ubuntu:ubuntu /var/{log,run}/gunicorn/
+	cd /projects/jam/jam-api
+	/home/ubuntu/.pyenv/shims/gunicorn -c gunicorn.conf.py
+	EOF
   vpc_security_group_ids = [aws_security_group.jam.id]
   tags = {
     Name = "JAM"

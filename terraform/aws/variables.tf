@@ -33,6 +33,7 @@ variable "db-user" {
 variable "db-password" {
   type        = string
   nullable    = false
+  sensitive   = true
   description = "Database password."
 }
 
@@ -45,6 +46,7 @@ variable "db-host" {
 variable "secret-key" {
   type        = string
   nullable    = false
+  sensitive   = true
   description = "Django secret key."
 }
 
