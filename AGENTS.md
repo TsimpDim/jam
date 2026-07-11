@@ -59,7 +59,21 @@ docker exec jobappman-client ng test
 - **Frontend:** Angular 19.2, Clarity UI 17, Chart.js, D3.js
 - **Infrastructure:** Docker Compose, Gunicorn
 
-## Frontend Code Rules
+## Database Rules
+
+### Never delete or mutate database data without explicit permission
+
+Do not run `DELETE`, `DROP`, `TRUNCATE`, or ORM `.delete()` / `.update()` calls against the
+database unless the user explicitly asks for it. This includes Django shell one-liners,
+management commands, and raw SQL. Creating test data for validation is acceptable, but
+always clean it up the same way — never by directly reaching into the database.
+
+```bash
+# BAD — never do this
+docker exec jobappman-api bash -c '... Notification.objects.all().delete() ...'
+
+# GOOD — ask the user first, or use a reversible approach (e.g. test fixtures)
+```
 
 ### Never use two-way binding with Clarity components
 

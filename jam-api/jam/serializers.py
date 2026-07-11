@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV
+from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV, Notification, NotificationType
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -97,3 +97,13 @@ class LeadSnapshotSerializer(serializers.ModelSerializer):
     class Meta:
         model = LeadSnapshot
         fields = "__all__"
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    notification_type = serializers.CharField(source='notification_type.code', read_only=True)
+    status = serializers.CharField(source='notification_type.status', read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'notification_type', 'status', 'text', 'is_read', 'created_at']
+        read_only_fields = fields

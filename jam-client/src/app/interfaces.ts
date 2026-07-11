@@ -230,3 +230,16 @@ export interface CoverLetterGenerationRequest {
   created_at: string;
   completed_at: string | null;
 }
+
+export interface AppNotification {
+  id: number;
+  notification_type: string;
+  status: 'success' | 'error' | 'info' | 'warning';
+  text: string;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}

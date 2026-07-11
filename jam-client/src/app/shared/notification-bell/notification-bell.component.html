@@ -1,0 +1,72 @@
+<div class="notification-bell-wrapper">
+  <button
+    class="bell-btn header-action-btn"
+    type="button"
+    (click)="toggle(); $event.stopPropagation()"
+    [attr.aria-label]="notificationService.unreadCount() > 0
+      ? 'Notifications (' + notificationService.unreadCount() + ' unread)'
+      : 'Notifications'"
+    [attr.aria-expanded]="isOpen()"
+  >
+    <cds-icon shape="bell" size="md"></cds-icon>
+    <span
+      class="badge"
+      [class.has-count]="notificationService.unreadCount() > 0"
+      aria-hidden="true"
+    >{{ notificationService.unreadCount() }}</span>
+  </button>
+
+  @if (isOpen()) {
+    <div class="notification-dropdown" (click)="$event.stopPropagation()" role="menu">
+      <div class="dropdown-header">
+        <span class="dropdown-title">Notifications</span>
+        <label class="new-only-toggle">
+          <input
+            type="checkbox"
+            [checked]="notificationService.newOnly()"
+            (change)="toggleNewOnly()"
+          />
+          New only
+        </label>
+      </div>
+      <div class="dropdown-list">
+        @if (notificationService.loading()) {
+          <div class="status-message">Loading notifications...</div>
+        } @else if (notificationService.filteredNotifications().length === 0) {
+          <div class="status-message">
+            @if (notificationService.newOnly()) {
+              No unread notifications
+            } @else {
+              No notifications yet
+            }
+          </div>
+        } @else {
+          @for (n of notificationService.filteredNotifications(); track n.id) {
+            <div
+              class="notification-item"
+              [class.unread]="!n.is_read"
+              (click)="onNotificationClick(n)"
+              (keydown.enter)="onNotificationClick(n)"
+              (keydown.space)="onNotificationClick(n); $event.preventDefault()"
+              role="menuitem"
+              tabindex="0"
+            >
+              <div class="unread-dot" aria-hidden="true"></div>
+              <cds-icon
+                [shape]="statusIcon(n.status)"
+                size="md"
+                [class]="'status-' + n.status"
+                class="status-icon"
+                aria-hidden="true"
+              ></cds-icon>
+              <div class="notification-body">
+                <span class="notification-text">{{ n.text }}</span>
+                <span class="notification-time">{{ n.created_at | date:'short' }}</span>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</div>

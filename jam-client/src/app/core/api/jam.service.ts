@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  AppNotification,
   CVReview,
   CoverLetterGenerationRequest,
   ExperienceLevel,
@@ -10,6 +11,7 @@ import {
   Industry,
   LeadGenerationRequest,
   Role,
+  UnreadCountResponse,
   UserInfo,
   City,
   Country,
@@ -481,5 +483,26 @@ export class JamService {
       default:
         return new Observable();
     }
+  }
+
+  getNotifications(): Observable<AppNotification[]> {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/jam/notifications/'
+    );
+  }
+
+  markNotificationRead(id: number): Observable<{ status: string }> {
+    return this.runHttpCall(
+      'PATCH',
+      environment.apiUrl + '/jam/notifications/' + id + '/mark-read/'
+    );
+  }
+
+  getUnreadNotificationCount(): Observable<UnreadCountResponse> {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/jam/notifications/unread-count/'
+    );
   }
 }

@@ -3,6 +3,7 @@ from django.utils import timezone
 from special.models import CoverLetterGenerationRequest
 from special.prompts import build_cover_letter_prompt
 from special.aws_client import AwsClient
+from jam.models import Notification, NotificationType
 
 
 class Command(BaseCommand):
@@ -70,6 +71,10 @@ class Command(BaseCommand):
                 request.is_done = True
                 request.completed_at = timezone.now()
                 request.save()
+
+                notif_type = NotificationType.objects.get(code='cover_letter_done')
+                text = notif_type.text_template.format(company=request.lead.company)
+                Notification.objects.create(user=request.user, notification_type=notif_type, text=text)
 
                 self.stdout.write(
                     self.style.SUCCESS(

@@ -3,6 +3,7 @@ from django.utils import timezone
 from special.models import CVReview
 from special.prompts import *
 from special.aws_client import AwsClient
+from jam.models import Notification, NotificationType
 
 
 class Command(BaseCommand):
@@ -57,6 +58,10 @@ class Command(BaseCommand):
                 review.is_done = True
                 review.completed_at = timezone.now()
                 review.save()
+
+                notif_type = NotificationType.objects.get(code='cv_review_done')
+                text = notif_type.text_template.format(industry=industry)
+                Notification.objects.create(user=review.user, notification_type=notif_type, text=text)
 
                 self.stdout.write(self.style.SUCCESS(f'Successfully processed review for CV: {review.cv.key}'))
             except Exception as e:

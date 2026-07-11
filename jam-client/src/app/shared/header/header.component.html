@@ -56,6 +56,7 @@
     </ng-container>
   </div>
   <div class="header-actions">
+    <app-notification-bell *ngIf="isLoggedIn"></app-notification-bell>
     <button
       class="theme-toggle"
       type="button"

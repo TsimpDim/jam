@@ -116,3 +116,33 @@ class Timeline(models.Model):
             self.date = datetime.now()
 
         super().save(*args, **kwargs)
+
+
+class NotificationType(models.Model):
+    NOTIFICATION_STATUSES = [
+        ('success', 'Success'),
+        ('error', 'Error'),
+        ('info', 'Info'),
+        ('warning', 'Warning'),
+    ]
+
+    code = models.CharField(max_length=100, unique=True)
+    text_template = models.CharField(max_length=500)
+    status = models.CharField(max_length=20, choices=NOTIFICATION_STATUSES, default='info')
+
+    def __str__(self):
+        return f"{self.code} ({self.status})"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    notification_type = models.ForeignKey(NotificationType, on_delete=models.PROTECT)
+    text = models.CharField(max_length=500)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"[{'read' if self.is_read else 'unread'}] {self.user.username}: {self.text[:50]}"

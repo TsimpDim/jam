@@ -12,9 +12,10 @@ from .serializers import (
     StepSerializer,
     TimelineSerializer,
     LeadSerializer,
-    CVSerializer
+    CVSerializer,
+    NotificationSerializer,
 )
-from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV, UserProfile
+from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV, UserProfile, Notification, NotificationType
 from .utils import remove_circular_links
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -662,3 +663,23 @@ class CVViewSet(viewsets.ModelViewSet):
         filename = cv.file.name.split('/')[-1]
         response = FileResponse(file_handle, as_attachment=True, filename=filename)
         return response
+
+
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)
+
+    @action(detail=True, methods=['patch'], url_path='mark-read')
+    def mark_read(self, request, pk=None):
+        notification = self.get_object()
+        notification.is_read = True
+        notification.save(update_fields=['is_read'])
+        return Response({'status': 'ok'})
+
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        count = Notification.objects.filter(user=request.user, is_read=False).count()
+        return Response({'count': count})

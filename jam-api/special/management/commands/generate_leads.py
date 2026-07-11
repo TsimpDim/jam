@@ -4,7 +4,7 @@ from special.models import LeadGenerationRequest
 from special.prompts import build_lead_generation_prompt
 from special.aws_client import AwsClient
 from special.web_search import WebSearch
-from jam.models import Lead
+from jam.models import Lead, Notification, NotificationType
 import json
 import re
 
@@ -82,6 +82,11 @@ class Command(BaseCommand):
                     request.is_done = True
                     request.completed_at = timezone.now()
                     request.save()
+                    notif_type = NotificationType.objects.get(code='lead_generation_empty')
+                    role_str = f"{', '.join(roles)} " if roles else ""
+                    country_str = ", ".join(countries) if countries else "all locations"
+                    text = notif_type.text_template.format(role_str=role_str, country_str=country_str)
+                    Notification.objects.create(user=request.user, notification_type=notif_type, text=text)
                     self.stdout.write(self.style.WARNING('  No search results found. Skipping LLM call to avoid hallucinated leads. Request left pending for retry.'))
                     continue
 
@@ -153,6 +158,11 @@ class Command(BaseCommand):
                     request.is_done = True
                     request.completed_at = timezone.now()
                     request.save()
+                    notif_type = NotificationType.objects.get(code='lead_generation_done')
+                    role_str = f"{', '.join(roles)} " if roles else ""
+                    country_str = ", ".join(countries) if countries else "all locations"
+                    text = notif_type.text_template.format(count=saved_count, role_str=role_str, country_str=country_str)
+                    Notification.objects.create(user=request.user, notification_type=notif_type, text=text)
                     self.stdout.write(self.style.SUCCESS(f'Successfully processed lead generation request for user: {request.user.username}'))
                 except json.JSONDecodeError as e:
                     self.stdout.write(self.style.ERROR(f'  Error decoding JSON response: {str(e)}'))

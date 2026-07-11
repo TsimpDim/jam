@@ -2,6 +2,7 @@ import '@cds/core/icon/register.js';
 import {
   ClarityIcons,
   barsIcon,
+  bellIcon,
   blockIcon,
   blocksGroupIcon,
   boltIcon,
@@ -13,6 +14,8 @@ import {
   colorPaletteIcon,
   downloadIcon,
   dragHandleIcon,
+  exclamationCircleIcon,
+  exclamationTriangleIcon,
   fileIcon,
   filter2Icon,
   flagIcon,
@@ -33,13 +36,16 @@ import {
   sunIcon,
   trashIcon,
   uploadIcon,
+  windowCloseIcon,
 } from '@cds/core/icon';
 
 export function registerIcons(): void {
   ClarityIcons.addIcons(
     barsIcon,
+    bellIcon,
     blockIcon,
     blocksGroupIcon,
+    boltIcon,
     calendarIcon,
     checkCircleIcon,
     clipboardIcon,
@@ -48,6 +54,8 @@ export function registerIcons(): void {
     colorPaletteIcon,
     downloadIcon,
     dragHandleIcon,
+    exclamationCircleIcon,
+    exclamationTriangleIcon,
     fileIcon,
     filter2Icon,
     flagIcon,
@@ -68,6 +76,6 @@ export function registerIcons(): void {
     sunIcon,
     trashIcon,
     uploadIcon,
-    boltIcon
+    windowCloseIcon,
   );
 }

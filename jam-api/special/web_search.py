@@ -68,7 +68,7 @@ class WebSearch:
                 client, queries, max_results_per_query)
         else:
             queries = WebSearch._build_company_queries_ddgs(
-                industries, countries, country_codes, cities, modes, company_sizes)
+                industries, countries, cities, modes, company_sizes)
             results = WebSearch._run_queries_ddgs(queries, max_results_per_query)
 
         deduped = WebSearch._deduplicate_by_url(results)
