@@ -1,0 +1,33 @@
+#!/bin/bash
+# Pre-commit hook — run tests before committing
+
+set -e
+
+echo "=== Running frontend unit tests ==="
+cd "$(git rev-parse --show-toplevel)/jam-client"
+npx ng test --no-watch --browsers=ChromeHeadless 2>&1 | grep -E "(SUCCESS|FAILED|TOTAL|tests? in)" | tail -3
+FRONTEND_RESULT=${PIPESTATUS[0]}
+
+echo ""
+
+if [ $FRONTEND_RESULT -ne 0 ]; then
+  echo "❌ Frontend tests failed. Commit aborted."
+  echo "   Fix failing tests or use 'git commit --no-verify' to bypass."
+  exit 1
+fi
+
+echo "=== Running backend unit tests ==="
+cd "$(git rev-parse --show-toplevel)/jam-api"
+docker exec jobappman-api python manage.py test jam auth special extapi --settings=core.settings.test --verbosity=1 2>&1 | tail -3
+BACKEND_RESULT=${PIPESTATUS[0]}
+
+echo ""
+
+if [ $BACKEND_RESULT -ne 0 ]; then
+  echo "❌ Backend tests failed. Commit aborted."
+  echo "   Fix failing tests or use 'git commit --no-verify' to bypass."
+  exit 1
+fi
+
+echo "✅ All tests passed."
+exit 0

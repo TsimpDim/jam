@@ -113,3 +113,139 @@ ngOnChanges(changes: SimpleChanges) {
   }
 }
 ```
+
+## Testing
+
+### Backend (Django)
+
+**Where to write tests:** Place test files in `jam-api/<app>/tests/`. Each test module mirrors the source layout:
+```
+jam-api/
+├── jam/tests/
+│   ├── __init__.py
+│   ├── test_models.py
+│   ├── test_serializers.py
+│   ├── test_views.py
+│   ├── test_signals.py
+│   ├── test_validators.py
+│   └── test_utils.py
+├── special/tests/
+│   ├── __init__.py
+│   ├── test_models.py
+│   ├── test_serializers.py
+│   ├── test_views.py
+│   └── test_commands.py
+├── auth/tests/
+│   └── test_views.py
+└── extapi/tests/
+    └── test_views.py
+```
+
+**How to write backend tests:**
+- Use Django's `TestCase` (from `django.test`).
+- Use `APIClient` (from `rest_framework.test`) for view tests, with `force_authenticate(user=self.user)`.
+- Use `call_command` from `django.core.management` for management command tests.
+- Mock external services (`AwsClient`, `WebSearch`) with `unittest.mock.patch`.
+- Use in-memory SQLite via `--settings=core.settings.test` (defined in `jam-api/core/settings/test.py`).
+- Account for signal-created data (user creation triggers default profile, steps, and group).
+
+**How to execute backend tests:**
+```bash
+# Run all backend tests
+docker exec jobappman-api python manage.py test jam auth special extapi --settings=core.settings.test
+
+# Run a single test class
+docker exec jobappman-api python manageystone test jam.tests.test_views.LeadViewSetTest --settings=core.settings.test
+
+# Run a single test method
+docker exec jobappman-api python manage.py test jam.tests.test_models.LeadModelTest.test_create_lead --settings=core.settings.test
+
+# Test shortcut via ctrl.sh
+./scripts/ctrl.sh test api
+```
+
+### Frontend (Angular)
+
+**Where to write tests:** Place spec files next to the source file they test (Angular convention):
+```
+jam-client/src/app/
+├── core/
+│   ├── api/
+│   │   ├── jam.service.ts
+│   │   ├── jam.service.spec.ts          # API call tests with HttpTestingController
+│   │   └── special.service.ts
+│   └── services/
+│       ├── auth.service.ts
+│       ├── auth.service.spec.ts          # Login/register/session state
+│       ├── notification.service.spec.ts  # Polling, signals, mark-as-read, filters
+│       └── theme.service.spec.ts         # localStorage persistence, dark mode
+├── shared/
+│   ├── header/
+│   │   ├── header.component.ts
+│   │   ├── header.component.spec.ts     # Mobile menu toggle, auth visibility
+│   │   └── header.component.html
+│   ├── job-nav/
+│   │   ├── job-nav.component.ts
+│   │   ├── job-nav.component.spec.ts    # Reorder, search, sort, localStorage
+│   │   └── job-nav.component.html
+│   └── notification-bell/
+│       ├── notification-bell.component.ts
+│       ├── notification-bell.component.spec.ts  # Click to read, keyboard, open/close
+│       └── notification-bell.component.html
+├── modals/
+│   ├── confirm-modal/
+│   │   ├── confirm-modal.component.spec.ts  # Emit confirmed/cancelled, ESC/backdrop
+│   ├── cv-upload-modal/
+│   │   ├── cv-upload-modal.component.spec.ts  # File validators (.pdf/.doc/.docx, size)
+│   └── lead-generation-modal/
+│       └── lead-generation-modal-validators.spec.ts  # Form validators (countries, roles, etc.)
+├── pages/
+│   ├── applications/
+│   │   ├── applications.component.spec.ts  # Delete confirmation, sort, notes
+│   ├── leads/
+│   │   ├── leads.component.spec.ts          # Filters, delete confirmation, form validation
+│   └── auth/register/
+│       └── register.component.spec.ts       # Password match/minlength, email format
+```
+
+**How to write frontend tests (Angular 19+ / standalone components):**
+- **Always use standalone components** — `imports: [ComponentUnderTest]`, never `declarations`.
+- **Use modern providers** — `provideHttpClient()`, `provideHttpClientTesting()` (not `HttpClientTestingModule`), `provideRouter([])` (not `RouterTestingModule`), `provideNoopAnimations()` (for Clarity components).
+- **Spy on services** with `jasmine.createSpyObj` and pass via providers.
+- **Spy on localStorage** directly with `spyOn(localStorage, 'getItem')`.
+- **Use signals** in service mocks: expose readonly signal properties on the spy object via the third arg of `createSpyObj`.
+- **Use `provideNoopAnimations()`** when testing any component that renders Clarity `clr-modal` or other animated elements (prevents `Unexpected synthetic listener` errors).
+
+Example pattern for component tests:
+```typescript
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+
+await TestBed.configureTestingModule({
+  imports: [ComponentUnderTest],
+  providers: [
+    provideNoopAnimations(),
+    provideHttpClient(),
+    provideHttpClientTesting(),
+    provideRouter([]),
+    { provide: MyService, useValue: myServiceSpy },
+  ],
+}).compileComponents();
+```
+
+**How to execute frontend tests:**
+```bash
+# Run all frontend tests (inside running Docker container)
+docker exec jobappman-client ng test --no-watch --browsers=ChromeHeadless
+
+# Run a single spec file
+docker exec jobappman-client npx ng test --no-watch --browsers=ChromeHeadless --include='**/header.component.spec.ts'
+
+# Watch mode (leave container running with test runner)
+docker exec -it jobappman-client ng test --browsers=ChromeHeadless
+
+# Run on host (requires Chrome installed locally)
+npx ng test --no-watch --browsers=ChromeHeadless
+```
