@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SpecialService } from 'src/app/core/api/special.service';
 import { CV, CVReview, UserInfo } from 'src/app/interfaces';
 import { CvUploadModalComponent } from '../../modals/cv-upload-modal/cv-upload-modal.component';
 import { CVReviewModalComponent } from '../../modals/cv-review-request-modal/cv-review-request-modal.component';
@@ -52,6 +53,7 @@ export class CvComponent implements OnInit {
 
   constructor(
     private jamService: JamService,
+    private specialService: SpecialService,
     private snackbarService: SnackbarService
   ) {}
 
@@ -91,7 +93,7 @@ export class CvComponent implements OnInit {
   }
 
   loadReviewsForCV(cvId: number): void {
-    this.jamService.getCVReviews(cvId).subscribe({
+    this.specialService.getCVReviews(cvId).subscribe({
       next: (reviews) => {
         this.cvReviews.set(cvId, reviews);
       },
@@ -258,7 +260,7 @@ export class CvComponent implements OnInit {
       roles: payload.roles,
     };
 
-    this.jamService.requestCVReview(reviewPayload).subscribe({
+    this.specialService.requestCVReview(reviewPayload).subscribe({
       next: (review) => {
         this.showReviewRequestModal = false;
         this.requestingReviewCvId = null;

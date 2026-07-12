@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
-import { JamService } from '../api/jam.service';
+import { SpecialService } from '../api/special.service';
 import { ExperienceLevel, Industry, Role, City, Country } from '../../interfaces';
 
 @Injectable({
@@ -13,18 +13,18 @@ export class ReferenceDataService {
   private countries$?: Observable<Country[]>;
   private cities$?: Observable<City[]>;
 
-  constructor(private jamService: JamService) {}
+  constructor(private specialService: SpecialService) {}
 
   getIndustries(): Observable<Industry[]> {
     if (!this.industries$) {
-      this.industries$ = this.jamService.getIndustries().pipe(shareReplay(1));
+      this.industries$ = this.specialService.getIndustries().pipe(shareReplay(1));
     }
     return this.industries$;
   }
 
   getExperienceLevels(): Observable<ExperienceLevel[]> {
     if (!this.experienceLevels$) {
-      this.experienceLevels$ = this.jamService
+      this.experienceLevels$ = this.specialService
         .getExperienceLevels()
         .pipe(shareReplay(1));
     }
@@ -33,7 +33,7 @@ export class ReferenceDataService {
 
   getRoles(): Observable<Role[]> {
     if (!this.roles$) {
-      this.roles$ = this.jamService.getRoles().pipe(shareReplay(1));
+      this.roles$ = this.specialService.getRoles().pipe(shareReplay(1));
     }
     return this.roles$;
   }
@@ -42,19 +42,19 @@ export class ReferenceDataService {
     if (!term || term.length < 2) {
       return this.getRoles();
     }
-    return this.jamService.getRoles(term);
+    return this.specialService.getRoles(term);
   }
 
   getCountries(): Observable<Country[]> {
     if (!this.countries$) {
-      this.countries$ = this.jamService.getCountries().pipe(shareReplay(1));
+      this.countries$ = this.specialService.getCountries().pipe(shareReplay(1));
     }
     return this.countries$;
   }
 
   getCities(): Observable<City[]> {
     if (!this.cities$) {
-      this.cities$ = this.jamService.getCities().pipe(shareReplay(1));
+      this.cities$ = this.specialService.getCities().pipe(shareReplay(1));
     }
     return this.cities$;
   }

@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
+import { SpecialService } from 'src/app/core/api/special.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { LeadGenerationModalComponent } from 'src/app/modals/lead-generation-modal/lead-generation-modal.component';
 import { CoverLetterGenerationModalComponent } from 'src/app/modals/cover-letter-generation-modal/cover-letter-generation-modal.component';
@@ -58,6 +59,7 @@ export class LeadsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private jamService: JamService,
+    private specialService: SpecialService,
     private snackbarService: SnackbarService,
   ) {
     this.leadForm = this.formBuilder.group({
@@ -92,7 +94,7 @@ export class LeadsComponent implements OnInit {
   }
 
   loadLeadGenerationStatus(checkQuota: boolean): void {
-    this.jamService.getLeadGenerationRequests().subscribe((requests) => {
+    this.specialService.getLeadGenerationRequests().subscribe((requests) => {
       this.inProgressCount = requests.filter(
         (req) => req.is_done === false,
       ).length;
@@ -317,7 +319,7 @@ export class LeadsComponent implements OnInit {
 
   onLeadGenerationSubmitted(payload: any) {
     this.loading = true;
-    this.jamService.createLeadGenerationRequest(payload).subscribe({
+    this.specialService.createLeadGenerationRequest(payload).subscribe({
       next: () => {
         this.snackbarService.showSuccess(
           'Lead generation request submitted successfully.',
@@ -359,7 +361,7 @@ export class LeadsComponent implements OnInit {
 
   onCoverLetterSubmitted(payload: { cv: number; lead: number }) {
     this.loading = true;
-    this.jamService.createCoverLetterRequest(payload).subscribe({
+    this.specialService.createCoverLetterRequest(payload).subscribe({
       next: () => {
         this.snackbarService.showSuccess(
           'Cover letter generation request submitted successfully.',
@@ -393,7 +395,7 @@ export class LeadsComponent implements OnInit {
   }
 
   loadCoverLetterRequests(): void {
-    this.jamService.getCoverLetterRequests().subscribe((requests) => {
+    this.specialService.getCoverLetterRequests().subscribe((requests) => {
       this.coverLetterRequests.clear();
       for (const req of requests) {
         const arr = this.coverLetterRequests.get(req.lead) || [];

@@ -5,6 +5,16 @@ declare -A dcfiles=(
     ["client"]="jam-client/docker-compose-client.yml"
 )
 
+if [[ $1 == "test" ]]; then
+    if [[ $2 == "api" ]]; then
+        docker exec jobappman-api python manage.py test jam auth special extapi --settings=core.settings.test
+    else
+        echo "Tests are only available for the api service."
+        exit 1
+    fi
+    exit $?
+fi
+
 if [[ $1 == "start" ]]; then
     cmd="up -d"
 else
