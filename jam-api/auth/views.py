@@ -67,30 +67,9 @@ class LoginView(generics.GenericAPIView):
     def post(self, request):
         user = _authenticate_or_error(request)
         login(request, user)
-        # Ensure CSRF cookie is set for subsequent requests
-        csrf_token = get_token(request)
+        get_token(request)
 
-        # DEBUG: log cookie settings to diagnose 403 after login
-        print(
-            "[DEBUG LoginView] SESSION_COOKIE_DOMAIN=%r SESSION_COOKIE_SAMESITE=%r "
-            "SESSION_COOKIE_SECURE=%r CSRF_COOKIE_DOMAIN=%r session_key=%r "
-            "request.scheme=%r HTTP_X_FORWARDED_PROTO=%r csrftoken(first8)=%s",
-            getattr(settings, "SESSION_COOKIE_DOMAIN", "NOT SET"),
-            getattr(settings, "SESSION_COOKIE_SAMESITE", "NOT SET"),
-            getattr(settings, "SESSION_COOKIE_SECURE", "NOT SET"),
-            getattr(settings, "CSRF_COOKIE_DOMAIN", "NOT SET"),
-            request.session.session_key,
-            request.scheme,
-            request.META.get("HTTP_X_FORWARDED_PROTO", "NOT SET"),
-            csrf_token[:8] if csrf_token else "NONE",
-        )
-
-        response = Response({"user": {"pk": user.pk, "username": user.username}})
-        # DEBUG: expose cookie domain in response header so it's visible in browser DevTools
-        response["X-Debug-Session-Cookie-Domain"] = str(
-            getattr(settings, "SESSION_COOKIE_DOMAIN", "None")
-        )
-        return response
+        return Response({"user": {"pk": user.pk, "username": user.username}})
 
 
 class LogoutView(generics.GenericAPIView):

@@ -58,7 +58,15 @@ describe('HeaderComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         provideNoopAnimations(),
-        provideRouter([]),
+        provideRouter([
+          { path: 'auth/login', component: {} as any },
+          { path: 'auth/register', component: {} as any },
+          { path: 'applications', component: {} as any },
+          { path: 'steps', component: {} as any },
+          { path: 'leads', component: {} as any },
+          { path: 'cv', component: {} as any },
+          { path: 'analytics', component: {} as any },
+        ]),
         { provide: AuthService, useFactory: createMockAuth },
         { provide: ThemeService, useFactory: createMockTheme },
         { provide: NotificationService, useFactory: createMockNotification },

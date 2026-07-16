@@ -68,7 +68,10 @@ describe('AuthService', () => {
     it('should emit true after setStatusLoggedIn', (done) => {
       service.setStatusLoggedIn();
       service.loggedIn$.subscribe((val) => {
-        if (val === true) done();
+        if (val !== null) {
+          expect(val).toBeTrue();
+          done();
+        }
       });
     });
   });

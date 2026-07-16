@@ -3,23 +3,27 @@
 
 set -e
 
+# Clear Angular cache (may be owned by root from Docker)
+rm -rf "$(git rev-parse --show-toplevel)/jam-client/.angular" 2>/dev/null || true
+
 echo "=== Running frontend unit tests ==="
 cd "$(git rev-parse --show-toplevel)/jam-client"
-npx ng test --no-watch --browsers=ChromeHeadless 2>&1 | grep -E "(SUCCESS|FAILED|TOTAL|tests? in)" | tail -3
-FRONTEND_RESULT=${PIPESTATUS[0]}
+npx ng test --no-watch --browsers=ChromeHeadless
+FRONTEND_RESULT=$?
 
 echo ""
 
 if [ $FRONTEND_RESULT -ne 0 ]; then
   echo "❌ Frontend tests failed. Commit aborted."
   echo "   Fix failing tests or use 'git commit --no-verify' to bypass."
+  echo $FRONTEND_RESULT
   exit 1
 fi
 
 echo "=== Running backend unit tests ==="
 cd "$(git rev-parse --show-toplevel)/jam-api"
-docker exec jobappman-api python manage.py test jam auth special extapi --settings=core.settings.test --verbosity=1 2>&1 | tail -3
-BACKEND_RESULT=${PIPESTATUS[0]}
+docker exec jobappman-api python manage.py test jam auth special extapi --settings=core.settings.test --verbosity=1
+BACKEND_RESULT=$?
 
 echo ""
 

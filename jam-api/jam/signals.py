@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 import threading
 import jam.utils as utils
 
-
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -28,23 +27,19 @@ def create_first_hist(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=JobApplication)
 def create_job_ad_snapshot(sender, instance, created, **kwargs):
-    print(f"fetch_job_ad_snapshot signal fired: created={created}, external_link={instance.external_link}")
     if instance.external_link is None:
         return
     
     def fetch():
         try:
             text = utils.fetch_job_ad_snapshot(instance.external_link)
-            print(f"fetch result: {text[:100] if text else 'None'}")
             if text:
                 JobAdSnapshot.objects.update_or_create(
                     job_application=instance,
                     defaults={'text': text}
                 )
-                print(f"Snapshot created/updated for job app {instance.id}")
         except Exception as e:
-            print(f"Error creating snapshot: {e}")
-    
+            pass
     thread = threading.Thread(target=fetch)
     thread.start()
 
@@ -63,10 +58,8 @@ def create_lead_snapshot(sender, instance, created, **kwargs):
                     lead=instance,
                     defaults={'text': text}
                 )
-                print(f"Snapshot created/updated for lead {instance.id}")
         except Exception as e:
-            print(f"Error creating lead snapshot: {e}")
-
+            pass
     thread = threading.Thread(target=fetch)
     thread.start()
 
