@@ -4,6 +4,9 @@ services:
     container_name: jobappman-client
     volumes:
       - .:/jam-client
+      - /jam-client/node_modules
+      - /jam-client/.angular
+      - /jam-client/dist
     ports:
       - "81:81"
     command: sh -c "npm install && /jam-client/node_modules/@angular/cli/bin/ng.js serve --live-reload --host 0.0.0.0 --port 81"
