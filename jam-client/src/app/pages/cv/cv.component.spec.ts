@@ -16,7 +16,7 @@ describe('CvComponent', () => {
   beforeEach(async () => {
     jamServiceSpy = jasmine.createSpyObj('JamService', ['getCVs', 'deleteCV', 'downloadCV', 'getUserInfo']);
     jamServiceSpy.getCVs.and.returnValue(of([]));
-    jamServiceSpy.getUserInfo.and.returnValue(of({ pk: 1, username: 'alice', is_premium: false, cv_limit: 1, cv_count: 0 }));
+    jamServiceSpy.getUserInfo.and.returnValue(of({ pk: 1, username: 'alice', is_premium: false, cv_limit: 1, cv_count: 0, file_limit_per_app: 5, lead_gen_limit_per_day: null, lead_gen_used_today: 0, cv_review_limit_per_day: null, cv_review_used_today: 0 } as any));
 
     const specialSpy = jasmine.createSpyObj('SpecialService', [
       'getCVReviews', 'getIndustries', 'getExperienceLevels', 'getRoles',

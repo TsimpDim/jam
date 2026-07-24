@@ -7,8 +7,14 @@ from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from jam.models import CV
+from jam.models import CV, UserProfile
+from jam.validators import (
+    JOB_APP_FILE_LIMIT_FREE, JOB_APP_FILE_LIMIT_PREMIUM,
+    LEAD_GENERATION_LIMIT_PER_DAY_FREE, CV_REVIEW_LIMIT_PER_DAY_FREE,
+)
+from special.models import CVReview, LeadGenerationRequest
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -110,12 +116,35 @@ class MeView(generics.GenericAPIView):
         is_premium = user_profile.is_premium if user_profile else False
         cv_limit = user_profile.get_user_cv_limit()
         cv_count = CV.objects.filter(user=request.user).count()
+
+        today = timezone.now().date()
+        lead_gen_used_today = LeadGenerationRequest.objects.filter(
+            user=request.user, created_at__date=today
+        ).count()
+        cv_review_used_today = CVReview.objects.filter(
+            user=request.user, created_at__date=today
+        ).count()
+
+        if is_premium:
+            file_limit = JOB_APP_FILE_LIMIT_PREMIUM
+            lead_gen_limit = None
+            cv_review_limit = None
+        else:
+            file_limit = JOB_APP_FILE_LIMIT_FREE
+            lead_gen_limit = LEAD_GENERATION_LIMIT_PER_DAY_FREE
+            cv_review_limit = CV_REVIEW_LIMIT_PER_DAY_FREE
+
         return Response({
             "pk": request.user.pk,
             "username": request.user.username,
             "is_premium": is_premium,
             "cv_limit": cv_limit,
-            "cv_count": cv_count
+            "cv_count": cv_count,
+            "file_limit_per_app": file_limit,
+            "lead_gen_limit_per_day": lead_gen_limit,
+            "lead_gen_used_today": lead_gen_used_today,
+            "cv_review_limit_per_day": cv_review_limit,
+            "cv_review_used_today": cv_review_used_today,
         })
 
 

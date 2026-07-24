@@ -358,6 +358,36 @@ export class JamService {
     );
   }
 
+  getJobAppFiles(jobAppId: number) {
+    return this.runHttpCall(
+      'GET',
+      environment.apiUrl + '/jam/jobapp-files/by-jobapp/' + jobAppId + '/'
+    );
+  }
+
+  uploadJobAppFile(jobAppId: number, file: File) {
+    const formData = new FormData();
+    formData.append('job_application', jobAppId.toString());
+    formData.append('file', file);
+    return this.http.post(environment.apiUrl + '/jam/jobapp-files/', formData);
+  }
+
+  deleteJobAppFile(fileId: number) {
+    return this.runHttpCall(
+      'DELETE',
+      environment.apiUrl + '/jam/jobapp-files/' + fileId + '/'
+    );
+  }
+
+  downloadJobAppFile(fileId: number): Observable<Blob> {
+    return this.http.get(
+      environment.apiUrl + '/jam/jobapp-files/' + fileId + '/download/',
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+
   getUserInfo(): Observable<UserInfo> {
     return this.runHttpCall('GET', environment.apiUrl + '/auth/me/');
   }

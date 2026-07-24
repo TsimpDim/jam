@@ -1,0 +1,93 @@
+.file-upload-section {
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+.drop-zone {
+  width: 100%;
+  border: 2px dashed var(--clr-global-border-color, #ccc);
+  border-radius: 8px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--clr-global-text2, #999);
+  box-sizing: border-box;
+
+  &:hover {
+    border-color: var(--clr-color-action-600, #5584ff);
+    color: var(--clr-color-action-600, #5584ff);
+  }
+
+  &.drag-over {
+    border-color: var(--clr-color-action-600, #5584ff);
+    background-color: var(--clr-color-action-50, #f0f4ff);
+    color: var(--clr-color-action-600, #5584ff);
+  }
+}
+
+.file-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.file-card {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--clr-global-border-color, #ddd);
+  border-radius: 6px;
+  background: var(--clr-global-app-background, #fff);
+  max-width: 220px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .file-icon {
+    flex-shrink: 0;
+    color: var(--clr-color-action-600, #5584ff);
+  }
+
+  .file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.8rem;
+    color: var(--clr-global-text1, #333);
+  }
+
+  .card-action-btn {
+    flex-shrink: 0;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    cds-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .delete-btn {
+    color: var(--clr-color-danger-700, #c92100);
+  }
+}
+

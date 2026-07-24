@@ -1,0 +1,55 @@
+<div class="file-upload-section" *ngIf="jobAppId">
+  <input
+    #fileInput
+    type="file"
+    multiple
+    hidden
+    (change)="onFileSelected($event)"
+  />
+
+  <div
+    *ngIf="showDropZone"
+    class="drop-zone"
+    [class.drag-over]="isDragOver"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    (click)="fileInput.click()"
+  >
+    <cds-icon shape="upload-cloud" size="md"></cds-icon>
+    <span>Drop files here or click to browse</span>
+  </div>
+
+  <clr-spinner
+    *ngIf="loading"
+    [clrMedium]="true"
+    [clrInline]="true"
+    [clrInverse]="true"
+  ></clr-spinner>
+
+  <div class="file-cards" *ngIf="files.length > 0">
+    <div
+      class="file-card"
+      *ngFor="let f of files"
+      (click)="downloadFile(f, $event)"
+    >
+      <cds-icon shape="file" size="md" class="file-icon"></cds-icon>
+      <span class="file-name" [title]="f.name">{{ f.name }}</span>
+      <button
+        class="btn btn-sm btn-icon card-action-btn"
+        (click)="downloadFile(f, $event)"
+        title="Download"
+      >
+        <cds-icon shape="download"></cds-icon>
+      </button>
+      <button
+        class="btn btn-sm btn-icon card-action-btn delete-btn"
+        (click)="deleteFile(f, $event)"
+        title="Delete"
+      >
+        <cds-icon shape="trash"></cds-icon>
+      </button>
+    </div>
+
+  </div>
+</div>

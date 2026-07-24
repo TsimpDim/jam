@@ -5,6 +5,7 @@ from django.utils import timezone
 from .models import CVReview, LeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
 from .serializers import CVReviewSerializer, LeadGenerationRequestSerializer, CoverLetterGenerationRequestSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer, CountrySerializer, CitySerializer
 from jam.models import CV, Lead, UserProfile
+from jam.validators import CV_REVIEW_LIMIT_PER_DAY_FREE, LEAD_GENERATION_LIMIT_PER_DAY_FREE
 
 
 class IndustryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -80,7 +81,7 @@ class CVReviewViewSet(viewsets.ModelViewSet):
         if not user_profile.is_premium:
             today = timezone.now().date()
             today_reviews = CVReview.objects.filter(user=request.user, created_at__date=today).count()
-            if today_reviews >= 1:
+            if today_reviews >= CV_REVIEW_LIMIT_PER_DAY_FREE:
                 return Response({'error': 'Free users can only request 1 CV review per day.'}, status=status.HTTP_400_BAD_REQUEST)
 
         data = request.data.copy()
@@ -119,7 +120,7 @@ class LeadGenerationRequestViewSet(viewsets.ModelViewSet):
         if not user_profile.is_premium:
             today = timezone.now().date()
             today_requests = LeadGenerationRequest.objects.filter(user=request.user, created_at__date=today).count()
-            if today_requests >= 1:
+            if today_requests >= LEAD_GENERATION_LIMIT_PER_DAY_FREE:
                 return Response({'error': 'Free users can only request 1 lead generation per day.'}, status=status.HTTP_400_BAD_REQUEST)
 
         data = request.data.copy()
@@ -179,7 +180,7 @@ class CoverLetterGenerationRequestViewSet(viewsets.ModelViewSet):
             today_requests = CoverLetterGenerationRequest.objects.filter(
                 user=request.user, created_at__date=today
             ).count()
-            if today_requests >= 1:
+            if today_requests >= LEAD_GENERATION_LIMIT_PER_DAY_FREE:
                 return Response(
                     {'error': 'Free users can only request 1 cover letter per day.'},
                     status=status.HTTP_400_BAD_REQUEST

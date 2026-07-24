@@ -164,6 +164,19 @@
           ></textarea>
         </clr-textarea-container>
       </div>
+
+      <div class="form-section-header">
+        <cds-icon shape="file" size="14"></cds-icon>
+        Files ({{ fileCount }} / {{ fileLimit }})
+      </div>
+
+      <app-file-upload
+        *ngIf="application !== null"
+        [jobAppId]="application.id"
+        [isPremium]="isPremium"
+        [fileLimit]="fileLimit"
+        (filesChange)="onFileCountChanged($event)"
+      ></app-file-upload>
     </form>
   </div>
 

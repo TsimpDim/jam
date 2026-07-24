@@ -19,11 +19,12 @@ import {
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { FileUploadComponent } from '../../shared/file-upload/file-upload.component';
 
 @Component({
   selector: 'app-job-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule, FileUploadComponent],
   templateUrl: './job-modal.component.html',
   styleUrls: ['./job-modal.component.scss'],
 })
@@ -31,6 +32,8 @@ export class JobModalComponent implements OnInit, OnChanges {
   @Input() isOpen: boolean = false;
   @Input() application: any = null;
   @Input() groupToSelect: any = null;
+  @Input() isPremium: boolean = false;
+  @Input() fileLimit: number | null = null;
   @Output() onClose = new EventEmitter();
   @Output() onApplicationsNeedUpdate = new EventEmitter();
   @Output() onApplicationCreated = new EventEmitter<{
@@ -43,8 +46,13 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.onClose.emit();
   }
 
+  onFileCountChanged(files: any[]) {
+    this.fileCount = files.length;
+  }
+
   public jobAppForm: FormGroup;
   public loading: boolean = false;
+  public fileCount: number = 0;
   public initialSteps: any = null;
   public groups: any = null;
   public leads: any = null;

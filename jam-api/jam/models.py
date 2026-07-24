@@ -2,7 +2,7 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from dateutil.relativedelta import relativedelta
-from .validators import validate_cv_file, CV_LIMIT_FREE, CV_LIMIT_PREMIUM
+from .validators import validate_cv_file, validate_job_app_file, CV_LIMIT_FREE, CV_LIMIT_PREMIUM
 
 class Group(models.Model):
     name = models.CharField(max_length=30, null=False)
@@ -82,6 +82,20 @@ class CV(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.key}"
+
+
+class JobAppFile(models.Model):
+    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='files')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='server_data/jobapp_files/', validators=[validate_job_app_file])
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"{self.job_application.company} - {self.name}"
 
 
 class UserProfile(models.Model):

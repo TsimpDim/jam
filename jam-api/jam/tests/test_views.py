@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 from jam.models import (
-    Group, Step, Lead, JobApplication, JobAdSnapshot, LeadSnapshot,
+    Group, Step, Lead, JobApplication, JobAppFile, JobAdSnapshot, LeadSnapshot,
     CV, Timeline, NotificationType, Notification,
 )
 from jam.views import (
@@ -371,6 +371,81 @@ class CVViewSetTest(TestCase):
         cv.save()
         resp = self.client.get(f"{self.url}{cv.id}/download/")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class JobAppFileViewSetTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="alice", password="pass")
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.group = Group.objects.create(name="Tech", user=self.user)
+        self.step = Step.objects.create(name="Applied", type="S", user=self.user)
+        self.ja = JobApplication.objects.create(
+            company="Acme Corp", role="Engineer",
+            group=self.group, user=self.user,
+        )
+        self.url = "/jam/jobapp-files/"
+
+    def test_create_file(self):
+        f = SimpleUploadedFile("resume.pdf", b"%PDF-1.4 test content", content_type="application/pdf")
+        resp = self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.data["name"], "resume.pdf")
+
+    def test_list_files_by_jobapp(self):
+        f1 = SimpleUploadedFile("a.pdf", b"%PDF-1.4", content_type="application/pdf")
+        f2 = SimpleUploadedFile("b.pdf", b"%PDF-1.4", content_type="application/pdf")
+        self.client.post(self.url, {"job_application": self.ja.id, "file": f1})
+        self.client.post(self.url, {"job_application": self.ja.id, "file": f2})
+        resp = self.client.get(f"/jam/jobapp-files/by-jobapp/{self.ja.id}/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 2)
+
+    def test_create_file_exceeds_free_limit(self):
+        for i in range(5):
+            f = SimpleUploadedFile(f"file{i}.pdf", b"%PDF-1.4", content_type="application/pdf")
+            self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        f = SimpleUploadedFile("overflow.pdf", b"%PDF-1.4", content_type="application/pdf")
+        resp = self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("5 files", resp.data["error"])
+
+    def test_premium_user_can_upload_up_to_10(self):
+        self.user.profile.is_premium = True
+        self.user.profile.save()
+        for i in range(10):
+            f = SimpleUploadedFile(f"file{i}.pdf", b"%PDF-1.4", content_type="application/pdf")
+            resp = self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+            self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+    def test_premium_user_exceeds_10_limit(self):
+        self.user.profile.is_premium = True
+        self.user.profile.save()
+        for i in range(10):
+            f = SimpleUploadedFile(f"file{i}.pdf", b"%PDF-1.4", content_type="application/pdf")
+            self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        f = SimpleUploadedFile("overflow.pdf", b"%PDF-1.4", content_type="application/pdf")
+        resp = self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("10 files", resp.data["error"])
+
+    def test_limit_is_per_job_application(self):
+        ja2 = JobApplication.objects.create(
+            company="Other Corp", role="Designer",
+            group=self.group, user=self.user,
+        )
+        for i in range(5):
+            f = SimpleUploadedFile(f"file{i}.pdf", b"%PDF-1.4", content_type="application/pdf")
+            self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        f = SimpleUploadedFile("for_other.pdf", b"%PDF-1.4", content_type="application/pdf")
+        resp = self.client.post(self.url, {"job_application": ja2.id, "file": f})
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+    def test_unsupported_file_type(self):
+        f = SimpleUploadedFile("malware.exe", b"bad content", content_type="application/x-msdownload")
+        resp = self.client.post(self.url, {"job_application": self.ja.id, "file": f})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("Unsupported", resp.data["error"])
 
 
 class TimelineViewSetTest(TestCase):

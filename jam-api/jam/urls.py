@@ -9,6 +9,7 @@ router.register(r"jobapps", JobApplicationViewSet, basename="jobapps")
 router.register(r"timeline", TimelineViewSet, basename="timeline")
 router.register(r"leads", LeadViewSet, basename="leads")
 router.register(r"cvs", CVViewSet, basename="cvs")
+router.register(r"jobapp-files", JobAppFileViewSet, basename="jobapp-files")
 router.register(r"notifications", NotificationViewSet, basename="notifications")
 
 urlpatterns = [

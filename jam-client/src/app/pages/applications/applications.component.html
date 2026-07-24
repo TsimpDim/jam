@@ -30,8 +30,8 @@
               Applied through: {{ selectedApp.appliedThrough }}
             </span>
           </div>
-          <div class="card-block" *ngIf="selectedApp.notes">
-            <div class="card-text notes">
+          <div class="card-block">
+            <div class="card-text notes" *ngIf="selectedApp.notes">
               <ng-container *ngIf="isNotesLong(selectedApp.notes)">
                 <span *ngIf="!showFullNotes">{{
                   getNotesPreview(selectedApp.notes)
@@ -48,6 +48,14 @@
                 {{ selectedApp.notes }}
               </ng-container>
             </div>
+
+            <app-file-upload
+              #detailFileUpload
+              [jobAppId]="selectedApp.id"
+              [showDropZone]="false"
+              [isPremium]="isPremium"
+              [fileLimit]="fileLimit"
+            ></app-file-upload>
           </div>
           <div class="card-footer">
             <div
@@ -167,7 +175,9 @@
       [isOpen]="jobAppModalIsOpen"
       [application]="selectedApp"
       [groupToSelect]="groupToSelect"
-      (onClose)="jobAppModalIsOpen = false"
+      [isPremium]="isPremium"
+      [fileLimit]="fileLimit"
+      (onClose)="onJobAppModalClose()"
       (onApplicationsNeedUpdate)="getApplications()"
       (onApplicationCreated)="onApplicationCreated($event)"
     >

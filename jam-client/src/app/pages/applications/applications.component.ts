@@ -2,6 +2,7 @@ import {
   Component,
   HostListener,
   OnInit,
+  ViewChild,
   CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,6 +15,7 @@ import { JobModalComponent } from '../../modals/job-modal/job-modal.component';
 import { TimelineModalComponent } from '../../modals/timeline-modal/timeline-modal.component';
 import { NoteViewModalComponent } from '../../modals/note-view-modal/note-view-modal.component';
 import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
+import { FileUploadComponent } from '../../shared/file-upload/file-upload.component';
 ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
 
 @Component({
@@ -27,6 +29,7 @@ ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
     TimelineModalComponent,
     NoteViewModalComponent,
     ConfirmModalComponent,
+    FileUploadComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './applications.component.html',
@@ -55,7 +58,11 @@ export class ApplicationsComponent implements OnInit {
   public noteViewModalIsOpen: boolean = false;
   public selectedTimelineStepForNotes: any = null;
   public showFullNotes: boolean = false;
+  public isPremium: boolean = false;
+  public fileLimit: number | null = null;
   private readonly MAX_JOB_APP_NOTE_LINES = 15;
+
+  @ViewChild('detailFileUpload') detailFileUpload!: FileUploadComponent;
 
   constructor(private jamService: JamService, private snackbarService: SnackbarService) {}
 
@@ -82,6 +89,7 @@ export class ApplicationsComponent implements OnInit {
     this.getApplications();
     this.getSteps();
     this.updateTimelineLayout();
+    this.loadUserInfo();
   }
 
   onSortChange(sort: string) {
@@ -96,6 +104,15 @@ export class ApplicationsComponent implements OnInit {
 
   updateTimelineLayout() {
     this.timelineLayout = window.innerWidth < 768 ? 'vertical' : 'horizontal';
+  }
+
+  loadUserInfo() {
+    this.jamService.getUserInfo().subscribe({
+      next: (data) => {
+        this.isPremium = data.is_premium;
+        this.fileLimit = data.file_limit_per_app;
+      },
+    });
   }
 
   getApplications() {
@@ -184,6 +201,11 @@ export class ApplicationsComponent implements OnInit {
   closeAndClearJobAppModal() {
     this.jobAppModalIsOpen = false;
     this.selectedApp = null;
+  }
+
+  onJobAppModalClose() {
+    this.jobAppModalIsOpen = false;
+    this.detailFileUpload?.loadFiles();
   }
 
   onApplicationCreated(app: any) {

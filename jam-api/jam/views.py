@@ -7,6 +7,7 @@ from django.db.models.functions import TruncWeek, TruncMonth
 from .serializers import (
     GroupSerializer,
     JobApplicationSerializer,
+    JobAppFileSerializer,
     JobAdSnapshotSerializer,
     LeadSnapshotSerializer,
     StepSerializer,
@@ -15,8 +16,9 @@ from .serializers import (
     CVSerializer,
     NotificationSerializer,
 )
-from .models import Group, JobApplication, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV, UserProfile, Notification, NotificationType
+from .models import Group, JobApplication, JobAppFile, JobAdSnapshot, LeadSnapshot, Step, Timeline, Lead, CV, UserProfile, Notification, NotificationType
 from .utils import remove_circular_links
+from .validators import MAX_JOB_APP_FILE_SIZE, ALLOWED_JOB_APP_EXTENSIONS, JOB_APP_FILE_LIMIT_FREE, JOB_APP_FILE_LIMIT_PREMIUM
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -683,3 +685,85 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     def unread_count(self, request):
         count = Notification.objects.filter(user=request.user, is_read=False).count()
         return Response({'count': count})
+
+
+class JobAppFileViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = JobAppFileSerializer
+    http_method_names = ['get', 'post', 'delete', 'head', 'options']
+
+    def get_queryset(self):
+        return JobAppFile.objects.filter(user_id=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        job_application_id = request.data.get('job_application')
+        uploaded_file = request.FILES.get('file')
+
+        if not uploaded_file:
+            return Response({'error': 'No file provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not job_application_id:
+            return Response({'error': 'No job application specified.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        ext = uploaded_file.name.split('.')[-1].lower()
+        if f'.{ext}' not in ALLOWED_JOB_APP_EXTENSIONS:
+            return Response(
+                {'error': f'Unsupported file type ".{ext}". Allowed: PDF, Word, PPT, TXT, MD, images, archives, etc.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if uploaded_file.size > MAX_JOB_APP_FILE_SIZE:
+            return Response(
+                {'error': 'File size must not exceed 300MB.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        job_application = get_object_or_404(
+            JobApplication.objects.filter(user=request.user), pk=job_application_id
+        )
+
+        with transaction.atomic():
+            user_profile = UserProfile.objects.select_for_update().get(user=request.user)
+            current_file_count = JobAppFile.objects.filter(
+                job_application=job_application
+            ).count()
+            file_limit = JOB_APP_FILE_LIMIT_PREMIUM if user_profile.is_premium else JOB_APP_FILE_LIMIT_FREE
+            if current_file_count >= file_limit:
+                return Response(
+                    {'error': f'File limit reached. Maximum {file_limit} files per application.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            instance = JobAppFile(
+                job_application=job_application,
+                user=request.user,
+                file=uploaded_file,
+                name=uploaded_file.name,
+            )
+            instance.save()
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        file_to_delete = instance.file
+        response = super().destroy(request, *args, **kwargs)
+        if file_to_delete:
+            file_to_delete.delete(save=False)
+        return response
+
+    @action(detail=False, methods=['get'], url_path='by-jobapp/(?P<job_application_id>\d+)')
+    def by_jobapp(self, request, job_application_id):
+        job_application = get_object_or_404(
+            JobApplication.objects.filter(user=request.user), pk=job_application_id
+        )
+        files = JobAppFile.objects.filter(job_application=job_application)
+        return Response(JobAppFileSerializer(files, many=True).data)
+
+    @action(detail=True, methods=['get'], url_path='download')
+    def download(self, request, pk=None):
+        instance = self.get_object()
+        if not instance.file:
+            return Response({'error': 'No file attached.'}, status=status.HTTP_404_NOT_FOUND)
+        file_handle = instance.file.open('rb')
+        response = FileResponse(file_handle, as_attachment=True, filename=instance.name)
+        return response

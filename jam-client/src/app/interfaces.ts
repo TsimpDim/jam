@@ -31,6 +31,13 @@ export interface CV {
   updated_at: string;
 }
 
+export interface JobAppFile {
+  id: number;
+  name: string;
+  file: string;
+  created_at: string;
+}
+
 export interface JobApplication {
   id: number;
   company: string;
@@ -145,6 +152,11 @@ export interface UserInfo {
   is_premium: boolean;
   cv_limit: number;
   cv_count: number;
+  file_limit_per_app: number;
+  lead_gen_limit_per_day: number | null;
+  lead_gen_used_today: number;
+  cv_review_limit_per_day: number | null;
+  cv_review_used_today: number;
 }
 
 export interface Industry {

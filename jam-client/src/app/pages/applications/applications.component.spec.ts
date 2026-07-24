@@ -35,11 +35,12 @@ describe('ApplicationsComponent', () => {
       'getJobAdSnapshot', 'deleteJobApplication', 'getGroups', 'reorderGroups',
       'getLeads', 'getCVs', 'createGroup', 'updateGroup', 'deleteGroup',
       'createJobApplication', 'updateJobApplication', 'addStepToTimeline',
-      'updateTimelineStep', 'deleteTimelineStep',
+      'updateTimelineStep', 'deleteTimelineStep', 'getUserInfo',
     ]);
     jamServiceSpy.getJobApplications.and.returnValue(of(mockApplications));
     jamServiceSpy.getSteps.and.returnValue(of(mockSteps));
     jamServiceSpy.getTimeline.and.returnValue(of(mockTimeline));
+    jamServiceSpy.getUserInfo.and.returnValue(of({ pk: 1, username: 'alice', is_premium: false, cv_limit: 1, cv_count: 0, file_limit_per_app: 5, lead_gen_limit_per_day: 1, lead_gen_used_today: 0, cv_review_limit_per_day: 1, cv_review_used_today: 0 } as any));
     jamServiceSpy.deleteJobApplication.and.returnValue(of({}));
     jamServiceSpy.getGroups.and.returnValue(of([]));
     jamServiceSpy.getLeads.and.returnValue(of([]));

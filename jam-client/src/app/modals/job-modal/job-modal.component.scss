@@ -22,4 +22,13 @@
     color: var(--color-ink-secondary);
     font-size: 0.8rem;
   }
+
+  .form-section-header {
+    grid-column: 1 / -1;
+  }
+
+  app-file-upload {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
 }

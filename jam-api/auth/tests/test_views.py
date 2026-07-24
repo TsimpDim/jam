@@ -113,6 +113,22 @@ class MeViewTest(TestCase):
         self.assertFalse(resp.data["is_premium"])
         self.assertEqual(resp.data["cv_count"], 0)
 
+    def test_me_includes_quotas_for_free_user(self):
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.data["file_limit_per_app"], 5)
+        self.assertEqual(resp.data["lead_gen_limit_per_day"], 1)
+        self.assertEqual(resp.data["lead_gen_used_today"], 0)
+        self.assertEqual(resp.data["cv_review_limit_per_day"], 1)
+        self.assertEqual(resp.data["cv_review_used_today"], 0)
+
+    def test_me_unlimited_quotas_for_premium_user(self):
+        self.user.profile.is_premium = True
+        self.user.profile.save()
+        resp = self.client.get(self.url)
+        self.assertEqual(resp.data["file_limit_per_app"], 10)
+        self.assertIsNone(resp.data["lead_gen_limit_per_day"])
+        self.assertIsNone(resp.data["cv_review_limit_per_day"])
+
     def test_me_unauthenticated(self):
         self.client.force_authenticate(user=None)
         resp = self.client.get(self.url)
