@@ -28,7 +28,7 @@ export class StepsComponent implements OnInit {
   public steps: any;
   public STEP_TYPES = {
     S: 'Starting Step',
-    D: 'Default Step',
+    D: 'Standard Step',
     E: 'Ending Step',
   };
   selectedColor = 'grey';
@@ -216,7 +216,8 @@ export class StepsComponent implements OnInit {
         this.selectedStep.id,
         this.stepForm.value.name,
         this.stepForm.value.notes,
-        this.stepForm.value.color
+        this.stepForm.value.color,
+        this.stepForm.value.type
       )
       .subscribe({
         next: () => {

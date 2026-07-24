@@ -9,9 +9,10 @@
         <p class="empty-message" *ngIf="steps.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
 
         <div class="card clickable" (click)="selectStep(step.id)" *ngFor="let step of steps">
-          <div class="card-header">
+          <div class="card-header step-card-header">
             <span class="badge" [style.background-color]="step.color"></span>
             {{step.name}}
+            <span class="badge">{{getStepTypeDisplayText(step.type)}}</span>
           </div>
           <div class="card-block" *ngIf="step.notes">
             <div class="card-text" >
@@ -84,7 +85,7 @@
               </div>
             </div>
           
-            <div class="clr-form-control" *ngIf="selectedStep === null">
+            <div class="clr-form-control">
               <label class="clr-control-label">
                 <cds-icon shape="flag"></cds-icon>
                 Type *
@@ -96,20 +97,6 @@
                   <option value="E">{{getStepTypeDisplayText('E')}}</option>
                 </select>
               </clr-select-container>
-            </div>
-
-            <div class="clr-form-control" *ngIf="selectedStep !== null">
-              <label class="clr-control-label">
-                <cds-icon shape="flag"></cds-icon>
-                Type
-              </label>
-              <div class="clr-control-container">
-                <input
-                clrInput
-                type="text"
-                disabled
-                [value]="getStepTypeDisplayText()">
-              </div>
             </div>
           </form>
         </div>

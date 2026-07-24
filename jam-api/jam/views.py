@@ -75,6 +75,59 @@ class StepViewSet(viewsets.ModelViewSet):
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        new_type = request.data.get('type', instance.type)
+
+        if new_type != instance.type:
+            if instance.type == 'S':
+                remaining_s = Step.objects.filter(
+                    user=self.request.user, type='S'
+                ).exclude(id=instance.id).count()
+                if remaining_s < 1:
+                    return Response(
+                        {'error': 'Must have at least one Starting step. Add another Starting step before changing this one.'},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+            if instance.type == 'E':
+                remaining_e = Step.objects.filter(
+                    user=self.request.user, type='E'
+                ).exclude(id=instance.id).count()
+                if remaining_e < 1:
+                    return Response(
+                        {'error': 'Must have at least one Ending step. Add another Ending step before changing this one.'},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance.type == 'S':
+            remaining_s = Step.objects.filter(
+                user=self.request.user, type='S'
+            ).exclude(id=instance.id).count()
+            if remaining_s < 1:
+                return Response(
+                    {'error': 'Must have at least one Starting step. Add another Starting step before deleting this one.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        if instance.type == 'E':
+            remaining_e = Step.objects.filter(
+                user=self.request.user, type='E'
+            ).exclude(id=instance.id).count()
+            if remaining_e < 1:
+                return Response(
+                    {'error': 'Must have at least one Ending step. Add another Ending step before deleting this one.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        return super().destroy(request, *args, **kwargs)
+
     def get_queryset(self):
         return Step.objects.filter(user_id=self.request.user)
 

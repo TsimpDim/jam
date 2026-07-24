@@ -135,16 +135,21 @@ export class JamService {
     stepId: number,
     stepName: string,
     stepNotes: string,
-    color: string
+    color: string,
+    stepType: string
   ) {
+    const body: any = {
+      name: stepName,
+      notes: stepNotes ? stepNotes : undefined,
+      color: color ? color : undefined,
+    };
+    if (stepType) {
+      body.type = stepType;
+    }
     return this.runHttpCall(
       'PATCH',
       environment.apiUrl + '/jam/steps/' + stepId + '/',
-      {
-        name: stepName,
-        notes: stepNotes ? stepNotes : undefined,
-        color: color ? color : undefined,
-      }
+      body
     );
   }
 

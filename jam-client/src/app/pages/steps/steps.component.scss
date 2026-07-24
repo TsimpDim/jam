@@ -38,6 +38,20 @@
     background-color: #fcba03;
 }
 
+.step-card-header .badge:last-child {
+  font-size: 0.7em;
+  font-weight: 400;
+  padding: 0.7em;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.step-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .empty-message {
     margin: auto;
     margin-top: 5em;
