@@ -256,18 +256,6 @@
     &:hover {
         background-color: rgba(50, 0, 71, 0.15);
     }
-
-    cds-icon {
-        width: 12px;
-        height: 12px;
-        color: var(--clr-forms-border-color, #d2d2d2);
-        opacity: 0;
-        transition: opacity 0.15s ease;
-    }
-
-    &:hover cds-icon {
-        opacity: 1;
-    }
 }
 
 .action {
@@ -473,11 +461,6 @@
 
     .drag-handle {
         width: 4px;
-
-        cds-icon {
-            width: 10px;
-            height: 10px;
-        }
     }
 }
 
