@@ -410,8 +410,13 @@ export class LeadsComponent implements OnInit {
     return requests.find((r) => r.is_done) || null;
   }
 
-  viewCoverLetterResult(leadId: number): void {
-    const completed = this.getCompletedCoverLetterForLead(leadId);
+  getCompletedCoverLettersForLead(leadId: number): CoverLetterGenerationRequest[] {
+    const requests = this.coverLetterRequests.get(leadId) || [];
+    return requests.filter((r) => r.is_done);
+  }
+
+  viewCoverLetterResult(leadId: number, request?: CoverLetterGenerationRequest): void {
+    const completed = request || this.getCompletedCoverLetterForLead(leadId);
     if (completed) {
       this.selectedCoverLetterForView = completed;
       this.showCoverLetterResultModal = true;

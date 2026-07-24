@@ -116,12 +116,27 @@
             </button>
             <button
               class="btn btn-sm btn-link"
-              *ngIf="getCompletedReviewForCV(cv.id)"
+              *ngIf="getCompletedReviewsForCV(cv.id).length === 1"
               (click)="viewReviewResult(cv.id); $event.stopPropagation()"
             >
               <cds-icon shape="eye"></cds-icon>
-              View Last CV Review
+              View CV Review
             </button>
+            <clr-dropdown *ngIf="getCompletedReviewsForCV(cv.id).length > 1">
+              <button class="btn btn-sm btn-link" clrDropdownTrigger (click)="$event.stopPropagation()">
+                <cds-icon shape="eye"></cds-icon>
+                View Reviews ({{ getCompletedReviewsForCV(cv.id).length }})
+              </button>
+              <clr-dropdown-menu clrPosition="bottom-left">
+                <button
+                  class="dropdown-item"
+                  *ngFor="let review of getCompletedReviewsForCV(cv.id)"
+                  (click)="viewReviewResult(cv.id, review); $event.stopPropagation()"
+                >
+                  {{ review.created_at | date:'dd MMM yy' }} - {{ review.industry_name }}
+                </button>
+              </clr-dropdown-menu>
+            </clr-dropdown>
             <button
               class="btn btn-sm btn-link"
               (click)="openDeleteConfirm(cv); $event.stopPropagation()"

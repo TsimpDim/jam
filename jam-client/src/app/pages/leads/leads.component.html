@@ -131,13 +131,28 @@
               Generate Cover Letter
             </button>
             <button
-              *ngIf="getCompletedCoverLetterForLead(lead.id)"
+              *ngIf="getCompletedCoverLettersForLead(lead.id).length === 1"
               class="btn btn-sm btn-link"
               (click)="viewCoverLetterResult(lead.id); $event.stopPropagation()"
             >
               <cds-icon shape="eye"></cds-icon>
-              View Generated Cover Letter
+              View Cover Letter
             </button>
+            <clr-dropdown *ngIf="getCompletedCoverLettersForLead(lead.id).length > 1">
+              <button class="btn btn-sm btn-link" clrDropdownTrigger (click)="$event.stopPropagation()">
+                <cds-icon shape="eye"></cds-icon>
+                View Cover Letters ({{ getCompletedCoverLettersForLead(lead.id).length }})
+              </button>
+              <clr-dropdown-menu clrPosition="bottom-left">
+                <button
+                  class="dropdown-item"
+                  *ngFor="let cl of getCompletedCoverLettersForLead(lead.id)"
+                  (click)="viewCoverLetterResult(lead.id, cl); $event.stopPropagation()"
+                >
+                  {{ cl.created_at | date:'dd MMM yy' }} - {{ cl.cv_key }}
+                </button>
+              </clr-dropdown-menu>
+            </clr-dropdown>
             <button
               class="btn btn-sm btn-link"
               (click)="openDeleteConfirm(lead.id); $event.stopPropagation()"

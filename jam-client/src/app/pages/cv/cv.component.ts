@@ -108,6 +108,11 @@ export class CvComponent implements OnInit {
     return reviews.find((r) => r.is_done) || null;
   }
 
+  getCompletedReviewsForCV(cvId: number): CVReview[] {
+    const reviews = this.cvReviews.get(cvId) || [];
+    return reviews.filter((r) => r.is_done);
+  }
+
   isCVReviewProcessing(cvId: number): boolean {
     const reviews = this.cvReviews.get(cvId) || [];
     return (reviews.find((r) => !r.is_done) || null) !== null;
@@ -284,8 +289,8 @@ export class CvComponent implements OnInit {
     this.requestingReviewCvId = null;
   }
 
-  viewReviewResult(cvId: number): void {
-    const completedReview = this.getCompletedReviewForCV(cvId);
+  viewReviewResult(cvId: number, review?: CVReview): void {
+    const completedReview = review || this.getCompletedReviewForCV(cvId);
     if (completedReview) {
       this.selectedReviewForView = completedReview;
       this.showReviewResultModal = true;
