@@ -255,6 +255,7 @@ describe('LeadsComponent', () => {
 
     it('should show generate leads below the create lead button', () => {
       component.leads = [];
+      component.hasArchivedLeads = false;
       component.loading = false;
       fixture.detectChanges();
       const buttons = fixture.nativeElement.querySelectorAll(
@@ -263,6 +264,44 @@ describe('LeadsComponent', () => {
       expect(buttons.length).toBe(2);
       expect(buttons[0].textContent).toContain('Create Lead');
       expect(buttons[1].textContent).toContain('Generate Leads');
+    });
+
+    it('should show the show archived button when there are no active leads but archived leads exist', () => {
+      component.leads = [];
+      component.hasArchivedLeads = true;
+      component.viewingArchived = false;
+      component.loading = false;
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        '.empty-state .empty-actions .btn',
+      );
+      expect(buttons.length).toBe(3);
+      expect(buttons[2].textContent).toContain('Show Archived');
+    });
+
+    it('should not show the show archived button when there are no archived leads', () => {
+      component.leads = [];
+      component.hasArchivedLeads = false;
+      component.viewingArchived = false;
+      component.loading = false;
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        '.empty-state .empty-actions .btn',
+      );
+      expect(buttons.length).toBe(2);
+    });
+
+    it('should toggle to archived view from the show archived button', () => {
+      component.leads = [];
+      component.hasArchivedLeads = true;
+      component.viewingArchived = false;
+      component.loading = false;
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        '.empty-state .empty-actions .btn',
+      );
+      buttons[2].click();
+      expect(component.viewingArchived).toBeTrue();
     });
 
     it('should open the lead generation modal from the empty state button', () => {

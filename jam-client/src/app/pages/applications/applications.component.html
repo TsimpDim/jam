@@ -11,15 +11,10 @@
     ></app-job-nav>
 
     <div class="content-area">
-      <div
-        class="empty-state"
-        *ngIf="!loadingApplications && !hasApplications"
-      >
+      <div class="empty-state" *ngIf="!loadingApplications && !hasApplications">
         <cds-icon shape="folder" class="empty-icon"></cds-icon>
         <h2>No job applications yet</h2>
-        <p>
-          Add your first job application to start tracking your job search.
-        </p>
+        <p>Add your first job application to start tracking your job search.</p>
         <button
           id="empty-state-add-btn"
           type="button"
@@ -31,10 +26,7 @@
         </button>
       </div>
 
-      <div
-        class="empty-state"
-        *ngIf="loadingApplications && !hasApplications"
-      >
+      <div class="empty-state" *ngIf="loadingApplications && !hasApplications">
         <clr-spinner></clr-spinner>
       </div>
 
@@ -58,8 +50,8 @@
               Applied through: {{ selectedApp.appliedThrough }}
             </span>
           </div>
-          <div class="card-block">
-            <div class="card-text notes" *ngIf="selectedApp.notes">
+          <div class="card-block" *ngIf="selectedApp.notes">
+            <div class="card-text notes">
               <ng-container *ngIf="isNotesLong(selectedApp.notes)">
                 <span *ngIf="!showFullNotes">{{
                   getNotesPreview(selectedApp.notes)

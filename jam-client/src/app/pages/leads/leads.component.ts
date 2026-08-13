@@ -40,6 +40,7 @@ export class LeadsComponent implements OnInit {
   modalIsOpen: boolean = false;
   selectedLead: any = null;
   viewingArchived: boolean = false;
+  hasArchivedLeads: boolean = false;
   applications: any[] = [];
   showLeadGenerationModal: boolean = false;
   showCoverLetterModal: boolean = false;
@@ -132,12 +133,24 @@ export class LeadsComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.leads = data;
+          this.checkArchivedLeads();
         },
         error: () => {
           this.loading = false;
         },
         complete: () => (this.loading = false),
       });
+  }
+
+  checkArchivedLeads() {
+    if (this.viewingArchived) {
+      return;
+    }
+    this.jamService.getLeads('true').subscribe({
+      next: (data: any) => {
+        this.hasArchivedLeads = Array.isArray(data) && data.length > 0;
+      },
+    });
   }
 
   getGroups() {

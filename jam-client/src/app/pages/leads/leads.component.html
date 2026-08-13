@@ -87,6 +87,14 @@
                   : "Generate Leads"
               }}
             </button>
+            <button
+              *ngIf="hasArchivedLeads && !viewingArchived"
+              class="btn btn-outline"
+              style="margin-top: -1em"
+              (click)="toggleViewMode()"
+            >
+              Show Archived
+            </button>
           </div>
         </div>
 
