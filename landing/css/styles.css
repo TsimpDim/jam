@@ -55,7 +55,7 @@
     --radius-lg: 16px;
     --radius-pill: 9999px;
 
-    /* Shadows — DESIGN.md elevation vocabulary */
+    /* Shadows - DESIGN.md elevation vocabulary */
     --shadow-ambient: 0 2px 8px rgba(50, 0, 71, 0.08);
     --shadow-elevated: 0 4px 16px rgba(50, 0, 71, 0.12);
     --shadow-prominent: 0 8px 32px rgba(50, 0, 71, 0.16);

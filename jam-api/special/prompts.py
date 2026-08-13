@@ -49,7 +49,7 @@ def build_cover_letter_prompt(company: str, role: str, location: str, notes: str
         - Keep the cover letter professional, concise, and engaging
         - Highlight relevant skills and experience from the CV that match this specific role and company
         - Use a standard business letter format with proper salutation and closing
-        - Do NOT use placeholder text like "[Your Name]" or "[Date]" — use actual content from the CV when possible, or omit if not available
+        - Do NOT use placeholder text like "[Your Name]" or "[Date]" - use actual content from the CV when possible, or omit if not available
         - Aim for 3-4 paragraphs (250-400 words)
         - End with a call to action expressing interest in an interview
 

@@ -1,0 +1,63 @@
+<div class="tutorial-overlay" [class.has-target]="hasTarget">
+  <div class="tutorial-backdrop" *ngIf="!hasTarget" aria-hidden="true"></div>
+
+  <div
+    class="tutorial-spotlight"
+    *ngIf="hasTarget && spotlight"
+    [style.left.px]="spotlight.left"
+    [style.top.px]="spotlight.top"
+    [style.width.px]="spotlight.width"
+    [style.height.px]="spotlight.height"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="tutorial-card tutorial-card--tooltip"
+    #tooltipCard
+    [style.top.px]="cardTop"
+    [style.left.px]="cardLeft"
+  >
+    <div class="tutorial-card-title">
+      <span class="tutorial-step-count">{{ step + 1 }} / {{ steps.length }}</span>
+      <h4>{{ current.title }}</h4>
+    </div>
+    <p class="tutorial-description">{{ current.description }}</p>
+    <ul class="tutorial-bullets">
+      <li *ngFor="let bullet of current.bullets">
+        <cds-icon shape="check-circle"></cds-icon>
+        <span>{{ bullet }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tutorial-footer">
+    <button type="button" class="btn btn-link tutorial-skip-btn" (click)="skip()">
+      Skip tutorial
+    </button>
+
+    <div class="tutorial-dots" aria-label="Tutorial steps">
+      <button
+        type="button"
+        *ngFor="let s of steps; let i = index"
+        class="tutorial-dot"
+        [class.active]="i === step"
+        [attr.aria-label]="'Go to step ' + (i + 1)"
+        (click)="goTo(i)"
+      ></button>
+    </div>
+
+    <div class="tutorial-nav-buttons">
+      <button
+        type="button"
+        class="btn tutorial-back-btn"
+        (click)="back()"
+        [disabled]="step === 0"
+      >
+        Back
+      </button>
+      <button type="button" class="btn btn-primary tutorial-next-btn" (click)="next()">
+        {{ isLast ? 'Finish' : 'Next' }}
+      </button>
+    </div>
+  </div>
+</div>

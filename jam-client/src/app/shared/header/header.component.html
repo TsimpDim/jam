@@ -19,6 +19,7 @@
   <div class="header-nav" [class.mobile-open]="mobileMenuOpen">
     <ng-container *ngIf="isLoggedIn">
       <a
+        id="nav-applications"
         class="nav-link"
         routerLinkActive="active"
         routerLink="/applications"
@@ -26,6 +27,7 @@
         >Applications</a
       >
       <a
+        id="nav-steps"
         class="nav-link"
         routerLinkActive="active"
         routerLink="/steps"
@@ -33,6 +35,7 @@
         >Steps</a
       >
       <a
+        id="nav-leads"
         class="nav-link"
         routerLinkActive="active"
         routerLink="/leads"
@@ -40,6 +43,7 @@
         >Leads</a
       >
       <a
+        id="nav-cv"
         class="nav-link"
         routerLinkActive="active"
         routerLink="/cv"
@@ -47,6 +51,7 @@
         >CVs</a
       >
       <a
+        id="nav-analytics"
         class="nav-link"
         routerLinkActive="active"
         routerLink="/analytics"

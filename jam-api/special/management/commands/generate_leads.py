@@ -132,7 +132,7 @@ class Command(BaseCommand):
                         role = Command._clip(item.get('role'), 255)
                         location = Command._clip(item.get('location'), 50)
                         external_link = item.get('external_link')
-                        # Drop URLs the LLM fabricated — only allow URLs that
+                        # Drop URLs the LLM fabricated - only allow URLs that
                         # were literally returned by the search provider.
                         if external_link and external_link not in valid_search_urls:
                             self.stdout.write(self.style.WARNING(f'    Dropping hallucinated URL: {external_link[:80]}'))

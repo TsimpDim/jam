@@ -180,4 +180,113 @@ describe('ApplicationsComponent', () => {
       expect(component.selectedApp).toBeNull();
     });
   });
+
+  describe('empty state', () => {
+    it('hasApplications should be true when a group has applications', () => {
+      component.applications = mockApplications;
+      expect(component.hasApplications).toBeTrue();
+    });
+
+    it('hasApplications should be false when there are no applications', () => {
+      component.applications = {};
+      expect(component.hasApplications).toBeFalse();
+    });
+
+    it('hasApplications should be false when applications is null', () => {
+      component.applications = null;
+      expect(component.hasApplications).toBeFalse();
+    });
+
+    it('should show the add application button when there are no applications', () => {
+      component.applications = {};
+      component.loadingApplications = false;
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector('#empty-state-add-btn'),
+      ).toBeTruthy();
+    });
+
+    it('should open the job app modal when the add button is clicked', () => {
+      component.applications = {};
+      component.loadingApplications = false;
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector(
+        '#empty-state-add-btn',
+      );
+      button.click();
+      expect(component.jobAppModalIsOpen).toBeTrue();
+    });
+  });
+
+  describe('tutorial', () => {
+    beforeEach(() => {
+      localStorage.removeItem('showTutorial');
+      component.tutorialActive = false;
+      component.tutorialStep = 0;
+    });
+
+    it('should start the tutorial when there are no applications', () => {
+      jamServiceSpy.getJobApplications.and.returnValue(of({}));
+      component.getApplications();
+      expect(component.tutorialActive).toBeTrue();
+      expect(component.tutorialStep).toBe(0);
+    });
+
+    it('should not start the tutorial when applications exist', () => {
+      component.getApplications();
+      expect(component.tutorialActive).toBeFalse();
+    });
+
+    it('should not start the tutorial when showTutorial is set', () => {
+      localStorage.setItem('showTutorial', 'false');
+      jamServiceSpy.getJobApplications.and.returnValue(of({}));
+      component.getApplications();
+      expect(component.tutorialActive).toBeFalse();
+    });
+
+    it('should not restart the tutorial once it is active', () => {
+      jamServiceSpy.getJobApplications.and.returnValue(of({}));
+      component.getApplications();
+      expect(component.tutorialActive).toBeTrue();
+      component.tutorialStep = 2;
+      component.getApplications();
+      expect(component.tutorialActive).toBeTrue();
+      expect(component.tutorialStep).toBe(2);
+    });
+
+    it('completeTutorial should persist the flag and hide the tutorial', () => {
+      component.tutorialActive = true;
+      component.tutorialStep = 2;
+      component.completeTutorial();
+      expect(localStorage.getItem('showTutorial')).toBe('false');
+      expect(component.tutorialActive).toBeFalse();
+      expect(component.tutorialStep).toBe(0);
+    });
+
+    it('onTutorialStepChange should update the current step', () => {
+      component.onTutorialStepChange(3);
+      expect(component.tutorialStep).toBe(3);
+    });
+
+    it('onApplicationCreated should advance to the steps highlight', () => {
+      component.tutorialActive = true;
+      component.applications = { Tech: [] };
+      component.onApplicationCreated({
+        id: 1,
+        company: 'Google',
+        group_name: 'Tech',
+      });
+      expect(component.tutorialStep).toBe(1);
+    });
+
+    it('onApplicationCreated should not advance when tutorial is inactive', () => {
+      component.applications = { Tech: [] };
+      component.onApplicationCreated({
+        id: 1,
+        company: 'Google',
+        group_name: 'Tech',
+      });
+      expect(component.tutorialStep).toBe(0);
+    });
+  });
 });

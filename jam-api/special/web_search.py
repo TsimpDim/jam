@@ -174,7 +174,7 @@ class WebSearch:
         return []
 
     # ------------------------------------------------------------------ #
-    # Tavily query builders — natural language, no site: operators         #
+    # Tavily query builders - natural language, no site: operators         #
     # ------------------------------------------------------------------ #
 
     @staticmethod
@@ -229,7 +229,7 @@ class WebSearch:
         ]))
 
     # ------------------------------------------------------------------ #
-    # DDGS query builders — site: operators for targeted fallback          #
+    # DDGS query builders - site: operators for targeted fallback          #
     # ------------------------------------------------------------------ #
 
     @staticmethod

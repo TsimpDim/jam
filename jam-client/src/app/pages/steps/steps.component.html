@@ -1,22 +1,33 @@
 <div class="main-container">
   <div class="content-container">
-    <div *ngIf="loadingSteps"  style="font-size: 1px" class="progress loop"><progress></progress></div>
+    <div *ngIf="loadingSteps" style="font-size: 1px" class="progress loop">
+      <progress></progress>
+    </div>
 
     <div class="content-area">
       <div class="clr-column">
-        <button class="button btn btn-primary" (click)="clearAndOpenModal()">Create new</button>
+        <button class="button btn btn-primary" (click)="clearAndOpenModal()">
+          <cds-icon shape="plus"></cds-icon> Create step
+        </button>
 
-        <p class="empty-message" *ngIf="steps.length === 0">Nothing's here so far :(<br>Use the 'create new' button to get started!</p>
+        <p class="empty-message" *ngIf="steps.length === 0">
+          Nothing's here so far :(<br />Use the 'create new' button to get
+          started!
+        </p>
 
-        <div class="card clickable" (click)="selectStep(step.id)" *ngFor="let step of steps">
+        <div
+          class="card clickable"
+          (click)="selectStep(step.id)"
+          *ngFor="let step of steps"
+        >
           <div class="card-header step-card-header">
             <span class="badge" [style.background-color]="step.color"></span>
-            {{step.name}}
-            <span class="badge">{{getStepTypeDisplayText(step.type)}}</span>
+            {{ step.name }}
+            <span class="badge">{{ getStepTypeDisplayText(step.type) }}</span>
           </div>
           <div class="card-block" *ngIf="step.notes">
-            <div class="card-text" >
-              {{step.notes}}
+            <div class="card-text">
+              {{ step.notes }}
             </div>
           </div>
           <div class="card-footer">
@@ -39,20 +50,24 @@
         </div>
       </div>
 
-      <clr-modal [clrModalOpen]="modalIsOpen" (clrModalOpenChange)="modalIsOpen = $event">
+      <clr-modal
+        [clrModalOpen]="modalIsOpen"
+        (clrModalOpenChange)="modalIsOpen = $event"
+      >
         <h3 class="modal-title" *ngIf="selectedStep !== null">Edit Step</h3>
         <h3 class="modal-title" *ngIf="selectedStep === null">Add Step</h3>
-      
+
         <div class="modal-body">
           <form class="clr-form clr-form-horizontal" [formGroup]="stepForm">
             <div class="clr-form-control">
               <clr-input-container>
                 <label><cds-icon shape="blocks-group"></cds-icon> Name *</label>
-                <input clrInput
-                type="text"
-                name="name"
-                formControlName="name"
-                placeholder="Take Home Assignment"
+                <input
+                  clrInput
+                  type="text"
+                  name="name"
+                  formControlName="name"
+                  placeholder="Take Home Assignment"
                 />
                 <clr-control-error>Name is required</clr-control-error>
               </clr-input-container>
@@ -62,10 +77,10 @@
               <clr-textarea-container>
                 <label><cds-icon shape="note"></cds-icon> Notes</label>
                 <textarea
-                clrTextarea
-                name="notes"
-                formControlName="notes"
-                placeholder="A coding task given a candidate to complete on their own time"
+                  clrTextarea
+                  name="notes"
+                  formControlName="notes"
+                  placeholder="A coding task given a candidate to complete on their own time"
                 ></textarea>
               </clr-textarea-container>
             </div>
@@ -76,15 +91,51 @@
                 Color
               </label>
               <div class="clr-control-container color-option-container">
-                <div class="color-option color-option-red" (click)="selectColor('red')" [ngClass]="{'color-option-selected': selectedColor === 'red'}"></div>
-                <div class="color-option color-option-grey" (click)="selectColor('grey')" [ngClass]="{'color-option-selected': selectedColor === 'grey'}"></div>
-                <div class="color-option color-option-green" (click)="selectColor('green')" [ngClass]="{'color-option-selected': selectedColor === 'green'}"></div>
-                <div class="color-option color-option-orange" (click)="selectColor('orange')" [ngClass]="{'color-option-selected': selectedColor === 'orange'}"></div>
-                <div class="color-option color-option-blue" (click)="selectColor('blue')" [ngClass]="{'color-option-selected': selectedColor === 'blue'}"></div>
-                <div class="color-option color-option-black" (click)="selectColor('black')" [ngClass]="{'color-option-selected': selectedColor === 'black'}"></div>
+                <div
+                  class="color-option color-option-red"
+                  (click)="selectColor('red')"
+                  [ngClass]="{
+                    'color-option-selected': selectedColor === 'red',
+                  }"
+                ></div>
+                <div
+                  class="color-option color-option-grey"
+                  (click)="selectColor('grey')"
+                  [ngClass]="{
+                    'color-option-selected': selectedColor === 'grey',
+                  }"
+                ></div>
+                <div
+                  class="color-option color-option-green"
+                  (click)="selectColor('green')"
+                  [ngClass]="{
+                    'color-option-selected': selectedColor === 'green',
+                  }"
+                ></div>
+                <div
+                  class="color-option color-option-orange"
+                  (click)="selectColor('orange')"
+                  [ngClass]="{
+                    'color-option-selected': selectedColor === 'orange',
+                  }"
+                ></div>
+                <div
+                  class="color-option color-option-blue"
+                  (click)="selectColor('blue')"
+                  [ngClass]="{
+                    'color-option-selected': selectedColor === 'blue',
+                  }"
+                ></div>
+                <div
+                  class="color-option color-option-black"
+                  (click)="selectColor('black')"
+                  [ngClass]="{
+                    'color-option-selected': selectedColor === 'black',
+                  }"
+                ></div>
               </div>
             </div>
-          
+
             <div class="clr-form-control">
               <label class="clr-control-label">
                 <cds-icon shape="flag"></cds-icon>
@@ -92,23 +143,36 @@
               </label>
               <clr-select-container>
                 <select clrSelect name="type" formControlName="type">
-                  <option value="S">{{getStepTypeDisplayText('S')}}</option>
-                  <option value="D">{{getStepTypeDisplayText('D')}}</option>
-                  <option value="E">{{getStepTypeDisplayText('E')}}</option>
+                  <option value="S">{{ getStepTypeDisplayText("S") }}</option>
+                  <option value="D">{{ getStepTypeDisplayText("D") }}</option>
+                  <option value="E">{{ getStepTypeDisplayText("E") }}</option>
                 </select>
               </clr-select-container>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <clr-spinner *ngIf="loading" [clrMedium]="true" [clrInline]="true" [clrInverse]="true"></clr-spinner>
+          <clr-spinner
+            *ngIf="loading"
+            [clrMedium]="true"
+            [clrInline]="true"
+            [clrInverse]="true"
+          ></clr-spinner>
 
-          <button type="button" class="btn btn-danger-outline"
-          (click)="openDeleteConfirm(selectedStep.id)"
-          *ngIf="selectedStep != null"
-          >Delete</button>
-          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" (click)="submitForm()">Submit</button>
+          <button
+            type="button"
+            class="btn btn-danger-outline"
+            (click)="openDeleteConfirm(selectedStep.id)"
+            *ngIf="selectedStep != null"
+          >
+            Delete
+          </button>
+          <button type="button" class="btn btn-outline" (click)="closeModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" (click)="submitForm()">
+            Submit
+          </button>
         </div>
       </clr-modal>
 

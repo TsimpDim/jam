@@ -1,6 +1,7 @@
 <div class="main-container">
   <div class="content-container">
     <app-job-nav
+      *ngIf="hasApplications"
       [applications]="applications"
       [loadingApplications]="loadingApplications"
       (onSelectApp)="selectApp($event)"
@@ -10,7 +11,34 @@
     ></app-job-nav>
 
     <div class="content-area">
-      <h6 *ngIf="selectedApp == null">
+      <div
+        class="empty-state"
+        *ngIf="!loadingApplications && !hasApplications"
+      >
+        <cds-icon shape="folder" class="empty-icon"></cds-icon>
+        <h2>No job applications yet</h2>
+        <p>
+          Add your first job application to start tracking your job search.
+        </p>
+        <button
+          id="empty-state-add-btn"
+          type="button"
+          class="btn btn-primary add-application-btn"
+          (click)="openAndClearJobAppModal(undefined)"
+        >
+          <cds-icon shape="plus"></cds-icon>
+          Add Application
+        </button>
+      </div>
+
+      <div
+        class="empty-state"
+        *ngIf="loadingApplications && !hasApplications"
+      >
+        <clr-spinner></clr-spinner>
+      </div>
+
+      <h6 *ngIf="selectedApp == null && hasApplications">
         Please create or select an application from the menu on the left.
       </h6>
 
@@ -248,5 +276,12 @@
       (closed)="onDeleteCancelled()"
       (confirmed)="onDeleteConfirmed()"
     ></app-confirm-modal>
+
+    <app-tutorial-overlay
+      *ngIf="tutorialActive"
+      [step]="tutorialStep"
+      (onStepChange)="onTutorialStepChange($event)"
+      (onComplete)="completeTutorial()"
+    ></app-tutorial-overlay>
   </div>
 </div>

@@ -6,9 +6,10 @@
 
     <div class="content-area">
       <div class="clr-column">
-        <div class="top-actions">
+        <div class="top-actions" *ngIf="leads?.length > 0">
           <button class="button btn btn-primary" (click)="clearAndOpenModal()">
-            Create new
+            <cds-icon shape="plus"></cds-icon>
+            Create lead
           </button>
           <button class="button btn btn-outline" (click)="toggleViewMode()">
             {{ viewingArchived ? "Show Active" : "Show Archived" }}
@@ -43,16 +44,51 @@
             >
               {{ inProgressCount }}
               <span class="tooltip-content"
-                >{{ inProgressCount }} lead generation requests in progress</span
+                >{{ inProgressCount }} lead generation requests in
+                progress</span
               >
             </span>
           </button>
         </div>
 
-        <p class="empty-message" *ngIf="leads?.length === 0">
-          Nothing's here so far :(<br />Use the 'create new' button to get
-          started!
-        </p>
+        <div class="empty-state" *ngIf="!loading && leads?.length === 0">
+          <cds-icon shape="bolt" class="empty-icon"></cds-icon>
+          <h2>No leads yet</h2>
+          <p>Add your first lead to get started with your job search.</p>
+          <div class="empty-actions">
+            <button
+              class="btn btn-primary btn-lg"
+              (click)="clearAndOpenModal()"
+            >
+              <cds-icon shape="plus"></cds-icon>
+              Create Lead
+            </button>
+            <button
+              class="btn btn-secondary"
+              style="margin-top: -1em"
+              (click)="openLeadGenerationModal()"
+              [disabled]="
+                (inProgressCount > 0 && !userInfo?.is_premium) ||
+                hasReachedDailyQuota
+              "
+            >
+              <cds-icon
+                *ngIf="inProgressCount === 0 || userInfo?.is_premium"
+                shape="bolt"
+              ></cds-icon>
+              <cds-icon
+                *ngIf="inProgressCount > 0 && !userInfo?.is_premium"
+                shape="spinner"
+                class="is-solid spin"
+              ></cds-icon>
+              {{
+                hasReachedDailyQuota
+                  ? "Lead generation quota reached"
+                  : "Generate Leads"
+              }}
+            </button>
+          </div>
+        </div>
 
         <div
           class="card clickable"
@@ -138,18 +174,28 @@
               <cds-icon shape="eye"></cds-icon>
               View Cover Letter
             </button>
-            <clr-dropdown *ngIf="getCompletedCoverLettersForLead(lead.id).length > 1">
-              <button class="btn btn-sm btn-link" clrDropdownTrigger (click)="$event.stopPropagation()">
+            <clr-dropdown
+              *ngIf="getCompletedCoverLettersForLead(lead.id).length > 1"
+            >
+              <button
+                class="btn btn-sm btn-link"
+                clrDropdownTrigger
+                (click)="$event.stopPropagation()"
+              >
                 <cds-icon shape="eye"></cds-icon>
-                View Cover Letters ({{ getCompletedCoverLettersForLead(lead.id).length }})
+                View Cover Letters ({{
+                  getCompletedCoverLettersForLead(lead.id).length
+                }})
               </button>
               <clr-dropdown-menu clrPosition="bottom-left">
                 <button
                   class="dropdown-item"
                   *ngFor="let cl of getCompletedCoverLettersForLead(lead.id)"
-                  (click)="viewCoverLetterResult(lead.id, cl); $event.stopPropagation()"
+                  (click)="
+                    viewCoverLetterResult(lead.id, cl); $event.stopPropagation()
+                  "
                 >
-                  {{ cl.created_at | date:'dd MMM yy' }} - {{ cl.cv_key }}
+                  {{ cl.created_at | date: "dd MMM yy" }} - {{ cl.cv_key }}
                 </button>
               </clr-dropdown-menu>
             </clr-dropdown>

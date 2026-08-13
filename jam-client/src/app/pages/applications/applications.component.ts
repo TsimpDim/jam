@@ -16,7 +16,10 @@ import { TimelineModalComponent } from '../../modals/timeline-modal/timeline-mod
 import { NoteViewModalComponent } from '../../modals/note-view-modal/note-view-modal.component';
 import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
 import { FileUploadComponent } from '../../shared/file-upload/file-upload.component';
+import { TutorialOverlayComponent } from '../../shared/tutorial-overlay/tutorial-overlay.component';
 ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
+
+const SHOW_TUTORIAL_STORAGE_KEY = 'showTutorial';
 
 @Component({
   selector: 'app-applications',
@@ -30,6 +33,7 @@ ClarityIcons.addIcons(detailsIcon, lightbulbIcon);
     NoteViewModalComponent,
     ConfirmModalComponent,
     FileUploadComponent,
+    TutorialOverlayComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './applications.component.html',
@@ -60,6 +64,8 @@ export class ApplicationsComponent implements OnInit {
   public showFullNotes: boolean = false;
   public isPremium: boolean = false;
   public fileLimit: number | null = null;
+  public tutorialActive: boolean = false;
+  public tutorialStep: number = 0;
   private readonly MAX_JOB_APP_NOTE_LINES = 15;
 
   @ViewChild('detailFileUpload') detailFileUpload!: FileUploadComponent;
@@ -123,6 +129,7 @@ export class ApplicationsComponent implements OnInit {
         this.loadingSelectedApplication = false;
         this.loadingApplications = false;
         this.applications = data;
+        this.maybeStartTutorial();
 
         if (this.selectedApp !== null) {
           this.selectApp({
@@ -133,6 +140,36 @@ export class ApplicationsComponent implements OnInit {
       },
       error: (error) => {},
     });
+  }
+
+  get hasApplications(): boolean {
+    return Object.values(this.applications || {}).some(
+      (apps: any) => Array.isArray(apps) && apps.length > 0,
+    );
+  }
+
+  maybeStartTutorial() {
+    if (localStorage.getItem(SHOW_TUTORIAL_STORAGE_KEY) !== null) {
+      return;
+    }
+    if (this.tutorialActive) {
+      return;
+    }
+
+    if (!this.hasApplications) {
+      this.tutorialActive = true;
+      this.tutorialStep = 0;
+    }
+  }
+
+  onTutorialStepChange(step: number) {
+    this.tutorialStep = step;
+  }
+
+  completeTutorial() {
+    localStorage.setItem(SHOW_TUTORIAL_STORAGE_KEY, 'false');
+    this.tutorialActive = false;
+    this.tutorialStep = 0;
   }
 
   selectApp(event: any) {
@@ -211,8 +248,13 @@ export class ApplicationsComponent implements OnInit {
   onApplicationCreated(app: any) {
     if (this.applications && app.group_name in this.applications) {
       this.applications[app.group_name].unshift(app);
+    } else if (this.applications) {
+      this.applications[app.group_name] = [app];
     }
     this.selectedApp = app;
+    if (this.tutorialActive) {
+      this.tutorialStep = 1;
+    }
   }
 
   openTimelineStepModal() {

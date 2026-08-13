@@ -201,6 +201,82 @@ describe('LeadsComponent', () => {
     });
   });
 
+  describe('empty state', () => {
+    it('should show the create lead button when there are no leads', () => {
+      component.leads = [];
+      component.loading = false;
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector('.empty-state .btn'),
+      ).toBeTruthy();
+    });
+
+    it('should hide the top actions when there are no leads', () => {
+      component.leads = [];
+      component.loading = false;
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector('.top-actions'),
+      ).toBeNull();
+    });
+
+    it('should show the top actions when leads exist', () => {
+      component.leads = mockLeads;
+      component.loading = false;
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector('.top-actions'),
+      ).toBeTruthy();
+    });
+
+    it('should not show the empty state while loading', () => {
+      component.leads = [];
+      component.loading = true;
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.empty-state')).toBeNull();
+    });
+
+    it('should not show the empty state when leads exist', () => {
+      component.leads = mockLeads;
+      component.loading = false;
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.empty-state')).toBeNull();
+    });
+
+    it('should open the create lead modal from the empty state button', () => {
+      component.leads = [];
+      component.loading = false;
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('.empty-state .btn');
+      button.click();
+      expect(component.modalIsOpen).toBeTrue();
+      expect(component.selectedLead).toBeNull();
+    });
+
+    it('should show generate leads below the create lead button', () => {
+      component.leads = [];
+      component.loading = false;
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        '.empty-state .empty-actions .btn',
+      );
+      expect(buttons.length).toBe(2);
+      expect(buttons[0].textContent).toContain('Create Lead');
+      expect(buttons[1].textContent).toContain('Generate Leads');
+    });
+
+    it('should open the lead generation modal from the empty state button', () => {
+      component.leads = [];
+      component.loading = false;
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        '.empty-state .empty-actions .btn',
+      );
+      buttons[1].click();
+      expect(component.showLeadGenerationModal).toBeTrue();
+    });
+  });
+
   describe('lead modal', () => {
     it('should open modal', () => {
       component.openModal();
