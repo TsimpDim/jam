@@ -182,6 +182,15 @@
               <cds-icon shape="eye"></cds-icon>
               View Cover Letter
             </button>
+            <button
+              class="btn btn-sm btn-link"
+              (click)="
+                openConvertToApplicationModal(lead); $event.stopPropagation()
+              "
+            >
+              <cds-icon shape="briefcase"></cds-icon>
+              Convert to job application
+            </button>
             <clr-dropdown
               *ngIf="getCompletedCoverLettersForLead(lead.id).length > 1"
             >
@@ -425,6 +434,16 @@
         (closed)="onDeleteCancelled()"
         (confirmed)="onDeleteConfirmed()"
       ></app-confirm-modal>
+
+      <app-job-modal
+        [isOpen]="jobAppModalIsOpen"
+        [application]="null"
+        [prefill]="leadToConvert"
+        [isPremium]="userInfo?.is_premium || false"
+        [fileLimit]="userInfo?.file_limit_per_app || null"
+        (onClose)="onJobAppModalClose()"
+        (onApplicationCreated)="onApplicationCreatedFromLead()"
+      ></app-job-modal>
     </div>
   </div>
 </div>

@@ -34,6 +34,7 @@ describe('LeadsComponent', () => {
     jamServiceSpy = jasmine.createSpyObj('JamService', [
       'getLeads', 'getGroups', 'getUserInfo', 'getLeadSnapshot',
       'createLead', 'updateLead', 'deleteLead', 'archiveLead', 'getCVs',
+      'getSteps', 'createJobApplication',
     ]);
     jamServiceSpy.getLeads.and.returnValue(of(mockLeads));
     jamServiceSpy.getGroups.and.returnValue(of(mockGroups));
@@ -44,6 +45,8 @@ describe('LeadsComponent', () => {
     } as any));
     jamServiceSpy.createLead.and.returnValue(of({}));
     jamServiceSpy.getCVs.and.returnValue(of([]));
+    jamServiceSpy.getSteps.and.returnValue(of([{ id: 1, type: 'S' }]));
+    jamServiceSpy.createJobApplication.and.returnValue(of({}));
 
     specialServiceSpy = jasmine.createSpyObj('SpecialService', [
       'getLeadGenerationRequests', 'createLeadGenerationRequest',
@@ -313,6 +316,50 @@ describe('LeadsComponent', () => {
       );
       buttons[1].click();
       expect(component.showLeadGenerationModal).toBeTrue();
+    });
+  });
+
+  describe('convert to job application', () => {
+    it('should open job application modal with the lead for conversion', () => {
+      component.openConvertToApplicationModal(mockLeads[0]);
+      expect(component.jobAppModalIsOpen).toBeTrue();
+      expect(component.leadToConvert).toEqual(mockLeads[0]);
+    });
+
+    it('should close the job application modal and clear the lead', () => {
+      component.jobAppModalIsOpen = true;
+      component.leadToConvert = mockLeads[0];
+      component.onJobAppModalClose();
+      expect(component.jobAppModalIsOpen).toBeFalse();
+      expect(component.leadToConvert).toBeNull();
+    });
+
+    it('should refresh leads after a job application is created', () => {
+      component.onApplicationCreatedFromLead();
+      expect(jamServiceSpy.getLeads).toHaveBeenCalled();
+    });
+
+    it('should render convert button on each lead card', () => {
+      component.leads = mockLeads;
+      component.loading = false;
+      fixture.detectChanges();
+      const cardFooters = fixture.nativeElement.querySelectorAll(
+        '.card .card-footer',
+      );
+      expect(cardFooters.length).toBe(2);
+      expect(cardFooters[0].textContent).toContain('Convert to job application');
+    });
+
+    it('should open the job application modal from the card footer button', () => {
+      component.leads = mockLeads;
+      component.loading = false;
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector(
+        '.card .card-footer .btn',
+      );
+      button.click();
+      expect(component.jobAppModalIsOpen).toBeTrue();
+      expect(component.leadToConvert).toEqual(mockLeads[0]);
     });
   });
 

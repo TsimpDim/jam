@@ -15,6 +15,7 @@ import { LeadGenerationModalComponent } from 'src/app/modals/lead-generation-mod
 import { CoverLetterGenerationModalComponent } from 'src/app/modals/cover-letter-generation-modal/cover-letter-generation-modal.component';
 import { CoverLetterResultModalComponent } from 'src/app/modals/cover-letter-result-modal/cover-letter-result-modal.component';
 import { ConfirmModalComponent } from 'src/app/modals/confirm-modal/confirm-modal.component';
+import { JobModalComponent } from 'src/app/modals/job-modal/job-modal.component';
 import { UserInfo, CoverLetterGenerationRequest } from 'src/app/interfaces';
 
 @Component({
@@ -28,6 +29,7 @@ import { UserInfo, CoverLetterGenerationRequest } from 'src/app/interfaces';
     CoverLetterGenerationModalComponent,
     CoverLetterResultModalComponent,
     ConfirmModalComponent,
+    JobModalComponent,
   ],
   templateUrl: './leads.component.html',
   styleUrls: ['./leads.component.scss'],
@@ -53,6 +55,8 @@ export class LeadsComponent implements OnInit {
   selectedCoverLetterForView: CoverLetterGenerationRequest | null = null;
   confirmModalOpen: boolean = false;
   leadToDelete: number | null = null;
+  jobAppModalIsOpen: boolean = false;
+  leadToConvert: any = null;
   inProgressCount: number = 0;
   userInfo: UserInfo | null = null;
   hasReachedDailyQuota: boolean = false;
@@ -176,6 +180,20 @@ export class LeadsComponent implements OnInit {
   onDeleteCancelled() {
     this.confirmModalOpen = false;
     this.leadToDelete = null;
+  }
+
+  openConvertToApplicationModal(lead: any) {
+    this.leadToConvert = lead;
+    this.jobAppModalIsOpen = true;
+  }
+
+  onJobAppModalClose() {
+    this.jobAppModalIsOpen = false;
+    this.leadToConvert = null;
+  }
+
+  onApplicationCreatedFromLead() {
+    this.getLeads();
   }
 
   deleteLead(leadId: number) {

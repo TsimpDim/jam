@@ -34,6 +34,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   @Input() groupToSelect: any = null;
   @Input() isPremium: boolean = false;
   @Input() fileLimit: number | null = null;
+  @Input() prefill: any = null;
   @Output() onClose = new EventEmitter();
   @Output() onApplicationsNeedUpdate = new EventEmitter();
   @Output() onApplicationCreated = new EventEmitter<{
@@ -105,7 +106,25 @@ export class JobModalComponent implements OnInit, OnChanges {
       (this.application === null || this.application === undefined)
     ) {
       this.resetForm();
+      if (this.prefill !== null && this.prefill !== undefined) {
+        this.applyPrefill(this.prefill);
+      }
     }
+  }
+
+  applyPrefill(prefill: any) {
+    const patch: any = {
+      company: prefill.company,
+      role: prefill.role,
+      location: prefill.location || '',
+      externalLink: prefill.external_link || '',
+      notes: prefill.notes || '',
+      lead: prefill.id,
+    };
+    if (prefill.group) {
+      patch.group = prefill.group;
+    }
+    this.jobAppForm.patchValue(patch);
   }
 
   resetForm() {
@@ -174,9 +193,11 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.groups = data;
 
         // set default value in form
-        this.jobAppForm.patchValue({
-          group: this.getDefaultGroup(),
-        });
+        if (!this.jobAppForm.get('group')?.value) {
+          this.jobAppForm.patchValue({
+            group: this.getDefaultGroup(),
+          });
+        }
       },
     });
   }
@@ -195,9 +216,11 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.initialSteps = data.filter((s: any) => s.type === 'S');
 
         // set default value in form
-        this.jobAppForm.patchValue({
-          initialStep: this.initialSteps[0].id,
-        });
+        if (!this.jobAppForm.get('initialStep')?.value) {
+          this.jobAppForm.patchValue({
+            initialStep: this.initialSteps[0]?.id,
+          });
+        }
       },
     });
   }

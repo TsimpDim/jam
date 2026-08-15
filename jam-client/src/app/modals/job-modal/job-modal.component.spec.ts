@@ -16,8 +16,8 @@ describe('JobModalComponent', () => {
       'getGroups', 'getSteps', 'getLeads', 'getCVs',
       'createJobApplication', 'updateJobApplication', 'deleteJobApplication',
     ]);
-    jamServiceSpy.getGroups.and.returnValue(of([]));
-    jamServiceSpy.getSteps.and.returnValue(of([]));
+    jamServiceSpy.getGroups.and.returnValue(of([{ id: 1, name: 'Tech' }]));
+    jamServiceSpy.getSteps.and.returnValue(of([{ id: 5, type: 'S', name: 'Applied' }]));
     jamServiceSpy.getLeads.and.returnValue(of([]));
     jamServiceSpy.getCVs.and.returnValue(of([]));
 
@@ -43,5 +43,43 @@ describe('JobModalComponent', () => {
   it('should have form with company and role fields', () => {
     expect(component.jobAppForm.get('company')).toBeTruthy();
     expect(component.jobAppForm.get('role')).toBeTruthy();
+  });
+
+  describe('prefill from lead', () => {
+    const openWithPrefill = (prefill: any) => {
+      component.application = null;
+      component.prefill = prefill;
+      component.ngOnChanges({
+        isOpen: { previousValue: false, currentValue: true, firstChange: false },
+      } as any);
+    };
+
+    it('should pre-fill the form when opened with a lead', () => {
+      openWithPrefill({
+        id: 3,
+        company: 'Acme',
+        role: 'Engineer',
+        location: 'NYC',
+        external_link: 'https://acme.com/jobs/1',
+        notes: 'Great fit',
+        group: null,
+      });
+      expect(component.jobAppForm.value.company).toBe('Acme');
+      expect(component.jobAppForm.value.role).toBe('Engineer');
+      expect(component.jobAppForm.value.location).toBe('NYC');
+      expect(component.jobAppForm.value.externalLink).toBe('https://acme.com/jobs/1');
+      expect(component.jobAppForm.value.notes).toBe('Great fit');
+      expect(component.jobAppForm.value.lead).toBe(3);
+    });
+
+    it('should use the lead group when provided', () => {
+      openWithPrefill({ id: 3, company: 'Acme', role: 'Engineer', group: 2 });
+      expect(component.jobAppForm.value.group).toBe(2);
+    });
+
+    it('should keep the default group when the lead has no group', () => {
+      openWithPrefill({ id: 3, company: 'Acme', role: 'Engineer', group: null });
+      expect(component.jobAppForm.value.group).toBe(1);
+    });
   });
 });
