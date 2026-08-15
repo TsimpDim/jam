@@ -20,11 +20,18 @@ import {
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { FileUploadComponent } from '../../shared/file-upload/file-upload.component';
+import { LeadPrefillModalComponent } from '../lead-prefill-modal/lead-prefill-modal.component';
 
 @Component({
   selector: 'app-job-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule, FileUploadComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ClarityModule,
+    FileUploadComponent,
+    LeadPrefillModalComponent,
+  ],
   templateUrl: './job-modal.component.html',
   styleUrls: ['./job-modal.component.scss'],
 })
@@ -44,6 +51,10 @@ export class JobModalComponent implements OnInit, OnChanges {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.leadPrefillPromptOpen) {
+      this.closeLeadPrefillPrompt();
+      return;
+    }
     this.onClose.emit();
   }
 
@@ -58,6 +69,9 @@ export class JobModalComponent implements OnInit, OnChanges {
   public groups: any = null;
   public leads: any = null;
   public cvs: any = null;
+  public leadPrefillPromptOpen: boolean = false;
+  public pendingLeadForPrefill: any = null;
+  private lastPromptedLeadId: number | null = null;
 
   constructor(
     private jamService: JamService,
@@ -87,6 +101,7 @@ export class JobModalComponent implements OnInit, OnChanges {
       changes['application'].currentValue !== null
     ) {
       let application = this.application;
+      this.lastPromptedLeadId = application.lead || null;
       this.jobAppForm.patchValue({
         company: application.company,
         role: application.role,
@@ -113,6 +128,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   }
 
   applyPrefill(prefill: any) {
+    this.lastPromptedLeadId = prefill.id ?? null;
     const patch: any = {
       company: prefill.company,
       role: prefill.role,
@@ -172,6 +188,50 @@ export class JobModalComponent implements OnInit, OnChanges {
     this.getGroups();
     this.getLeads();
     this.getCVs();
+    this.jobAppForm
+      .get('lead')
+      ?.valueChanges.subscribe((leadId) =>
+        this.onLeadFormSelectionChanged(leadId),
+      );
+  }
+
+  onLeadFormSelectionChanged(leadId: any) {
+    if (leadId === null || leadId === undefined || leadId === '') {
+      this.lastPromptedLeadId = null;
+      return;
+    }
+    if (leadId === this.lastPromptedLeadId) {
+      return;
+    }
+    this.lastPromptedLeadId = leadId;
+    const lead = this.leads?.find((l: any) => l.id === leadId);
+    if (lead) {
+      this.pendingLeadForPrefill = lead;
+      this.leadPrefillPromptOpen = true;
+    }
+  }
+
+  confirmLeadPrefill() {
+    const lead = this.pendingLeadForPrefill;
+    if (lead) {
+      const patch: any = {
+        company: lead.company,
+        role: lead.role,
+        location: lead.location || '',
+        externalLink: lead.external_link || '',
+        notes: lead.notes || '',
+      };
+      if (lead.group) {
+        patch.group = lead.group;
+      }
+      this.jobAppForm.patchValue(patch);
+    }
+    this.closeLeadPrefillPrompt();
+  }
+
+  closeLeadPrefillPrompt() {
+    this.leadPrefillPromptOpen = false;
+    this.pendingLeadForPrefill = null;
   }
 
   submitJobAppForm() {

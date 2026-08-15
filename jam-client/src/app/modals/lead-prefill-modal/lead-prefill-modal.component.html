@@ -1,0 +1,44 @@
+<clr-modal
+  [clrModalOpen]="open"
+  (clrModalOpenChange)="onModalOpenChange($event)"
+  [clrModalSize]="'md'"
+  [clrModalClosable]="false"
+>
+  <h3 class="modal-title">Pre-fill from lead?</h3>
+  <div class="modal-body" *ngIf="lead">
+    <div class="lead-overview">
+      <div class="overview-row" *ngIf="lead.company">
+        <span class="overview-label">Company</span>
+        <span class="overview-value">{{ lead.company }}</span>
+      </div>
+      <div class="overview-row" *ngIf="lead.role">
+        <span class="overview-label">Role</span>
+        <span class="overview-value">{{ lead.role }}</span>
+      </div>
+      <div class="overview-row" *ngIf="lead.location">
+        <span class="overview-label">Location</span>
+        <span class="overview-value">{{ lead.location }}</span>
+      </div>
+      <div class="overview-row" *ngIf="lead.external_link">
+        <span class="overview-label">External Link</span>
+        <span class="overview-value">{{ lead.external_link }}</span>
+      </div>
+      <div class="overview-row" *ngIf="lead.group_name">
+        <span class="overview-label">Group</span>
+        <span class="overview-value">{{ lead.group_name }}</span>
+      </div>
+      <div class="overview-row overview-notes" *ngIf="lead.notes">
+        <span class="overview-label">Notes</span>
+        <span class="overview-value">{{ lead.notes }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="decline()">
+      No, thanks
+    </button>
+    <button type="button" class="btn btn-primary" (click)="confirm()">
+      Pre-fill
+    </button>
+  </div>
+</clr-modal>

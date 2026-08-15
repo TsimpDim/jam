@@ -82,4 +82,79 @@ describe('JobModalComponent', () => {
       expect(component.jobAppForm.value.group).toBe(1);
     });
   });
+
+  describe('lead selection prefill prompt', () => {
+    const lead = {
+      id: 7,
+      company: 'Acme',
+      role: 'Engineer',
+      location: 'NYC',
+      external_link: 'https://acme.com/jobs/1',
+      notes: 'Nice opportunity',
+      group: 2,
+      group_name: 'Health',
+    };
+
+    beforeEach(() => {
+      component.leads = [lead];
+    });
+
+    it('should prompt for prefill when a lead is selected', () => {
+      component.jobAppForm.get('lead')?.setValue(7);
+      expect(component.leadPrefillPromptOpen).toBeTrue();
+      expect(component.pendingLeadForPrefill).toEqual(lead);
+    });
+
+    it('should not prompt when the lead is set programmatically by prefill', () => {
+      component.applyPrefill({ ...lead });
+      expect(component.leadPrefillPromptOpen).toBeFalse();
+      expect(component.jobAppForm.value.lead).toBe(7);
+    });
+
+    it('should pre-fill the form when the prompt is confirmed', () => {
+      component.jobAppForm.get('lead')?.setValue(7);
+      component.confirmLeadPrefill();
+      expect(component.jobAppForm.value.company).toBe('Acme');
+      expect(component.jobAppForm.value.role).toBe('Engineer');
+      expect(component.jobAppForm.value.location).toBe('NYC');
+      expect(component.jobAppForm.value.externalLink).toBe(
+        'https://acme.com/jobs/1',
+      );
+      expect(component.jobAppForm.value.notes).toBe('Nice opportunity');
+      expect(component.jobAppForm.value.group).toBe(2);
+      expect(component.leadPrefillPromptOpen).toBeFalse();
+      expect(component.pendingLeadForPrefill).toBeNull();
+    });
+
+    it('should keep the form unchanged when the prompt is declined', () => {
+      component.jobAppForm.patchValue({ company: 'Existing', role: 'Dev' });
+      component.jobAppForm.get('lead')?.setValue(7);
+      component.closeLeadPrefillPrompt();
+      expect(component.jobAppForm.value.company).toBe('Existing');
+      expect(component.jobAppForm.value.role).toBe('Dev');
+      expect(component.jobAppForm.value.lead).toBe(7);
+      expect(component.leadPrefillPromptOpen).toBeFalse();
+      expect(component.pendingLeadForPrefill).toBeNull();
+    });
+
+    it('should prompt again when a different lead is selected', () => {
+      component.jobAppForm.get('lead')?.setValue(7);
+      component.closeLeadPrefillPrompt();
+      component.leads = [
+        ...component.leads,
+        { ...lead, id: 8, company: 'Globex' },
+      ];
+      component.jobAppForm.get('lead')?.setValue(8);
+      expect(component.leadPrefillPromptOpen).toBeTrue();
+      expect(component.pendingLeadForPrefill?.company).toBe('Globex');
+    });
+
+    it('should prompt again when re-selecting a lead after clearing the selection', () => {
+      component.jobAppForm.get('lead')?.setValue(7);
+      component.closeLeadPrefillPrompt();
+      component.jobAppForm.get('lead')?.setValue(null as any);
+      component.jobAppForm.get('lead')?.setValue(7);
+      expect(component.leadPrefillPromptOpen).toBeTrue();
+    });
+  });
 });

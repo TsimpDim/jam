@@ -203,3 +203,10 @@
     </button>
   </div>
 </clr-modal>
+
+<app-lead-prefill-modal
+  [open]="leadPrefillPromptOpen"
+  [lead]="pendingLeadForPrefill"
+  (closed)="closeLeadPrefillPrompt()"
+  (confirmed)="confirmLeadPrefill()"
+></app-lead-prefill-modal>

@@ -354,10 +354,13 @@ describe('LeadsComponent', () => {
       component.leads = mockLeads;
       component.loading = false;
       fixture.detectChanges();
-      const button = fixture.nativeElement.querySelector(
-        '.card .card-footer .btn',
+      const buttons = Array.from(
+        fixture.nativeElement.querySelectorAll('.card .card-footer .btn'),
+      ) as HTMLElement[];
+      const convertButton = buttons.find((b) =>
+        b.textContent?.includes('Convert to job application'),
       );
-      button.click();
+      convertButton?.click();
       expect(component.jobAppModalIsOpen).toBeTrue();
       expect(component.leadToConvert).toEqual(mockLeads[0]);
     });

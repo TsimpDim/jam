@@ -1,0 +1,29 @@
+.lead-overview {
+  border: 1px solid var(--clr-global-border-color);
+  border-radius: 4px;
+  background: var(--clr-global-app-background);
+  padding: 0.5rem 0.75rem;
+  max-height: 16rem;
+  overflow-y: auto;
+
+  .overview-row {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.3rem 0;
+    font-size: 0.85rem;
+
+    .overview-label {
+      flex: 0 0 6.5rem;
+      font-weight: 500;
+      color: var(--color-ink-secondary);
+    }
+
+    .overview-value {
+      word-break: break-word;
+    }
+
+    &.overview-notes .overview-value {
+      white-space: pre-wrap;
+    }
+  }
+}
