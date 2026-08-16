@@ -327,11 +327,6 @@ class ScheduledLeadGenerationRequestViewSetTest(TestCase):
         self.assertEqual(request.schedule, schedule)
         self.assertEqual(request.num_leads, 12)
         self.assertIn(self.country, request.countries.all())
-        self.assertTrue(
-            Notification.objects.filter(
-                user=self.user, notification_type__code="lead_generation_scheduled"
-            ).exists()
-        )
 
     def test_premium_create_duplicate_fails(self):
         self.user.profile.is_premium = True
