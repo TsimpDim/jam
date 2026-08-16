@@ -65,7 +65,7 @@
     <button
       type="button"
       class="btn btn-danger-outline"
-      (click)="deleteTimelineStep()"
+      (click)="openDeleteConfirm()"
       *ngIf="timelineStep !== null && timelineStep.step.type !== 'S'"
     >
       Delete
@@ -82,3 +82,12 @@
     </button>
   </div>
 </clr-modal>
+
+<app-confirm-modal
+  [open]="confirmDeleteOpen"
+  title="Delete Timeline Step"
+  message="Are you sure you want to delete this timeline step?"
+  verb="Delete"
+  (closed)="onDeleteCancelled()"
+  (confirmed)="onDeleteConfirmed()"
+></app-confirm-modal>

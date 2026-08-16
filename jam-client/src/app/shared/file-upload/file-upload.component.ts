@@ -14,6 +14,7 @@ import { ClarityIcons, trashIcon, uploadCloudIcon, downloadIcon } from '@cds/cor
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { JobAppFile } from 'src/app/interfaces';
+import { ConfirmModalComponent } from '../../modals/confirm-modal/confirm-modal.component';
 
 ClarityIcons.addIcons(trashIcon, uploadCloudIcon, downloadIcon);
 
@@ -29,7 +30,7 @@ const MAX_FILE_SIZE = 300 * 1024 * 1024;
 @Component({
   selector: 'app-file-upload',
   standalone: true,
-  imports: [CommonModule, ClarityModule],
+  imports: [CommonModule, ClarityModule, ConfirmModalComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],
@@ -46,6 +47,8 @@ export class FileUploadComponent implements OnChanges, AfterViewInit {
   loading = false;
   uploading = false;
   isDragOver = false;
+  confirmDeleteOpen = false;
+  fileToDelete: JobAppFile | null = null;
 
   constructor(private jamService: JamService, private snackbarService: SnackbarService) {}
 
@@ -185,6 +188,17 @@ export class FileUploadComponent implements OnChanges, AfterViewInit {
 
   deleteFile(file: JobAppFile, event: Event): void {
     event.stopPropagation();
+    this.fileToDelete = file;
+    this.confirmDeleteOpen = true;
+  }
+
+  onDeleteConfirmed(): void {
+    this.confirmDeleteOpen = false;
+    if (this.fileToDelete === null) {
+      return;
+    }
+    const file = this.fileToDelete;
+    this.fileToDelete = null;
     this.jamService.deleteJobAppFile(file.id).subscribe({
       next: () => {
         this.files = this.files.filter((f) => f.id !== file.id);
@@ -192,6 +206,11 @@ export class FileUploadComponent implements OnChanges, AfterViewInit {
         this.filesChange.emit(this.files);
       },
     });
+  }
+
+  onDeleteCancelled(): void {
+    this.confirmDeleteOpen = false;
+    this.fileToDelete = null;
   }
 
   downloadFile(file: JobAppFile, event: Event): void {

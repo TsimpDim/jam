@@ -18,11 +18,12 @@ import {
 import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-timeline-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule, ConfirmModalComponent],
   templateUrl: './timeline-modal.component.html',
   styleUrls: ['./timeline-modal.component.scss'],
 })
@@ -37,12 +38,16 @@ export class TimelineModalComponent implements OnInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.confirmDeleteOpen) {
+      return;
+    }
     this.onClose.emit();
   }
 
   public timelineStepForm: FormGroup;
   public loading: boolean = false;
   public nonInitialSteps: any = null;
+  public confirmDeleteOpen: boolean = false;
 
   constructor(
     private jamService: JamService,
@@ -208,5 +213,18 @@ export class TimelineModalComponent implements OnInit {
         });
       },
     });
+  }
+
+  openDeleteConfirm() {
+    this.confirmDeleteOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    this.confirmDeleteOpen = false;
+    this.deleteTimelineStep();
+  }
+
+  onDeleteCancelled() {
+    this.confirmDeleteOpen = false;
   }
 }

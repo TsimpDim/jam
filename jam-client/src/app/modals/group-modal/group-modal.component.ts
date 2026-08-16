@@ -19,11 +19,12 @@ import {
 } from '@angular/forms';
 import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-group-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule, ConfirmModalComponent],
   templateUrl: './group-modal.component.html',
   styleUrls: ['./group-modal.component.scss'],
 })
@@ -35,9 +36,13 @@ export class GroupModalComponent implements OnInit, OnChanges {
 
   public groupForm: FormGroup;
   public loading: boolean = false;
+  public confirmDeleteOpen: boolean = false;
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.confirmDeleteOpen) {
+      return;
+    }
     this.onClose.emit();
   }
 
@@ -167,5 +172,18 @@ export class GroupModalComponent implements OnInit, OnChanges {
         );
       },
     });
+  }
+
+  openDeleteConfirm() {
+    this.confirmDeleteOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    this.confirmDeleteOpen = false;
+    this.deleteGroup();
+  }
+
+  onDeleteCancelled() {
+    this.confirmDeleteOpen = false;
   }
 }

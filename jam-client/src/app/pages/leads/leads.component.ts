@@ -79,6 +79,9 @@ export class LeadsComponent implements OnInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.confirmModalOpen) {
+      return;
+    }
     this.closeModal();
   }
 

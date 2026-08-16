@@ -21,6 +21,7 @@ import { JamService } from 'src/app/core/api/jam.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { FileUploadComponent } from '../../shared/file-upload/file-upload.component';
 import { LeadPrefillModalComponent } from '../lead-prefill-modal/lead-prefill-modal.component';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-job-modal',
@@ -31,6 +32,7 @@ import { LeadPrefillModalComponent } from '../lead-prefill-modal/lead-prefill-mo
     ClarityModule,
     FileUploadComponent,
     LeadPrefillModalComponent,
+    ConfirmModalComponent,
   ],
   templateUrl: './job-modal.component.html',
   styleUrls: ['./job-modal.component.scss'],
@@ -51,6 +53,9 @@ export class JobModalComponent implements OnInit, OnChanges {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.confirmDeleteOpen) {
+      return;
+    }
     if (this.leadPrefillPromptOpen) {
       this.closeLeadPrefillPrompt();
       return;
@@ -71,6 +76,7 @@ export class JobModalComponent implements OnInit, OnChanges {
   public cvs: any = null;
   public leadPrefillPromptOpen: boolean = false;
   public pendingLeadForPrefill: any = null;
+  public confirmDeleteOpen: boolean = false;
   private lastPromptedLeadId: number | null = null;
 
   constructor(
@@ -382,5 +388,20 @@ export class JobModalComponent implements OnInit, OnChanges {
         this.loading = false;
       },
     });
+  }
+
+  openDeleteConfirm() {
+    this.confirmDeleteOpen = true;
+  }
+
+  onDeleteConfirmed() {
+    this.confirmDeleteOpen = false;
+    if (this.application !== null) {
+      this.deleteJobApp(this.application.id);
+    }
+  }
+
+  onDeleteCancelled() {
+    this.confirmDeleteOpen = false;
   }
 }

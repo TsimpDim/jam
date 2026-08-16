@@ -118,10 +118,24 @@ describe('CvUploadModalComponent', () => {
       expect(component.closed.emit).toHaveBeenCalled();
     });
 
-    it('should emit deleted on delete', () => {
-      spyOn(component.deleted, 'emit');
+    it('should open the confirm dialog on delete', () => {
       component.delete();
+      expect(component.confirmDeleteOpen).toBeTrue();
+    });
+
+    it('should emit deleted when the delete is confirmed', () => {
+      spyOn(component.deleted, 'emit');
+      component.onDeleteConfirmed();
       expect(component.deleted.emit).toHaveBeenCalled();
+      expect(component.confirmDeleteOpen).toBeFalse();
+    });
+
+    it('should close the confirm dialog without emitting when cancelled', () => {
+      spyOn(component.deleted, 'emit');
+      component.confirmDeleteOpen = true;
+      component.onDeleteCancelled();
+      expect(component.deleted.emit).not.toHaveBeenCalled();
+      expect(component.confirmDeleteOpen).toBeFalse();
     });
   });
 });

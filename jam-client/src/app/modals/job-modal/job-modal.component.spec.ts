@@ -83,6 +83,35 @@ describe('JobModalComponent', () => {
     });
   });
 
+  describe('delete confirmation', () => {
+    const application = { id: 9, company: 'Acme', role: 'Engineer' };
+
+    beforeEach(() => {
+      component.application = application;
+      jamServiceSpy.deleteJobApplication.and.returnValue(of({}));
+    });
+
+    it('should open confirm dialog when openDeleteConfirm is called', () => {
+      component.openDeleteConfirm();
+      expect(component.confirmDeleteOpen).toBeTrue();
+    });
+
+    it('should call deleteJobApplication only after confirmation', () => {
+      component.openDeleteConfirm();
+      expect(jamServiceSpy.deleteJobApplication).not.toHaveBeenCalled();
+      component.onDeleteConfirmed();
+      expect(jamServiceSpy.deleteJobApplication).toHaveBeenCalledWith(9);
+      expect(component.confirmDeleteOpen).toBeFalse();
+    });
+
+    it('should not delete when confirmation is cancelled', () => {
+      component.openDeleteConfirm();
+      component.onDeleteCancelled();
+      expect(jamServiceSpy.deleteJobApplication).not.toHaveBeenCalled();
+      expect(component.confirmDeleteOpen).toBeFalse();
+    });
+  });
+
   describe('lead selection prefill prompt', () => {
     const lead = {
       id: 7,

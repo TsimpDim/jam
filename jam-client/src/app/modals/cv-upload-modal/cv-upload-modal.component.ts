@@ -21,6 +21,7 @@ import {
 import { ClarityModule } from '@clr/angular';
 import { JamService } from 'src/app/core/api/jam.service';
 import { CV } from 'src/app/interfaces';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
 const MAX_FILE_SIZE = 1 * 1024 * 1024;
@@ -50,7 +51,7 @@ function cvFileValidator(required: boolean): ValidatorFn {
 @Component({
   selector: 'app-cv-upload-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClarityModule],
+  imports: [CommonModule, ReactiveFormsModule, ClarityModule, ConfirmModalComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './cv-upload-modal.component.html',
   styleUrls: ['./cv-upload-modal.component.scss'],
@@ -65,6 +66,7 @@ export class CvUploadModalComponent implements OnChanges {
   form: FormGroup;
   uploading = false;
   cvFileError = '';
+  confirmDeleteOpen = false;
 
   get isEditMode(): boolean {
     return this.editCV !== null;
@@ -144,7 +146,16 @@ export class CvUploadModalComponent implements OnChanges {
   }
 
   delete(): void {
+    this.confirmDeleteOpen = true;
+  }
+
+  onDeleteConfirmed(): void {
+    this.confirmDeleteOpen = false;
     this.deleted.emit();
+  }
+
+  onDeleteCancelled(): void {
+    this.confirmDeleteOpen = false;
   }
 
   close(): void {

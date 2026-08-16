@@ -36,4 +36,31 @@ describe('TimelineModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('delete confirmation', () => {
+    beforeEach(() => {
+      component.timelineStep = { id: 3, step: { name: 'Interview', type: 'M' } };
+      jamServiceSpy.deleteTimelineStep.and.returnValue(of({}));
+    });
+
+    it('should open confirm dialog when openDeleteConfirm is called', () => {
+      component.openDeleteConfirm();
+      expect(component.confirmDeleteOpen).toBeTrue();
+    });
+
+    it('should call deleteTimelineStep only after confirmation', () => {
+      component.openDeleteConfirm();
+      expect(jamServiceSpy.deleteTimelineStep).not.toHaveBeenCalled();
+      component.onDeleteConfirmed();
+      expect(jamServiceSpy.deleteTimelineStep).toHaveBeenCalledWith(3);
+      expect(component.confirmDeleteOpen).toBeFalse();
+    });
+
+    it('should not delete when confirmation is cancelled', () => {
+      component.openDeleteConfirm();
+      component.onDeleteCancelled();
+      expect(jamServiceSpy.deleteTimelineStep).not.toHaveBeenCalled();
+      expect(component.confirmDeleteOpen).toBeFalse();
+    });
+  });
 });

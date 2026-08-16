@@ -42,7 +42,7 @@
     <button
       type="button"
       class="btn btn-danger-outline"
-      (click)="deleteGroup()"
+      (click)="openDeleteConfirm()"
       *ngIf="group !== null"
     >
       Delete
@@ -55,3 +55,12 @@
     </button>
   </div>
 </clr-modal>
+
+<app-confirm-modal
+  [open]="confirmDeleteOpen"
+  title="Delete Group"
+  message="Are you sure you want to delete this group?"
+  verb="Delete"
+  (closed)="onDeleteCancelled()"
+  (confirmed)="onDeleteConfirmed()"
+></app-confirm-modal>
