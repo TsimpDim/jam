@@ -26,7 +26,7 @@ describe('RegisterComponent', () => {
         provideNoopAnimations(),
         provideHttpClient(),
         provideHttpClientTesting(),
-        provideRouter([]),
+        provideRouter([{ path: 'auth/login', component: {} as any }]),
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SnackbarService, useValue: snackbarServiceSpy },
       ],

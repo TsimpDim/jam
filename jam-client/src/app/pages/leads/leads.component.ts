@@ -16,7 +16,12 @@ import { CoverLetterGenerationModalComponent } from 'src/app/modals/cover-letter
 import { CoverLetterResultModalComponent } from 'src/app/modals/cover-letter-result-modal/cover-letter-result-modal.component';
 import { ConfirmModalComponent } from 'src/app/modals/confirm-modal/confirm-modal.component';
 import { JobModalComponent } from 'src/app/modals/job-modal/job-modal.component';
-import { UserInfo, CoverLetterGenerationRequest } from 'src/app/interfaces';
+import {
+  UserInfo,
+  CoverLetterGenerationRequest,
+  ScheduledLeadGenerationRequest,
+} from 'src/app/interfaces';
+import { LeadGenerationPayload } from 'src/app/modals/lead-generation-modal/lead-generation-modal.component';
 
 @Component({
   selector: 'app-leads',
@@ -60,6 +65,9 @@ export class LeadsComponent implements OnInit {
   inProgressCount: number = 0;
   userInfo: UserInfo | null = null;
   hasReachedDailyQuota: boolean = false;
+  leadGenerationScheduleMode: boolean = false;
+  scheduledLeadGeneration: ScheduledLeadGenerationRequest | null = null;
+  confirmScheduleCancelOpen: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -97,7 +105,16 @@ export class LeadsComponent implements OnInit {
       next: (data) => {
         this.userInfo = data;
         this.loadLeadGenerationStatus(!data.is_premium);
+        if (data.is_premium) {
+          this.loadScheduledLeadGeneration();
+        }
       },
+    });
+  }
+
+  loadScheduledLeadGeneration(): void {
+    this.specialService.getScheduledLeadGeneration().subscribe((schedules) => {
+      this.scheduledLeadGeneration = schedules[0] || null;
     });
   }
 
@@ -348,10 +365,20 @@ export class LeadsComponent implements OnInit {
   }
 
   openLeadGenerationModal() {
+    this.leadGenerationScheduleMode = false;
     this.showLeadGenerationModal = true;
   }
 
-  onLeadGenerationSubmitted(payload: any) {
+  openLeadGenerationScheduleModal() {
+    this.leadGenerationScheduleMode = true;
+    this.showLeadGenerationModal = true;
+  }
+
+  onLeadGenerationSubmitted(payload: LeadGenerationPayload) {
+    if (this.leadGenerationScheduleMode) {
+      this.onLeadGenerationScheduled(payload);
+      return;
+    }
     this.loading = true;
     this.specialService.createLeadGenerationRequest(payload).subscribe({
       next: () => {
@@ -384,8 +411,105 @@ export class LeadsComponent implements OnInit {
     });
   }
 
+  onLeadGenerationScheduled(payload: LeadGenerationPayload) {
+    this.loading = true;
+    if (this.scheduledLeadGeneration) {
+      this.specialService
+        .updateScheduledLeadGeneration(this.scheduledLeadGeneration.id, payload)
+        .subscribe({
+          next: (updated) => {
+            this.scheduledLeadGeneration = updated;
+            this.snackbarService.showSuccess('Daily schedule updated.');
+            this.snackbarService.showInfo(
+              'Your daily lead generation will run with the new criteria.',
+            );
+            this.showLeadGenerationModal = false;
+            this.loading = false;
+          },
+          error: (e) => {
+            this.loading = false;
+            this.snackbarService.showError(
+              this.snackbarService.getErrorMessage(
+                e,
+                'An error occurred while updating the schedule.',
+              ),
+            );
+          },
+          complete: () => {
+            this.loading = false;
+          },
+        });
+    } else {
+      this.specialService.createScheduledLeadGeneration(payload).subscribe({
+        next: (created) => {
+          this.scheduledLeadGeneration = created;
+          this.snackbarService.showSuccess(
+            'Daily lead generation scheduled — the first run starts now.',
+          );
+          this.snackbarService.showInfo(
+            'This search will run daily. You will be notified after every run.',
+          );
+          this.showLeadGenerationModal = false;
+          this.inProgressCount++;
+          this.loading = false;
+        },
+        error: (e) => {
+          this.loading = false;
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while scheduling the lead generation.',
+            ),
+          );
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
+    }
+  }
+
+  onScheduleCancelled() {
+    this.confirmScheduleCancelOpen = true;
+  }
+
+  onScheduleCancelCancelled() {
+    this.confirmScheduleCancelOpen = false;
+  }
+
+  onScheduleCancelConfirmed() {
+    this.confirmScheduleCancelOpen = false;
+    if (!this.scheduledLeadGeneration) {
+      return;
+    }
+    this.loading = true;
+    this.specialService
+      .deleteScheduledLeadGeneration(this.scheduledLeadGeneration.id)
+      .subscribe({
+        next: () => {
+          this.scheduledLeadGeneration = null;
+          this.showLeadGenerationModal = false;
+          this.loading = false;
+          this.snackbarService.showSuccess('Daily schedule cancelled.');
+        },
+        error: (e) => {
+          this.loading = false;
+          this.snackbarService.showError(
+            this.snackbarService.getErrorMessage(
+              e,
+              'An error occurred while cancelling the schedule.',
+            ),
+          );
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
+  }
+
   onLeadGenerationModalClosed() {
     this.showLeadGenerationModal = false;
+    this.leadGenerationScheduleMode = false;
   }
 
   openCoverLetterModal(leadId: number) {

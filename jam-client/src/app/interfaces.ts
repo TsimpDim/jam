@@ -67,6 +67,8 @@ export interface Lead {
   date?: string;
   applications?: JobApplication[];
   generated?: boolean;
+  generation_request?: number | null;
+  from_scheduled_generation?: boolean;
 }
 
 export interface JobAdSnapshot {
@@ -224,10 +226,35 @@ export interface LeadGenerationRequest {
   industries: number[];
   industries_names: string[];
   company_sizes: string[];
+  num_leads: number;
+  additional_comment: string | null;
+  leads_generated_count: number;
   result: string | null;
   is_done: boolean;
   created_at: string;
   completed_at: string | null;
+}
+
+export interface ScheduledLeadGenerationRequest {
+  id: number;
+  countries: number[];
+  countries_names: string[];
+  cities: number[];
+  cities_names: string[];
+  company_leads_only: boolean;
+  roles: number[];
+  roles_names: string[];
+  modes: string[];
+  experience_level: number[];
+  experience_level_names: string[];
+  industries: number[];
+  industries_names: string[];
+  company_sizes: string[];
+  num_leads: number;
+  additional_comment: string | null;
+  last_generation_request: number | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CoverLetterGenerationRequest {

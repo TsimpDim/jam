@@ -17,7 +17,7 @@ describe('LoginComponent', () => {
       providers: [
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
-        provideRouter([]),
+        provideRouter([{ path: 'auth/login', component: {} as any }]),
         { provide: AuthService, useValue: jasmine.createSpyObj('AuthService', ['login', 'setStatusLoggedIn']) },
         { provide: SnackbarService, useValue: jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']) },
       ],

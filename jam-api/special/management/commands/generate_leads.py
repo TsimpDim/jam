@@ -47,6 +47,8 @@ class Command(BaseCommand):
                 company_leads_only = request.company_leads_only
                 roles_list = list(request.roles.all())
                 roles = [role.name for role in roles_list] if roles_list else None
+                num_leads = request.num_leads or 15
+                additional_comment = request.additional_comment
 
                 self.stdout.write('  Step 1: Performing real web search...')
                 try:
@@ -58,6 +60,7 @@ class Command(BaseCommand):
                             cities=cities,
                             modes=modes,
                             company_sizes=company_sizes,
+                            additional_comment=additional_comment,
                         )
                     else:
                         search_results = WebSearch.search_jobs(
@@ -69,6 +72,7 @@ class Command(BaseCommand):
                             modes=modes,
                             experience_level=experience_level,
                             company_sizes=company_sizes,
+                            additional_comment=additional_comment,
                         )
                     self.stdout.write(f'  Found {len(search_results)} raw search results.')
                 except Exception as e:
@@ -113,6 +117,8 @@ class Command(BaseCommand):
                                     company_sizes=company_sizes,
                                     roles=roles,
                                     company_leads_only=company_leads_only,
+                                    num_leads=num_leads,
+                                    additional_comment=additional_comment,
                                     search_results=search_results,
                                 )
                             }
@@ -149,7 +155,8 @@ class Command(BaseCommand):
                                 role=role,
                                 external_link=external_link,
                                 location=location,
-                                generated=True
+                                generated=True,
+                                generation_request=request,
                             )
                             existing_lead_companies.add(company.lower())
                             saved_count += 1
@@ -157,6 +164,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS(f'  Saved {saved_count} leads.'))
                     request.is_done = True
                     request.completed_at = timezone.now()
+                    request.leads_generated_count = saved_count
                     request.save()
                     notif_type = NotificationType.objects.get(code='lead_generation_done')
                     role_str = f"{', '.join(roles)} " if roles else ""

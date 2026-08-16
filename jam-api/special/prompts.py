@@ -68,11 +68,20 @@ def _format_search_results(search_results: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def build_lead_generation_prompt(existing_lead_companies: set[str], industries: list[str], experience_level: str, countries: list[str], cities: list[str], modes: list[str], company_sizes: list[str], roles: list[str], company_leads_only: bool, search_results: list[dict] = None) -> str:
+def build_lead_generation_prompt(existing_lead_companies: set[str], industries: list[str], experience_level: str, countries: list[str], cities: list[str], modes: list[str], company_sizes: list[str], roles: list[str], company_leads_only: bool, num_leads: int = 15, additional_comment: str = None, search_results: list[dict] = None) -> str:
     industries_str = ', '.join(industries) if industries else 'all industries'
     countries_str = ', '.join(countries) if countries else 'any country'
     cities_str = ', '.join(cities) if cities else 'any city'
     search_results_str = _format_search_results(search_results or [])
+    additional_requirements_block = ""
+    if additional_comment:
+        additional_requirements_block = f"""
+## Additional Requirements from the User
+{additional_comment}
+
+When selecting results, treat these additional requirements as the highest
+priority criteria. Only include results that match them whenever possible."""
+
 
     if company_leads_only:
         return f"""
@@ -93,9 +102,9 @@ Below you will find real search results from the web. You MUST use ONLY these re
 - Modes: {', '.join(modes)}
 - Company Sizes: {', '.join(company_sizes)}
 - Existing leads to avoid: {existing_lead_companies}
-
+{additional_requirements_block}
 ## Task
-From the search results above, select up to 15 companies that best match the criteria. Extract the company name from the title/snippet. Use the EXACT URL from the search results.
+From the search results above, select up to {num_leads} companies that best match the criteria. Extract the company name from the title/snippet. Use the EXACT URL from the search results.
 
 ## Output Format
 Output ONLY a valid JSON array. No thinking tags, no explanation, no markdown. Start with [ and end with ].
@@ -129,9 +138,9 @@ Below you will find real search results from the web. You MUST use ONLY these re
 - Roles: {', '.join(roles) if roles else 'any role'}
 - Experience Level: {experience_level}
 - Existing leads to avoid: {existing_lead_companies}
-
+{additional_requirements_block}
 ## Task
-From the search results above, select up to 15 job postings that best match the criteria. Extract the exact job title from the title/snippet. Use the EXACT URL from the search results.
+From the search results above, select up to {num_leads} job postings that best match the criteria. Extract the exact job title from the title/snippet. Use the EXACT URL from the search results.
 
 ## Output Format
 Output ONLY a valid JSON array. No thinking tags, no explanation, no markdown. Start with [ and end with ].

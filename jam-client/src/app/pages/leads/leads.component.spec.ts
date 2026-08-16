@@ -50,11 +50,14 @@ describe('LeadsComponent', () => {
 
     specialServiceSpy = jasmine.createSpyObj('SpecialService', [
       'getLeadGenerationRequests', 'createLeadGenerationRequest',
+      'getScheduledLeadGeneration', 'createScheduledLeadGeneration',
+      'updateScheduledLeadGeneration', 'deleteScheduledLeadGeneration',
       'getCoverLetterRequests', 'createCoverLetterRequest',
       'getIndustries', 'getExperienceLevels', 'getRoles', 'getCities',
       'getCountries',
     ]);
     specialServiceSpy.getLeadGenerationRequests.and.returnValue(of([]));
+    specialServiceSpy.getScheduledLeadGeneration.and.returnValue(of([]));
     specialServiceSpy.getCoverLetterRequests.and.returnValue(of([]));
     specialServiceSpy.getIndustries.and.returnValue(of([]));
     specialServiceSpy.getExperienceLevels.and.returnValue(of([]));
@@ -74,7 +77,9 @@ describe('LeadsComponent', () => {
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideRouter([]),
+        provideRouter([
+          { path: 'auth/login', component: {} as any },
+        ]),
         { provide: JamService, useValue: jamServiceSpy },
         { provide: SpecialService, useValue: specialServiceSpy },
         { provide: SnackbarService, useValue: snackbarServiceSpy },
@@ -386,6 +391,141 @@ describe('LeadsComponent', () => {
       expect(component.leadForm.value.company).toBeFalsy();
       expect(component.selectedLead).toBeNull();
       expect(component.modalIsOpen).toBeTrue();
+    });
+  });
+
+  describe('daily scheduled lead generation', () => {
+    const schedulePayload = {
+      countries: [1],
+      cities: [],
+      company_leads_only: false,
+      roles: [2],
+      modes: ['Remote'],
+      experience_level: [3],
+      industries: [],
+      company_sizes: ['Startup'],
+      num_leads: 10,
+      additional_comment: 'Motorsports only',
+    };
+
+    const scheduleResponse = {
+      id: 7,
+      ...schedulePayload,
+      last_generation_request: 12,
+      created_at: '2024-01-01',
+      updated_at: '2024-01-01',
+    };
+
+    function setPremiumUser() {
+      jamServiceSpy.getUserInfo.and.returnValue(of({
+        pk: 1, username: 'alice', is_premium: true, cv_limit: 10, cv_count: 0,
+        file_limit_per_app: 5, lead_gen_limit_per_day: null,
+        lead_gen_used_today: 0, cv_review_limit_per_day: null,
+        cv_review_used_today: 0,
+      } as any));
+      component.loadUserInfo();
+    }
+
+    it('should not load schedule for free users', () => {
+      expect(specialServiceSpy.getScheduledLeadGeneration).not.toHaveBeenCalled();
+    });
+
+    it('should load schedule for premium users', () => {
+      setPremiumUser();
+      expect(specialServiceSpy.getScheduledLeadGeneration).toHaveBeenCalled();
+    });
+
+    it('should not render the clock button for free users', () => {
+      component.leads = mockLeads;
+      component.loading = false;
+      fixture.detectChanges();
+      const html = fixture.nativeElement.innerHTML as string;
+      expect(html).not.toContain('Schedule Daily');
+    });
+
+    it('should render the clock button for premium users', () => {
+      setPremiumUser();
+      component.leads = mockLeads;
+      component.loading = false;
+      fixture.detectChanges();
+      const html = fixture.nativeElement.innerHTML as string;
+      expect(html).toContain('Schedule Daily');
+    });
+
+    it('should open the modal in schedule mode from the clock button', () => {
+      setPremiumUser();
+      component.openLeadGenerationScheduleModal();
+      expect(component.showLeadGenerationModal).toBeTrue();
+      expect(component.leadGenerationScheduleMode).toBeTrue();
+    });
+
+    it('should create a schedule when none exists', () => {
+      specialServiceSpy.createScheduledLeadGeneration.and.returnValue(
+        of(scheduleResponse as any),
+      );
+      component.onLeadGenerationScheduled(schedulePayload as any);
+      expect(
+        specialServiceSpy.createScheduledLeadGeneration,
+      ).toHaveBeenCalledWith(schedulePayload);
+      expect(specialServiceSpy.updateScheduledLeadGeneration).not.toHaveBeenCalled();
+      expect(component.scheduledLeadGeneration).toBeTruthy();
+      expect(snackbarServiceSpy.showSuccess).toHaveBeenCalled();
+    });
+
+    it('should update the schedule when one exists', () => {
+      component.scheduledLeadGeneration = scheduleResponse as any;
+      specialServiceSpy.updateScheduledLeadGeneration.and.returnValue(
+        of(scheduleResponse as any),
+      );
+      component.onLeadGenerationScheduled(schedulePayload as any);
+      expect(
+        specialServiceSpy.updateScheduledLeadGeneration,
+      ).toHaveBeenCalledWith(7, schedulePayload);
+      expect(specialServiceSpy.createScheduledLeadGeneration).not.toHaveBeenCalled();
+      expect(snackbarServiceSpy.showSuccess).toHaveBeenCalled();
+    });
+
+    it('should route schedule-mode submissions to the schedule handler', () => {
+      specialServiceSpy.createScheduledLeadGeneration.and.returnValue(
+        of(scheduleResponse as any),
+      );
+      component.leadGenerationScheduleMode = true;
+      component.onLeadGenerationSubmitted(schedulePayload as any);
+      expect(
+        specialServiceSpy.createScheduledLeadGeneration,
+      ).toHaveBeenCalledWith(schedulePayload);
+      expect(specialServiceSpy.createLeadGenerationRequest).not.toHaveBeenCalled();
+    });
+
+    it('should open the confirmation dialog on schedule cancel', () => {
+      component.onScheduleCancelled();
+      expect(component.confirmScheduleCancelOpen).toBeTrue();
+    });
+
+    it('should delete the schedule when cancel is confirmed', () => {
+      component.scheduledLeadGeneration = scheduleResponse as any;
+      specialServiceSpy.deleteScheduledLeadGeneration.and.returnValue(
+        of(undefined as any),
+      );
+      component.onScheduleCancelConfirmed();
+      expect(specialServiceSpy.deleteScheduledLeadGeneration).toHaveBeenCalledWith(7);
+      expect(component.scheduledLeadGeneration).toBeNull();
+    });
+
+    it('should show the clock icon on leads from scheduled generations', () => {
+      component.leads = [
+        {
+          ...mockLeads[0],
+          generated: true,
+          from_scheduled_generation: true,
+        },
+      ];
+      component.loading = false;
+      fixture.detectChanges();
+      const clockIcons = fixture.nativeElement.querySelectorAll(
+        '.card-header cds-icon[shape="clock"]',
+      );
+      expect(clockIcons.length).toBe(1);
     });
   });
 });

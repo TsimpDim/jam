@@ -7,15 +7,15 @@ import { AppNotification } from '../../interfaces';
 export class NotificationService {
   readonly notifications = signal<AppNotification[]>([]);
   readonly loading = signal<boolean>(false);
-  readonly newOnly = signal<boolean>(false);
+  readonly unreadOnly = signal<boolean>(false);
 
-  readonly unreadCount = computed(() =>
-    this.notifications().filter((n) => !n.is_read).length
+  readonly unreadCount = computed(
+    () => this.notifications().filter((n) => !n.is_read).length,
   );
 
   readonly filteredNotifications = computed(() => {
     const all = this.notifications();
-    if (this.newOnly()) {
+    if (this.unreadOnly()) {
       return all.filter((n) => !n.is_read);
     }
     return all;
@@ -52,7 +52,7 @@ export class NotificationService {
   async markAsRead(id: number): Promise<void> {
     const previous = this.notifications();
     this.notifications.update((list) =>
-      list.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+      list.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
     );
     try {
       await firstValueFrom(this.jamService.markNotificationRead(id));
@@ -61,7 +61,7 @@ export class NotificationService {
     }
   }
 
-  toggleNewOnly(): void {
-    this.newOnly.update((v) => !v);
+  toggleUnreadOnly(): void {
+    this.unreadOnly.update((v) => !v);
   }
 }

@@ -55,7 +55,7 @@ describe('ApplicationsComponent', () => {
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideRouter([]),
+        provideRouter([{ path: 'auth/login', component: {} as any }]),
         { provide: JamService, useValue: jamServiceSpy },
         { provide: SnackbarService, useValue: snackbarServiceSpy },
       ],

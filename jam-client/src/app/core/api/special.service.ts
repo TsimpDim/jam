@@ -8,6 +8,7 @@ import {
   ExperienceLevel,
   Industry,
   LeadGenerationRequest,
+  ScheduledLeadGenerationRequest,
   Role,
   City,
   Country,
@@ -78,6 +79,8 @@ export class SpecialService {
     experience_level: number[];
     industries?: number[];
     company_sizes: string[];
+    num_leads: number;
+    additional_comment?: string | null;
   }): Observable<LeadGenerationRequest> {
     return this.http.post<LeadGenerationRequest>(
       environment.apiUrl + '/special/lead-generation-requests/',
@@ -88,6 +91,57 @@ export class SpecialService {
   getLeadGenerationRequests(): Observable<LeadGenerationRequest[]> {
     return this.http.get<LeadGenerationRequest[]>(
       environment.apiUrl + '/special/lead-generation-requests/'
+    );
+  }
+
+  getScheduledLeadGeneration(): Observable<ScheduledLeadGenerationRequest[]> {
+    return this.http.get<ScheduledLeadGenerationRequest[]>(
+      environment.apiUrl + '/special/scheduled-lead-generation/'
+    );
+  }
+
+  createScheduledLeadGeneration(payload: {
+    countries: number[];
+    cities?: number[];
+    company_leads_only: boolean;
+    roles?: number[];
+    modes: string[];
+    experience_level: number[];
+    industries?: number[];
+    company_sizes: string[];
+    num_leads: number;
+    additional_comment?: string | null;
+  }): Observable<ScheduledLeadGenerationRequest> {
+    return this.http.post<ScheduledLeadGenerationRequest>(
+      environment.apiUrl + '/special/scheduled-lead-generation/',
+      payload
+    );
+  }
+
+  updateScheduledLeadGeneration(
+    id: number,
+    payload: {
+      countries: number[];
+      cities?: number[];
+      company_leads_only: boolean;
+      roles?: number[];
+      modes: string[];
+      experience_level: number[];
+      industries?: number[];
+      company_sizes: string[];
+      num_leads: number;
+      additional_comment?: string | null;
+    }
+  ): Observable<ScheduledLeadGenerationRequest> {
+    return this.http.put<ScheduledLeadGenerationRequest>(
+      environment.apiUrl + '/special/scheduled-lead-generation/' + id + '/',
+      payload
+    );
+  }
+
+  deleteScheduledLeadGeneration(id: number): Observable<void> {
+    return this.http.delete<void>(
+      environment.apiUrl + '/special/scheduled-lead-generation/' + id + '/'
     );
   }
 

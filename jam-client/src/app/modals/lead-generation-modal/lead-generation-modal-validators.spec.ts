@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { ValidatorFn } from '@angular/forms';
+import { ValidatorFn, Validators } from '@angular/forms';
 
 function minCountriesValidator(): ValidatorFn {
   return (control: any) => {
@@ -138,6 +138,46 @@ describe('LeadGenerationModal validators', () => {
       const ctrl = new FormControl({ value: [], disabled: true });
       ctrl.disable();
       expect(minExperienceLevelsValidator()(ctrl)).toBeNull();
+    });
+  });
+
+  describe('numLeads validators (required, min 1, max 15)', () => {
+    it('should accept values between 1 and 15', () => {
+      for (const value of [1, 5, 15]) {
+        const ctrl = new FormControl(value, [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(15),
+        ]);
+        expect(ctrl.valid).toBeTrue();
+      }
+    });
+
+    it('should reject 0', () => {
+      const ctrl = new FormControl(0, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(15),
+      ]);
+      expect(ctrl.errors?.['min']).toBeTruthy();
+    });
+
+    it('should reject values above 15', () => {
+      const ctrl = new FormControl(16, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(15),
+      ]);
+      expect(ctrl.errors?.['max']).toBeTruthy();
+    });
+
+    it('should reject empty values', () => {
+      const ctrl = new FormControl(null, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(15),
+      ]);
+      expect(ctrl.errors?.['required']).toBeTruthy();
     });
   });
 });

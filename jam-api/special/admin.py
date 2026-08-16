@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CVReview, Industry, ExperienceLevel, LeadGenerationRequest, CoverLetterGenerationRequest, Role, City, Country
+from .models import CVReview, Industry, ExperienceLevel, LeadGenerationRequest, CoverLetterGenerationRequest, Role, City, Country, ScheduledLeadGenerationRequest
 
 
 @admin.register(Industry)
@@ -80,6 +80,46 @@ class LeadGenerationRequestAdmin(admin.ModelAdmin):
     @admin.display(description="Experience Level")
     def get_experience_levels(self, obj):
         return ", ".join(el.name for el in obj.experience_level.all()) or "—"
+
+    @admin.display(description="Modes")
+    def get_modes(self, obj):
+        return ", ".join(obj.modes) if obj.modes else "—"
+
+    @admin.display(description="Company Sizes")
+    def get_company_sizes(self, obj):
+        return ", ".join(obj.company_sizes) if obj.company_sizes else "—"
+
+
+@admin.register(ScheduledLeadGenerationRequest)
+class ScheduledLeadGenerationRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "get_countries",
+        "num_leads",
+        "get_modes",
+        "get_company_sizes",
+        "last_generation_request",
+        "created_at",
+        "updated_at",
+    )
+    list_filter = ("company_leads_only", "user")
+    search_fields = ("user__username",)
+    date_hierarchy = "created_at"
+    filter_horizontal = ("countries", "cities", "roles", "industries", "experience_level")
+    readonly_fields = ("created_at", "updated_at")
+    fieldsets = (
+        ("User", {"fields": ("user",)}),
+        ("Countries & Cities", {"fields": ("countries", "cities")}),
+        ("Job Preferences", {"fields": ("company_leads_only", "roles", "modes", "experience_level", "industries", "company_sizes")}),
+        ("Schedule", {"fields": ("num_leads", "additional_comment", "last_generation_request", "created_at", "updated_at")}),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('countries', 'experience_level')
+
+    @admin.display(description="Countries", ordering="user")
+    def get_countries(self, obj):
+        return ", ".join(c.name for c in obj.countries.all()[:3])
 
     @admin.display(description="Modes")
     def get_modes(self, obj):

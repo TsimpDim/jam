@@ -4,8 +4,22 @@
   [clrModalSize]="'lg'"
   class="lead-generation-modal"
 >
-  <h3 class="modal-title">Generate Leads</h3>
+  <h3 class="modal-title">
+    {{ scheduleMode ? "Schedule Daily Lead Generation" : "Generate Leads" }}
+  </h3>
   <div class="modal-body">
+    <clr-alert
+      *ngIf="scheduleMode"
+      clrAlertType="info"
+      [clrAlertClosable]="false"
+    >
+      <clr-alert-item>
+        <span class="alert-text">
+          This search will run daily. You can edit or cancel it anytime.
+        </span>
+      </clr-alert-item>
+    </clr-alert>
+
     <form class="clr-form form-grid" [formGroup]="form">
       <div class="clr-form-control form-field-full company-leads-section">
         <clr-checkbox-container>
@@ -202,6 +216,54 @@
             >
           </clr-combobox-container>
         </div>
+
+        <div class="clr-form-control">
+          <clr-number-input-container>
+            <label>Number of Leads</label>
+            <input
+              clrNumberInput
+              type="number"
+              name="numLeads"
+              formControlName="numLeads"
+              min="1"
+              max="15"
+            />
+            <clr-control-helper
+              >How many leads to generate (1-15)</clr-control-helper
+            >
+            <clr-control-error
+              *ngIf="
+                form.get('numLeads')?.touched && form.get('numLeads')?.invalid
+              "
+              >Enter a number between 1 and 15.</clr-control-error
+            >
+          </clr-number-input-container>
+        </div>
+
+        <div class="clr-form-control form-field-full">
+          <clr-textarea-container>
+            <label>Additional Comment</label>
+            <textarea
+              clrTextarea
+              name="additionalComment"
+              formControlName="additionalComment"
+              maxlength="500"
+              placeholder="e.g. only Formula E teams, fintech startups using Go..."
+            ></textarea>
+            <clr-control-helper
+              >Optional: describe exactly what you are looking for ({{
+                additionalCommentLength
+              }}/500)</clr-control-helper
+            >
+            <clr-control-error
+              *ngIf="
+                form.get('additionalComment')?.touched &&
+                form.get('additionalComment')?.errors?.['maxlength']
+              "
+              >The comment must be 500 characters or fewer.</clr-control-error
+            >
+          </clr-textarea-container>
+        </div>
       </div>
 
       <div class="checkbox-sections">
@@ -268,11 +330,20 @@
     ></clr-spinner>
     <button
       type="button"
+      class="btn btn-danger-outline"
+      *ngIf="scheduleMode && prefill"
+      (click)="cancelSchedule()"
+      [disabled]="submitting"
+    >
+      Cancel Schedule
+    </button>
+    <button
+      type="button"
       class="btn btn-outline"
       (click)="close()"
       [disabled]="submitting"
     >
-      Cancel
+      Close
     </button>
     <button
       type="button"
@@ -280,7 +351,9 @@
       (click)="submit()"
       [disabled]="submitting"
     >
-      Submit
+      {{
+        scheduleMode ? (prefill ? "Save Schedule" : "Schedule Daily") : "Submit"
+      }}
     </button>
   </div>
 </clr-modal>

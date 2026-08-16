@@ -7,7 +7,7 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter([]), provideHttpClient(withInterceptorsFromDi())],
+      providers: [provideRouter([{ path: 'auth/login', component: {} as any }]), provideHttpClient(withInterceptorsFromDi())],
     }).compileComponents();
   });
 

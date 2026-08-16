@@ -9,7 +9,8 @@ from django.utils import timezone
 from django.core.management import call_command
 from io import StringIO
 from special.models import (
-    CVReview, LeadGenerationRequest, CoverLetterGenerationRequest,
+    CVReview, LeadGenerationRequest, ScheduledLeadGenerationRequest,
+    CoverLetterGenerationRequest,
     Industry, ExperienceLevel, Role, Country, City,
 )
 from special.management.commands.generate_leads import Command as GenerateLeadsCommand
@@ -341,3 +342,138 @@ class GenerateLeadsCommandTest(TestCase):
         self.assertEqual(GenerateLeadsCommand._clip("abc", 5), "abc")
         self.assertIsNone(GenerateLeadsCommand._clip(None, 10))
         self.assertEqual(GenerateLeadsCommand._clip("  hello  ", 3), "hel")
+
+    @patch("special.management.commands.generate_leads.WebSearch.search_jobs")
+    @patch("special.management.commands.generate_leads.AwsClient.converse")
+    def test_comment_and_num_leads_passed_to_search_and_prompt(self, mock_converse, mock_search):
+        mock_search.return_value = [
+            {"title": "Engineer at Acme Corp", "url": "https://example.com/job1", "snippet": "Engineer job"},
+        ]
+        mock_converse.return_value = json.dumps([
+            {"company": "Acme Corp", "role": "Engineer", "location": "NYC",
+             "external_link": "https://example.com/job1", "notes": "Good"},
+        ])
+
+        req = LeadGenerationRequest.objects.create(
+            user=self.user, num_leads=10,
+            additional_comment="Only Formula E teams",
+        )
+
+        out = StringIO()
+        call_command("generate_leads", stdout=out)
+
+        self.assertEqual(mock_search.call_args.kwargs["additional_comment"], "Only Formula E teams")
+        messages = mock_converse.call_args.args[0]
+        prompt_text = messages[0]["content"][0]["text"]
+        self.assertIn("Only Formula E teams", prompt_text)
+        self.assertIn("select up to 10", prompt_text)
+
+    @patch("special.management.commands.generate_leads.WebSearch.search_jobs")
+    @patch("special.management.commands.generate_leads.AwsClient.converse")
+    def test_leads_linked_to_request_and_count_recorded(self, mock_converse, mock_search):
+        mock_search.return_value = [
+            {"title": "Engineer at Acme Corp", "url": "https://example.com/job1", "snippet": "Engineer job"},
+            {"title": "Dev at Beta Corp", "url": "https://example.com/job2", "snippet": "Dev job"},
+        ]
+        mock_converse.return_value = json.dumps([
+            {"company": "Acme Corp", "role": "Engineer", "location": "NYC",
+             "external_link": "https://example.com/job1", "notes": "Good"},
+            {"company": "Beta Corp", "role": "Dev", "location": "SF",
+             "external_link": "https://example.com/job2", "notes": "Great"},
+        ])
+
+        req = LeadGenerationRequest.objects.create(user=self.user)
+
+        call_command("generate_leads", stdout=StringIO())
+
+        req.refresh_from_db()
+        self.assertEqual(req.leads_generated_count, 2)
+        leads = Lead.objects.filter(user=self.user, generated=True)
+        self.assertEqual(leads.count(), 2)
+        for lead in leads:
+            self.assertEqual(lead.generation_request, req)
+
+    @patch("special.management.commands.generate_leads.WebSearch.search_jobs")
+    def test_empty_results_records_zero_count(self, mock_search):
+        mock_search.return_value = []
+        req = LeadGenerationRequest.objects.create(user=self.user)
+        call_command("generate_leads", stdout=StringIO())
+        req.refresh_from_db()
+        self.assertEqual(req.leads_generated_count, 0)
+
+
+class CreateDailyLeadGenerationRequestsCommandTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="alice", password="pass")
+        self.user.profile.is_premium = True
+        self.user.profile.save()
+        self.country = Country.objects.create(name="TestCountry", slug="test-country", code="TC")
+
+    def _make_schedule(self, **kwargs):
+        schedule = ScheduledLeadGenerationRequest.objects.create(
+            user=self.user,
+            num_leads=8,
+            additional_comment="Motorsports teams only",
+            **kwargs,
+        )
+        schedule.countries.add(self.country)
+        return schedule
+
+    def test_no_schedules(self):
+        out = StringIO()
+        call_command("create_daily_lead_generation_requests", stdout=out)
+        self.assertIn("No daily lead generation requests due", out.getvalue())
+
+    def test_schedule_without_last_request_is_due(self):
+        self._make_schedule()
+        out = StringIO()
+        call_command("create_daily_lead_generation_requests", stdout=out)
+
+        schedule = ScheduledLeadGenerationRequest.objects.get(user=self.user)
+        self.assertIsNotNone(schedule.last_generation_request)
+        request = schedule.last_generation_request
+        self.assertEqual(request.schedule, schedule)
+        self.assertEqual(request.num_leads, 8)
+        self.assertEqual(request.additional_comment, "Motorsports teams only")
+        self.assertIn(self.country, request.countries.all())
+        self.assertIn("Created 1 daily lead generation request", out.getvalue())
+
+    def test_schedule_with_last_run_yesterday_is_due(self):
+        schedule = self._make_schedule()
+        last = LeadGenerationRequest.objects.create(user=self.user, schedule=schedule)
+        last.created_at = timezone.now() - timedelta(days=1)
+        last.save(update_fields=['created_at'])
+        schedule.last_generation_request = last
+        schedule.save(update_fields=['last_generation_request'])
+
+        call_command("create_daily_lead_generation_requests", stdout=StringIO())
+
+        schedule.refresh_from_db()
+        self.assertNotEqual(schedule.last_generation_request, last)
+        self.assertEqual(
+            LeadGenerationRequest.objects.filter(user=self.user, schedule__isnull=False).count(), 2
+        )
+
+    def test_schedule_with_last_run_today_is_skipped(self):
+        schedule = self._make_schedule()
+        last = LeadGenerationRequest.objects.create(user=self.user, schedule=schedule)
+        schedule.last_generation_request = last
+        schedule.save(update_fields=['last_generation_request'])
+
+        call_command("create_daily_lead_generation_requests", stdout=StringIO())
+
+        schedule.refresh_from_db()
+        self.assertEqual(schedule.last_generation_request, last)
+        self.assertEqual(
+            LeadGenerationRequest.objects.filter(user=self.user, schedule__isnull=False).count(), 1
+        )
+
+    def test_non_premium_schedule_is_skipped(self):
+        schedule = self._make_schedule()
+        self.user.profile.is_premium = False
+        self.user.profile.save()
+
+        call_command("create_daily_lead_generation_requests", stdout=StringIO())
+
+        schedule.refresh_from_db()
+        self.assertIsNone(schedule.last_generation_request)

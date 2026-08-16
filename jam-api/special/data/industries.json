@@ -202,5 +202,133 @@
     {
         "name": "Market Research",
         "slug": "market-research"
+    },
+    {
+        "name": "FinTech",
+        "slug": "fintech"
+    },
+    {
+        "name": "Motorsports",
+        "slug": "motorsports"
+    },
+    {
+        "name": "Cybersecurity",
+        "slug": "cybersecurity"
+    },
+    {
+        "name": "Crypto & Web3",
+        "slug": "crypto-web3"
+    },
+    {
+        "name": "Artificial Intelligence & Machine Learning",
+        "slug": "artificial-intelligence-machine-learning"
+    },
+    {
+        "name": "Data Science & Analytics",
+        "slug": "data-science-analytics"
+    },
+    {
+        "name": "Cloud Computing",
+        "slug": "cloud-computing"
+    },
+    {
+        "name": "SaaS",
+        "slug": "saas"
+    },
+    {
+        "name": "Internet of Things (IoT)",
+        "slug": "internet-of-things-iot"
+    },
+    {
+        "name": "AR & VR",
+        "slug": "ar-vr"
+    },
+    {
+        "name": "Robotics",
+        "slug": "robotics"
+    },
+    {
+        "name": "Semiconductors",
+        "slug": "semiconductors"
+    },
+    {
+        "name": "Quantum Computing",
+        "slug": "quantum-computing"
+    },
+    {
+        "name": "Nanotechnology",
+        "slug": "nanotechnology"
+    },
+    {
+        "name": "Space & Satellite",
+        "slug": "space-satellite"
+    },
+    {
+        "name": "Sustainability & ESG",
+        "slug": "sustainability-esg"
+    },
+    {
+        "name": "HealthTech",
+        "slug": "healthtech"
+    },
+    {
+        "name": "EdTech",
+        "slug": "edtech"
+    },
+    {
+        "name": "PropTech",
+        "slug": "proptech"
+    },
+    {
+        "name": "AgTech",
+        "slug": "agtech"
+    },
+    {
+        "name": "InsurTech",
+        "slug": "insurtech"
+    },
+    {
+        "name": "LegalTech",
+        "slug": "legaltech"
+    },
+    {
+        "name": "Wealth Management",
+        "slug": "wealth-management"
+    },
+    {
+        "name": "Aviation",
+        "slug": "aviation"
+    },
+    {
+        "name": "Maritime & Shipping",
+        "slug": "maritime-shipping"
+    },
+    {
+        "name": "Consumer Electronics",
+        "slug": "consumer-electronics"
+    },
+    {
+        "name": "Cosmetics & Beauty",
+        "slug": "cosmetics-beauty"
+    },
+    {
+        "name": "Pet Care",
+        "slug": "pet-care"
+    },
+    {
+        "name": "Furniture & Home Goods",
+        "slug": "furniture-home-goods"
+    },
+    {
+        "name": "Esports",
+        "slug": "esports"
+    },
+    {
+        "name": "Sports Betting",
+        "slug": "sports-betting"
+    },
+    {
+        "name": "Performing Arts",
+        "slug": "performing-arts"
     }
 ]

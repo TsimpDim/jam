@@ -12,11 +12,17 @@ describe('NotificationBellComponent', () => {
   beforeEach(async () => {
     notificationServiceSpy = jasmine.createSpyObj(
       'NotificationService',
-      ['startPolling', 'stopPolling', 'fetchNotifications', 'markAsRead', 'toggleNewOnly'],
+      [
+        'startPolling',
+        'stopPolling',
+        'fetchNotifications',
+        'markAsRead',
+        'toggleUnreadOnly',
+      ],
       {
         notifications: signal([]),
         loading: signal(false),
-        newOnly: signal(false),
+        unreadOnly: signal(false),
         unreadCount: signal(0),
         filteredNotifications: signal([]),
       },
@@ -55,7 +61,9 @@ describe('NotificationBellComponent', () => {
     it('should open and fetch fresh notifications', () => {
       component.toggle();
       expect(component.isOpen()).toBeTrue();
-      expect(notificationServiceSpy.fetchNotifications).toHaveBeenCalledTimes(2);
+      expect(notificationServiceSpy.fetchNotifications).toHaveBeenCalledTimes(
+        2,
+      );
     });
 
     it('should close', () => {
@@ -87,10 +95,10 @@ describe('NotificationBellComponent', () => {
     });
   });
 
-  describe('toggleNewOnly', () => {
+  describe('toggleUnreadOnly', () => {
     it('should delegate to service', () => {
-      component.toggleNewOnly();
-      expect(notificationServiceSpy.toggleNewOnly).toHaveBeenCalled();
+      component.toggleUnreadOnly();
+      expect(notificationServiceSpy.toggleUnreadOnly).toHaveBeenCalled();
     });
   });
 

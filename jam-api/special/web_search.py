@@ -34,20 +34,22 @@ class WebSearch:
 
     @staticmethod
     def search_jobs(roles, industries, countries, country_codes, cities, modes,
-                    experience_level, company_sizes, max_results_per_query=20):
+                    experience_level, company_sizes, max_results_per_query=20,
+                    additional_comment=None):
         client = WebSearch._get_or_create_tavily_client()
         print(f"search_jobs: provider={'Tavily' if client else 'DDGS'}, "
                     f"roles={roles}, countries={countries}")
 
         if client:
             queries = WebSearch._build_job_queries_tavily(
-                roles, industries, countries, cities, modes, experience_level)
+                roles, industries, countries, cities, modes, experience_level,
+                additional_comment)
             results = WebSearch._run_queries_tavily(
                 client, queries, max_results_per_query)
         else:
             queries = WebSearch._build_job_queries_ddgs(
                 roles, industries, countries, country_codes, cities, modes,
-                experience_level, company_sizes)
+                experience_level, company_sizes, additional_comment)
             results = WebSearch._run_queries_ddgs(queries, max_results_per_query)
 
         deduped = WebSearch._deduplicate_by_url(results)
@@ -56,19 +58,22 @@ class WebSearch:
 
     @staticmethod
     def search_companies(industries, countries, country_codes, cities, modes,
-                         company_sizes, max_results_per_query=20):
+                         company_sizes, max_results_per_query=20,
+                         additional_comment=None):
         client = WebSearch._get_or_create_tavily_client()
         print(f"search_companies: provider={'Tavily' if client else 'DDGS'}, "
                     f"industries={industries}, countries={countries}")
 
         if client:
             queries = WebSearch._build_company_queries_tavily(
-                industries, countries, cities, modes, company_sizes)
+                industries, countries, cities, modes, company_sizes,
+                additional_comment)
             results = WebSearch._run_queries_tavily(
                 client, queries, max_results_per_query)
         else:
             queries = WebSearch._build_company_queries_ddgs(
-                industries, countries, cities, modes, company_sizes)
+                industries, countries, cities, modes, company_sizes,
+                additional_comment)
             results = WebSearch._run_queries_ddgs(queries, max_results_per_query)
 
         deduped = WebSearch._deduplicate_by_url(results)
@@ -178,7 +183,14 @@ class WebSearch:
     # ------------------------------------------------------------------ #
 
     @staticmethod
-    def _build_job_queries_tavily(roles, industries, countries, cities, modes, experience_level):
+    def _comment_suffix(additional_comment):
+        if not additional_comment:
+            return ""
+        comment = str(additional_comment).strip()[:120]
+        return f" {comment}" if comment else ""
+
+    @staticmethod
+    def _build_job_queries_tavily(roles, industries, countries, cities, modes, experience_level, additional_comment=None):
         role_str = " ".join(roles) if roles else "all roles"
         industry_str = " ".join(industries) if industries else "all industries"
         country_str = " ".join(countries) if countries else "everywhere"
@@ -191,20 +203,21 @@ class WebSearch:
         if country_str and country_str != "everywhere":
             loc_parts.append(country_str)
         loc_str = " ".join(loc_parts) if loc_parts else "worldwide"
+        suffix = WebSearch._comment_suffix(additional_comment)
 
         return list(dict.fromkeys([
-            f"{role_str} {exp_str} jobs {loc_str} {mode_str} {industry_str}".strip(),
-            f"{industry_str} companies hiring {role_str} {exp_str} {loc_str} {mode_str}".strip(),
-            f"{role_str} {exp_str} career openings {loc_str} {mode_str}".strip(),
-            f"{role_str} {exp_str} {loc_str} {mode_str} {industry_str} apply now".strip(),
-            f"hiring {role_str} {exp_str} {loc_str} {mode_str} {industry_str}".strip(),
-            f"{role_str} {exp_str} positions {loc_str} {mode_str}".strip(),
-            f"{industry_str} {role_str} {exp_str} openings {loc_str} {mode_str}".strip(),
-            f"{loc_str} {mode_str} {role_str} {exp_str} {industry_str} jobs".strip(),
+            f"{role_str} {exp_str} jobs {loc_str} {mode_str} {industry_str}{suffix}".strip(),
+            f"{industry_str} companies hiring {role_str} {exp_str} {loc_str} {mode_str}{suffix}".strip(),
+            f"{role_str} {exp_str} career openings {loc_str} {mode_str}{suffix}".strip(),
+            f"{role_str} {exp_str} {loc_str} {mode_str} {industry_str} apply now{suffix}".strip(),
+            f"hiring {role_str} {exp_str} {loc_str} {mode_str} {industry_str}{suffix}".strip(),
+            f"{role_str} {exp_str} positions {loc_str} {mode_str}{suffix}".strip(),
+            f"{industry_str} {role_str} {exp_str} openings {loc_str} {mode_str}{suffix}".strip(),
+            f"{loc_str} {mode_str} {role_str} {exp_str} {industry_str} jobs{suffix}".strip(),
         ]))
 
     @staticmethod
-    def _build_company_queries_tavily(industries, countries, cities, modes, company_sizes):
+    def _build_company_queries_tavily(industries, countries, cities, modes, company_sizes, additional_comment=None):
         industry_str = " ".join(industries) if industries else "all industries"
         country_str = " ".join(countries) if countries else "everywhere"
         city_str = " ".join(cities) if cities else "all cities"
@@ -216,16 +229,17 @@ class WebSearch:
         if country_str and country_str != "everywhere":
             loc_parts.append(country_str)
         loc_str = " ".join(loc_parts) if loc_parts else "worldwide"
+        suffix = WebSearch._comment_suffix(additional_comment)
 
         return list(dict.fromkeys([
-            f"{industry_str} {size_str} companies {loc_str} {mode_str} hiring".strip(),
-            f"{industry_str} companies {loc_str} {mode_str} careers open positions".strip(),
-            f"top {industry_str} {size_str} companies {loc_str} {mode_str} jobs".strip(),
-            f"{industry_str} {size_str} {loc_str} {mode_str} company careers page".strip(),
-            f"{industry_str} startups {loc_str} {mode_str} we are hiring".strip(),
-            f"best {industry_str} {size_str} companies to work for {loc_str} {mode_str}".strip(),
-            f"{loc_str} {mode_str} {industry_str} companies hiring {size_str}".strip(),
-            f"{industry_str} {loc_str} {size_str} employer job board".strip(),
+            f"{industry_str} {size_str} companies {loc_str} {mode_str} hiring{suffix}".strip(),
+            f"{industry_str} companies {loc_str} {mode_str} careers open positions{suffix}".strip(),
+            f"top {industry_str} {size_str} companies {loc_str} {mode_str} jobs{suffix}".strip(),
+            f"{industry_str} {size_str} {loc_str} {mode_str} company careers page{suffix}".strip(),
+            f"{industry_str} startups {loc_str} {mode_str} we are hiring{suffix}".strip(),
+            f"best {industry_str} {size_str} companies to work for {loc_str} {mode_str}{suffix}".strip(),
+            f"{loc_str} {mode_str} {industry_str} companies hiring {size_str}{suffix}".strip(),
+            f"{industry_str} {loc_str} {size_str} employer job board{suffix}".strip(),
         ]))
 
     # ------------------------------------------------------------------ #
@@ -234,7 +248,7 @@ class WebSearch:
 
     @staticmethod
     def _build_job_queries_ddgs(roles, industries, countries, country_codes, cities,
-                                 modes, experience_level, company_sizes):
+                                 modes, experience_level, company_sizes, additional_comment=None):
         role_str = " ".join(roles) if roles else "all roles"
         country_str = " ".join(countries) if countries else "everywhere"
         city_str = " ".join(cities) if cities else "all cities"
@@ -242,36 +256,38 @@ class WebSearch:
         industry_str = " ".join(industries) if industries else "all industries"
         mode_str = " ".join(modes) if modes else "all modes"
         size_str = " ".join(company_sizes) if company_sizes else "all sizes"
+        suffix = WebSearch._comment_suffix(additional_comment)
 
         return list(dict.fromkeys([
-            f"{role_str} {exp_str} {country_str} {city_str} {mode_str} {industry_str} {size_str} careers hiring",
-            f"{role_str} {exp_str} {country_str} {mode_str} {industry_str} jobs",
-            f"{role_str} {exp_str} {city_str} {mode_str} {industry_str} openings",
-            f"{role_str} {exp_str} {country_str} {industry_str} apply now",
-            f"{industry_str} {role_str} {exp_str} {country_str} {mode_str} careers",
-            f"{role_str} {exp_str} {country_str} {city_str} {mode_str} positions",
-            f"{size_str} {industry_str} hiring {role_str} {exp_str} {country_str} {mode_str}",
-            f"{role_str} {country_str} {city_str} {industry_str} jobs",
+            f"{role_str} {exp_str} {country_str} {city_str} {mode_str} {industry_str} {size_str} careers hiring{suffix}",
+            f"{role_str} {exp_str} {country_str} {mode_str} {industry_str} jobs{suffix}",
+            f"{role_str} {exp_str} {city_str} {mode_str} {industry_str} openings{suffix}",
+            f"{role_str} {exp_str} {country_str} {industry_str} apply now{suffix}",
+            f"{industry_str} {role_str} {exp_str} {country_str} {mode_str} careers{suffix}",
+            f"{role_str} {exp_str} {country_str} {city_str} {mode_str} positions{suffix}",
+            f"{size_str} {industry_str} hiring {role_str} {exp_str} {country_str} {mode_str}{suffix}",
+            f"{role_str} {country_str} {city_str} {industry_str} jobs{suffix}",
         ]))
 
     @staticmethod
     def _build_company_queries_ddgs(industries, countries, cities,
-                                     modes, company_sizes):
+                                     modes, company_sizes, additional_comment=None):
         industry_str = " ".join(industries) if industries else "all industries"
         country_str = " ".join(countries) if countries else "everywhere"
         city_str = " ".join(cities) if cities else "all cities"
         mode_str = " ".join(modes) if modes else "all modes"
         size_str = " ".join(company_sizes) if company_sizes else "all sizes"
+        suffix = WebSearch._comment_suffix(additional_comment)
 
         return list(dict.fromkeys([
-            f"{industry_str} {size_str} companies {country_str} {city_str} {mode_str} hiring",
-            f"{industry_str} companies {country_str} {mode_str} careers",
-            f"{industry_str} {size_str} {country_str} {mode_str} employer jobs",
-            f"{industry_str} {size_str} companies {city_str} {mode_str} openings",
-            f"{industry_str} startups {country_str} {mode_str} we are hiring",
-            f"{industry_str} {size_str} {country_str} {mode_str} company careers page",
-            f"top {industry_str} {size_str} companies {country_str} {mode_str}",
-            f"{country_str} {mode_str} {industry_str} companies hiring",
+            f"{industry_str} {size_str} companies {country_str} {city_str} {mode_str} hiring{suffix}",
+            f"{industry_str} companies {country_str} {mode_str} careers{suffix}",
+            f"{industry_str} {size_str} {country_str} {mode_str} employer jobs{suffix}",
+            f"{industry_str} {size_str} companies {city_str} {mode_str} openings{suffix}",
+            f"{industry_str} startups {country_str} {mode_str} we are hiring{suffix}",
+            f"{industry_str} {size_str} {country_str} {mode_str} company careers page{suffix}",
+            f"top {industry_str} {size_str} companies {country_str} {mode_str}{suffix}",
+            f"{country_str} {mode_str} {industry_str} companies hiring{suffix}",
         ]))
 
     # ------------------------------------------------------------------ #

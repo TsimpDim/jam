@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, HostListener, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { NotificationService } from '../../core/services/notification.service';
@@ -44,8 +50,8 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleNewOnly(): void {
-    this.notificationService.toggleNewOnly();
+  toggleUnreadOnly(): void {
+    this.notificationService.toggleUnreadOnly();
   }
 
   statusIcon(status: string): string {

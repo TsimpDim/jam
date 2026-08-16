@@ -2,9 +2,9 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from .models import CVReview, LeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
-from .serializers import CVReviewSerializer, LeadGenerationRequestSerializer, CoverLetterGenerationRequestSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer, CountrySerializer, CitySerializer
-from jam.models import CV, Lead, UserProfile
+from .models import CVReview, LeadGenerationRequest, ScheduledLeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
+from .serializers import CVReviewSerializer, LeadGenerationRequestSerializer, ScheduledLeadGenerationRequestSerializer, CoverLetterGenerationRequestSerializer, IndustrySerializer, ExperienceLevelSerializer, RoleSerializer, CountrySerializer, CitySerializer
+from jam.models import CV, Lead, UserProfile, Notification, NotificationType
 from jam.validators import CV_REVIEW_LIMIT_PER_DAY_FREE, LEAD_GENERATION_LIMIT_PER_DAY_FREE
 
 
@@ -133,6 +133,79 @@ class LeadGenerationRequestViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ScheduledLeadGenerationRequestViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ScheduledLeadGenerationRequestSerializer
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']
+
+    def get_queryset(self):
+        return ScheduledLeadGenerationRequest.objects.filter(
+            user=self.request.user
+        ).prefetch_related(
+            'roles', 'countries', 'cities',
+            'industries', 'experience_level',
+        )
+
+    def _require_premium(self):
+        user_profile = UserProfile.objects.get(user=self.request.user)
+        if not user_profile.is_premium:
+            return Response(
+                {'error': 'Scheduled lead generation is a premium feature.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return None
+
+    def create(self, request, *args, **kwargs):
+        error = self._require_premium()
+        if error:
+            return error
+
+        existing = ScheduledLeadGenerationRequest.objects.filter(user=request.user).first()
+        if existing:
+            return Response(
+                {'error': 'You already have a scheduled lead generation.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        data = request.data.copy()
+        data["user"] = request.user.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        schedule = serializer.instance
+        schedule.create_generation_request()
+        headers = self.get_success_headers(serializer.data)
+        refreshed = self.get_serializer(schedule)
+        return Response(refreshed.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        error = self._require_premium()
+        if error:
+            return error
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        data = request.data.copy()
+        data["user"] = request.user.id
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        error = self._require_premium()
+        if error:
+            return error
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
 

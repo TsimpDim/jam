@@ -41,14 +41,14 @@ describe('HeaderComponent', () => {
     return {
       notifications: signal([]),
       loading: signal(false),
-      newOnly: signal(false),
+      unreadOnly: signal(false),
       unreadCount: signal(0),
       filteredNotifications: signal([]),
       startPolling: jasmine.createSpy('startPolling'),
       stopPolling: jasmine.createSpy('stopPolling'),
       fetchNotifications: jasmine.createSpy('fetchNotifications'),
       markAsRead: jasmine.createSpy('markAsRead'),
-      toggleNewOnly: jasmine.createSpy('toggleNewOnly'),
+      toggleUnreadOnly: jasmine.createSpy('toggleUnreadOnly'),
     } as unknown as NotificationService;
   }
 
@@ -101,7 +101,9 @@ describe('HeaderComponent', () => {
     });
 
     it('should render mobile menu toggle button when logged in', () => {
-      const buttons = fixture.nativeElement.querySelectorAll('.mobile-menu-toggle');
+      const buttons = fixture.nativeElement.querySelectorAll(
+        '.mobile-menu-toggle',
+      );
       expect(buttons.length).toBe(1);
     });
   });
@@ -109,7 +111,9 @@ describe('HeaderComponent', () => {
   describe('authentication visibility', () => {
     it('should show notification bell and logout when logged in', () => {
       fixture.detectChanges();
-      const logoutBtn = fixture.nativeElement.querySelector('[aria-label="Logout"]');
+      const logoutBtn = fixture.nativeElement.querySelector(
+        '[aria-label="Logout"]',
+      );
       expect(logoutBtn).toBeTruthy();
     });
 
@@ -118,7 +122,9 @@ describe('HeaderComponent', () => {
       auth.isLoggedIn = () => false;
       component.isLoggedIn = false;
       fixture.detectChanges();
-      const links = fixture.nativeElement.querySelectorAll('.header-actions .nav-link');
+      const links = fixture.nativeElement.querySelectorAll(
+        '.header-actions .nav-link',
+      );
       expect(links.length).toBe(2);
     });
   });

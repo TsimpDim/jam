@@ -67,6 +67,7 @@ class LeadSerializer(serializers.ModelSerializer):
     group_name = serializers.SerializerMethodField()
     applications = serializers.SerializerMethodField()
     snapshot = serializers.SerializerMethodField()
+    from_scheduled_generation = serializers.SerializerMethodField()
 
     def get_group_name(self, obj):
         return obj.group.name if obj.group else None
@@ -81,6 +82,9 @@ class LeadSerializer(serializers.ModelSerializer):
             return {'id': snap.id, 'fetched_at': snap.fetched_at}
         except LeadSnapshot.DoesNotExist:
             return None
+
+    def get_from_scheduled_generation(self, obj):
+        return bool(obj.generation_request and obj.generation_request.schedule_id)
 
     class Meta:
         model = Lead

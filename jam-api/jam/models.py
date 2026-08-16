@@ -37,6 +37,7 @@ class Lead(models.Model):
     archived = models.BooleanField(default=False)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, null=True, blank=True)
     generated = models.BooleanField(default=False)
+    generation_request = models.ForeignKey('special.LeadGenerationRequest', on_delete=models.SET_NULL, null=True, blank=True, related_name='generated_leads')
 
 class JobApplication(models.Model):
     company = models.CharField(max_length=40, null=False)

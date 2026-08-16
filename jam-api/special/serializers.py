@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import CVReview, LeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
+from .models import CVReview, LeadGenerationRequest, ScheduledLeadGenerationRequest, CoverLetterGenerationRequest, Industry, ExperienceLevel, Role, Country, City
+
+MODE_CHOICES = ['On-Site', 'Hybrid', 'Remote']
+COMPANY_SIZE_CHOICES = ['Startup', 'Scaleup', 'Established', 'Enterprise']
 
 
 class IndustrySerializer(serializers.ModelSerializer):
@@ -60,12 +63,16 @@ class CVReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'review_result', 'is_done', 'created_at', 'completed_at', 'cv_key', 'cv_file', 'industry_name', 'experience_level_name', 'roles_names']
 
 
-class LeadGenerationRequestSerializer(serializers.ModelSerializer):
+class LeadGenerationConfigSerializer(serializers.ModelSerializer):
     countries = serializers.PrimaryKeyRelatedField(queryset=Country.objects.all(), many=True, required=False)
     cities = serializers.PrimaryKeyRelatedField(queryset=City.objects.all(), many=True, required=False)
     roles = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all(), many=True, required=False)
     industries = serializers.PrimaryKeyRelatedField(queryset=Industry.objects.all(), many=True, required=False)
     experience_level = serializers.PrimaryKeyRelatedField(queryset=ExperienceLevel.objects.all(), many=True, required=False)
+    modes = serializers.ListField(child=serializers.ChoiceField(choices=MODE_CHOICES), required=False)
+    company_sizes = serializers.ListField(child=serializers.ChoiceField(choices=COMPANY_SIZE_CHOICES), required=False)
+    num_leads = serializers.IntegerField(min_value=1, max_value=15, default=15)
+    additional_comment = serializers.CharField(max_length=500, allow_blank=True, allow_null=True, required=False)
     countries_names = serializers.SerializerMethodField()
     cities_names = serializers.SerializerMethodField()
     roles_names = serializers.SerializerMethodField()
@@ -87,10 +94,14 @@ class LeadGenerationRequestSerializer(serializers.ModelSerializer):
     def get_experience_level_names(self, obj):
         return [el.name for el in obj.experience_level.all()]
 
+    def validate_additional_comment(self, value):
+        if value is None:
+            return None
+        value = value.strip()
+        return value if value else None
+
     class Meta:
-        model = LeadGenerationRequest
         fields = [
-            'id',
             'countries', 'countries_names',
             'cities', 'cities_names',
             'company_leads_only',
@@ -98,13 +109,39 @@ class LeadGenerationRequestSerializer(serializers.ModelSerializer):
             'modes', 'experience_level', 'experience_level_names',
             'industries', 'industries_names',
             'company_sizes',
+            'num_leads', 'additional_comment',
+        ]
+
+
+class LeadGenerationRequestSerializer(LeadGenerationConfigSerializer):
+    class Meta(LeadGenerationConfigSerializer.Meta):
+        model = LeadGenerationRequest
+        fields = LeadGenerationConfigSerializer.Meta.fields + [
+            'id',
+            'leads_generated_count',
             'result', 'is_done',
             'created_at', 'completed_at'
         ]
         read_only_fields = [
             'id',
             'countries_names', 'cities_names', 'roles_names', 'industries_names', 'experience_level_names',
+            'leads_generated_count',
             'result', 'is_done', 'created_at', 'completed_at'
+        ]
+
+
+class ScheduledLeadGenerationRequestSerializer(LeadGenerationConfigSerializer):
+    class Meta(LeadGenerationConfigSerializer.Meta):
+        model = ScheduledLeadGenerationRequest
+        fields = LeadGenerationConfigSerializer.Meta.fields + [
+            'id',
+            'last_generation_request',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = [
+            'id',
+            'countries_names', 'cities_names', 'roles_names', 'industries_names', 'experience_level_names',
+            'last_generation_request', 'created_at', 'updated_at'
         ]
 
 

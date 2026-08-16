@@ -2,12 +2,14 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from special.models import (
     Industry, ExperienceLevel, Role, Country, City,
-    CVReview, LeadGenerationRequest, CoverLetterGenerationRequest,
+    CVReview, LeadGenerationRequest, ScheduledLeadGenerationRequest,
+    CoverLetterGenerationRequest,
 )
 from special.serializers import (
     IndustrySerializer, ExperienceLevelSerializer, RoleSerializer,
     CountrySerializer, CitySerializer, CVReviewSerializer,
-    LeadGenerationRequestSerializer, CoverLetterGenerationRequestSerializer,
+    LeadGenerationRequestSerializer, ScheduledLeadGenerationRequestSerializer,
+    CoverLetterGenerationRequestSerializer,
 )
 from jam.models import CV, Lead
 
@@ -118,3 +120,79 @@ class LeadGenerationRequestSerializerTest(TestCase):
         data = {"countries": [self.country.id]}
         s = LeadGenerationRequestSerializer(data=data)
         self.assertTrue(s.is_valid())
+
+    def test_default_num_leads(self):
+        data = {"countries": [self.country.id]}
+        s = LeadGenerationRequestSerializer(data=data)
+        self.assertTrue(s.is_valid())
+        self.assertEqual(s.validated_data["num_leads"], 15)
+
+    def test_num_leads_bounds(self):
+        for value in [0, 16, -1]:
+            data = {"countries": [self.country.id], "num_leads": value}
+            s = LeadGenerationRequestSerializer(data=data)
+            self.assertFalse(s.is_valid())
+        data = {"countries": [self.country.id], "num_leads": 15}
+        s = LeadGenerationRequestSerializer(data=data)
+        self.assertTrue(s.is_valid())
+
+    def test_comment_too_long(self):
+        data = {"countries": [self.country.id], "additional_comment": "x" * 501}
+        s = LeadGenerationRequestSerializer(data=data)
+        self.assertFalse(s.is_valid())
+
+    def test_comment_whitespace_normalized(self):
+        data = {"countries": [self.country.id], "additional_comment": "  hello  "}
+        s = LeadGenerationRequestSerializer(data=data)
+        self.assertTrue(s.is_valid())
+        self.assertEqual(s.validated_data["additional_comment"], "hello")
+
+    def test_modes_whitelist(self):
+        data = {"countries": [self.country.id], "modes": ["On-Site", "Nope"]}
+        s = LeadGenerationRequestSerializer(data=data)
+        self.assertFalse(s.is_valid())
+
+    def test_company_sizes_whitelist(self):
+        data = {"countries": [self.country.id], "company_sizes": ["Nope"]}
+        s = LeadGenerationRequestSerializer(data=data)
+        self.assertFalse(s.is_valid())
+
+    def test_read_only_counts(self):
+        req = LeadGenerationRequest.objects.create(
+            user=self.user, leads_generated_count=3,
+        )
+        s = LeadGenerationRequestSerializer(req)
+        self.assertEqual(s.data["leads_generated_count"], 3)
+
+
+class ScheduledLeadGenerationRequestSerializerTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="alice", password="pass")
+        self.country = Country.objects.create(name="TestCountry", slug="test-country", code="TC")
+
+    def test_deserialize_valid(self):
+        data = {
+            "countries": [self.country.id],
+            "modes": ["Remote"],
+            "company_sizes": ["Startup"],
+            "num_leads": 5,
+            "additional_comment": "Motorsports only",
+        }
+        s = ScheduledLeadGenerationRequestSerializer(data=data)
+        self.assertTrue(s.is_valid())
+
+    def test_num_leads_bounds(self):
+        data = {"countries": [self.country.id], "num_leads": 20}
+        s = ScheduledLeadGenerationRequestSerializer(data=data)
+        self.assertFalse(s.is_valid())
+
+    def test_serialize(self):
+        schedule = ScheduledLeadGenerationRequest.objects.create(
+            user=self.user, num_leads=7, additional_comment="NGO roles",
+        )
+        schedule.countries.add(self.country)
+        s = ScheduledLeadGenerationRequestSerializer(schedule)
+        self.assertEqual(s.data["num_leads"], 7)
+        self.assertEqual(s.data["additional_comment"], "NGO roles")
+        self.assertEqual(s.data["countries_names"], ["TestCountry"])
+        self.assertIsNone(s.data["last_generation_request"])

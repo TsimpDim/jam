@@ -128,6 +128,27 @@
     border-radius: 10px;
 }
 
+.top-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.btn-group {
+    margin: var(--clr-btn-vertical-margin) var(--clr-btn-horizontal-margin) var(--clr-btn-vertical-margin) 0;
+
+    clr-dropdown .btn {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+
+        cds-icon {
+            width: 0.7rem;
+            height: 0.7rem;
+        }
+    }
+}
+
 .snapshot-content {
     .snapshot-date {
         color: var(--color-ink-secondary);
