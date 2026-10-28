@@ -8,6 +8,7 @@ import { ApplicationsComponent } from './pages/applications/applications.compone
 import { LeadsComponent } from './pages/leads/leads.component';
 import { StepsComponent } from './pages/steps/steps.component';
 import { CvComponent } from './pages/cv/cv.component';
+import { SettingsComponent } from './pages/settings/settings.component';
 import { AuthGuard, NoAuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -39,6 +40,11 @@ export const routes: Routes = [
   {
     path: 'cv',
     component: CvComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
     canActivate: [AuthGuard],
   },
   {

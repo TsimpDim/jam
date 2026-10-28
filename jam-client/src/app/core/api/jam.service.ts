@@ -430,6 +430,18 @@ export class JamService {
     );
   }
 
+  generateMcpToken(): Observable<{ token: string; detail: string }> {
+    return this.runHttpCall('POST', environment.apiUrl + '/auth/mcp-token/create/');
+  }
+
+  listMcpTokens(): Observable<any> {
+    return this.runHttpCall('GET', environment.apiUrl + '/auth/mcp-token/list/');
+  }
+
+  deleteMcpToken(tokenKey: string): Observable<any> {
+    return this.runHttpCall('DELETE', environment.apiUrl + '/auth/mcp-token/' + tokenKey + '/');
+  }
+
   getUnreadNotificationCount(): Observable<UnreadCountResponse> {
     return this.runHttpCall(
       'GET',

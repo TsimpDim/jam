@@ -79,15 +79,15 @@ class LeadGenerationRequestAdmin(admin.ModelAdmin):
 
     @admin.display(description="Experience Level")
     def get_experience_levels(self, obj):
-        return ", ".join(el.name for el in obj.experience_level.all()) or "—"
+        return ", ".join(el.name for el in obj.experience_level.all()) or "-"
 
     @admin.display(description="Modes")
     def get_modes(self, obj):
-        return ", ".join(obj.modes) if obj.modes else "—"
+        return ", ".join(obj.modes) if obj.modes else "-"
 
     @admin.display(description="Company Sizes")
     def get_company_sizes(self, obj):
-        return ", ".join(obj.company_sizes) if obj.company_sizes else "—"
+        return ", ".join(obj.company_sizes) if obj.company_sizes else "-"
 
 
 @admin.register(ScheduledLeadGenerationRequest)
@@ -123,11 +123,11 @@ class ScheduledLeadGenerationRequestAdmin(admin.ModelAdmin):
 
     @admin.display(description="Modes")
     def get_modes(self, obj):
-        return ", ".join(obj.modes) if obj.modes else "—"
+        return ", ".join(obj.modes) if obj.modes else "-"
 
     @admin.display(description="Company Sizes")
     def get_company_sizes(self, obj):
-        return ", ".join(obj.company_sizes) if obj.company_sizes else "—"
+        return ", ".join(obj.company_sizes) if obj.company_sizes else "-"
 
 
 @admin.register(CoverLetterGenerationRequest)

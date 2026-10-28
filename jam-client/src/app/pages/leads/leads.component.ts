@@ -444,7 +444,7 @@ export class LeadsComponent implements OnInit {
         next: (created) => {
           this.scheduledLeadGeneration = created;
           this.snackbarService.showSuccess(
-            'Daily lead generation scheduled — the first run starts now.',
+            'Daily lead generation scheduled - the first run starts now.',
           );
           this.snackbarService.showInfo(
             'This search will run daily. You will be notified after every run.',
@@ -563,17 +563,24 @@ export class LeadsComponent implements OnInit {
     });
   }
 
-  getCompletedCoverLetterForLead(leadId: number): CoverLetterGenerationRequest | null {
+  getCompletedCoverLetterForLead(
+    leadId: number,
+  ): CoverLetterGenerationRequest | null {
     const requests = this.coverLetterRequests.get(leadId) || [];
     return requests.find((r) => r.is_done) || null;
   }
 
-  getCompletedCoverLettersForLead(leadId: number): CoverLetterGenerationRequest[] {
+  getCompletedCoverLettersForLead(
+    leadId: number,
+  ): CoverLetterGenerationRequest[] {
     const requests = this.coverLetterRequests.get(leadId) || [];
     return requests.filter((r) => r.is_done);
   }
 
-  viewCoverLetterResult(leadId: number, request?: CoverLetterGenerationRequest): void {
+  viewCoverLetterResult(
+    leadId: number,
+    request?: CoverLetterGenerationRequest,
+  ): void {
     const completed = request || this.getCompletedCoverLetterForLead(leadId);
     if (completed) {
       this.selectedCoverLetterForView = completed;

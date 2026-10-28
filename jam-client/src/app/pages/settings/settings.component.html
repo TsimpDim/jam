@@ -1,0 +1,100 @@
+<div class="main-container">
+  <div class="content-container">
+    <div *ngIf="loading" style="font-size: 1px" class="progress loop">
+      <progress></progress>
+    </div>
+
+    <div class="content-area">
+      <div class="clr-column settings-page">
+        <h3>Settings</h3>
+
+        <section class="settings-section">
+          <div class="settings-section-heading">
+            <h4>MCP Tokens</h4>
+            <p class="settings-description">
+              Connect MCP clients like Claude Code or Claude Desktop to your JAM
+              data.
+            </p>
+          </div>
+
+          <div class="token-actions">
+            <button
+              class="btn btn-primary"
+              (click)="generateToken()"
+              [disabled]="generating || tokenCount >= tokenLimit"
+            >
+              <clr-spinner *ngIf="generating" [clrInline]="true"></clr-spinner>
+              <cds-icon *ngIf="!generating" shape="plus"></cds-icon>
+              Generate MCP Token
+              <span *ngIf="tokenLimit > 1" class="badge badge-light-blue">
+                {{ tokenCount }} / {{ tokenLimit }}
+              </span>
+            </button>
+            <span
+              class="token-limit-hint"
+              *ngIf="!generating && tokenCount >= tokenLimit"
+            >
+              Limit reached - delete a token to generate a new one.
+            </span>
+          </div>
+
+          <div class="new-token-box" *ngIf="justCreatedToken">
+            <div class="new-token-label">
+              Save this token now - it will not be shown again.
+            </div>
+            <div class="new-token-row">
+              <code class="token-code">{{ justCreatedToken }}</code>
+              <button
+                type="button"
+                class="btn btn-sm btn-icon"
+                (click)="copyToken()"
+                title="Copy to clipboard"
+              >
+                <cds-icon
+                  shape="clipboard"
+                  *ngIf="!copiedToClipboard"
+                ></cds-icon>
+                <cds-icon
+                  shape="check-circle"
+                  *ngIf="copiedToClipboard"
+                ></cds-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="token-list" *ngIf="tokens.length > 0">
+            <div class="token-item" *ngFor="let token of tokens">
+              <div class="token-item-info">
+                <span class="token-key">{{ token.token_key }}</span>
+                <span class="token-date">
+                  Created {{ formatDate(token.created) }}
+                </span>
+              </div>
+              <button
+                type="button"
+                class="btn btn-sm btn-icon btn-link token-delete"
+                (click)="openDeleteConfirm(token)"
+                title="Delete token"
+              >
+                <cds-icon shape="trash"></cds-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="token-empty" *ngIf="!loading && tokens.length === 0">
+            No MCP tokens generated yet.
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-confirm-modal
+  [open]="confirmModalOpen"
+  title="Delete MCP Token"
+  message="Are you sure you want to delete this token? Any MCP client using it will lose access."
+  verb="Delete"
+  (closed)="onDeleteCancelled()"
+  (confirmed)="onDeleteConfirmed()"
+></app-confirm-modal>

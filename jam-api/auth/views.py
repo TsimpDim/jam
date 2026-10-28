@@ -17,8 +17,10 @@ from jam.validators import (
 from special.models import CVReview, LeadGenerationRequest
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 from rest_framework.serializers import CharField, EmailField, Serializer, ValidationError
+from auth.validators import MCP_TOKEN_LIMIT_FREE, MCP_TOKEN_LIMIT_PREMIUM
 
 User = get_user_model()
 
@@ -221,6 +223,75 @@ class PasswordResetRequestView(generics.GenericAPIView):
             {"detail": "If an account with that email exists, a password reset link has been sent."},
             status=status.HTTP_200_OK,
         )
+
+class SafeSessionAuthentication(SessionAuthentication):
+    """Session authentication that skips CSRF checks for API endpoints."""
+
+    def enforce_csrf(self, request):
+        pass
+
+class MCPTokenListView(generics.GenericAPIView):
+    """List MCP tokens for the authenticated user."""
+    authentication_classes = [SafeSessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        tokens = AuthToken.objects.filter(user=request.user).order_by('-created')
+        profile = getattr(request.user, 'profile', None)
+        is_premium = profile.is_premium if profile else False
+        limit = MCP_TOKEN_LIMIT_PREMIUM if is_premium else MCP_TOKEN_LIMIT_FREE
+        return Response({
+            "tokens": [
+                {
+                    "token_key": token.token_key,
+                    "created": token.created.isoformat(),
+                    "expiry": token.expiry.isoformat() if token.expiry else None,
+                }
+                for token in tokens
+            ],
+            "limit": limit,
+            "count": tokens.count(),
+            "is_premium": is_premium,
+        })
+
+
+class MCPTokenView(generics.GenericAPIView):
+    """Create a new Knox token for MCP client use. Authenticates via Django session."""
+    authentication_classes = [SafeSessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        token_count = AuthToken.objects.filter(user=request.user).count()
+        profile = getattr(request.user, 'profile', None)
+        is_premium = profile.is_premium if profile else False
+        limit = MCP_TOKEN_LIMIT_PREMIUM if is_premium else MCP_TOKEN_LIMIT_FREE
+
+        if token_count >= limit:
+            return Response(
+                {"detail": f"Token limit reached ({limit}). Delete an existing token first."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        _, token = AuthToken.objects.create(request.user)
+        return Response({
+            "token": token,
+            "detail": "MCP token created successfully. Save it now - it cannot be retrieved again.",
+        })
+
+
+class MCPTokenDeleteView(generics.GenericAPIView):
+    """Delete an MCP token by ID."""
+    authentication_classes = [SafeSessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, token_key):
+        try:
+            token = AuthToken.objects.get(token_key=token_key, user=request.user)
+            token.delete()
+            return Response({"detail": "Token deleted."})
+        except AuthToken.DoesNotExist:
+            return Response({"detail": "Token not found."}, status=status.HTTP_404_NOT_FOUND)
+
 
 class PasswordResetConfirmView(generics.GenericAPIView):
     """Validates the reset token and updates the user's password."""
