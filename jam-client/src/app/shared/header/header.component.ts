@@ -9,6 +9,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
+import { JamService } from 'src/app/core/api/jam.service';
 import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
@@ -24,11 +25,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription | undefined;
   authSubscription: Subscription | undefined;
   mobileMenuOpen = false;
+  isPremium = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    public themeService: ThemeService
+    public themeService: ThemeService,
+    private jamService: JamService
   ) {}
   ngAfterViewInit(): void {
     this.routerSubscription = this.router.events.subscribe((event: any) => {
@@ -47,6 +50,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.checkIsLoggedIn();
     this.authSubscription = this.authService.loggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
+      if (status) {
+        this.loadUserInfo();
+      } else {
+        this.isPremium = false;
+      }
+    });
+  }
+
+  loadUserInfo() {
+    this.jamService.getUserInfo().subscribe({
+      next: (data) => {
+        this.isPremium = data.is_premium;
+      },
+      error: () => {
+        this.isPremium = false;
+      },
     });
   }
 
@@ -56,6 +75,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout();
+  }
+
+  navigateToSettings() {
+    this.router.navigate(['/settings']);
+    this.closeMobileMenu();
   }
 
   toggleMobileMenu() {

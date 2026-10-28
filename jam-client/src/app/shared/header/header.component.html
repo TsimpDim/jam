@@ -1,4 +1,4 @@
-<header class="header header-3">
+<header class="header header-3" [class.premium]="isPremium">
   <div class="branding">
     <button
       type="button"
@@ -15,6 +15,7 @@
     <a class="nav-link" routerLink="/">
       <div class="title jam"></div>
     </a>
+    <span class="premium-badge" *ngIf="isPremium" aria-label="Premium subscription">Premium</span>
   </div>
   <div class="header-nav" [class.mobile-open]="mobileMenuOpen">
     <ng-container *ngIf="isLoggedIn">
@@ -74,6 +75,15 @@
         size="md"
         [shape]="themeService.isDark() ? 'sun' : 'moon'"
       ></cds-icon>
+    </button>
+    <button
+      *ngIf="isLoggedIn"
+      class="header-action-btn"
+      type="button"
+      aria-label="Settings"
+      (click)="navigateToSettings()"
+    >
+      <cds-icon size="md" shape="cog"></cds-icon>
     </button>
     <button
       *ngIf="isLoggedIn"

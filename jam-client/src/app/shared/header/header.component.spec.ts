@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ThemeService } from 'src/app/core/services/theme.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
+import { JamService } from 'src/app/core/api/jam.service';
 import { signal } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -12,6 +13,7 @@ import { of } from 'rxjs';
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
+  let jamServiceSpy: jasmine.SpyObj<JamService>;
 
   function createMockAuth(): AuthService {
     return {
@@ -53,6 +55,11 @@ describe('HeaderComponent', () => {
   }
 
   beforeEach(async () => {
+    jamServiceSpy = jasmine.createSpyObj('JamService', ['getUserInfo']);
+    jamServiceSpy.getUserInfo.and.returnValue(
+      of({ pk: 1, username: 'alice', is_premium: false } as any)
+    );
+
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
       schemas: [NO_ERRORS_SCHEMA],
@@ -70,6 +77,7 @@ describe('HeaderComponent', () => {
         { provide: AuthService, useFactory: createMockAuth },
         { provide: ThemeService, useFactory: createMockTheme },
         { provide: NotificationService, useFactory: createMockNotification },
+        { provide: JamService, useValue: jamServiceSpy },
       ],
     }).compileComponents();
 
@@ -143,6 +151,32 @@ describe('HeaderComponent', () => {
       const authService = TestBed.inject(AuthService);
       component.logout();
       expect(authService.logout).toHaveBeenCalled();
+    });
+  });
+
+  describe('premium', () => {
+    it('should not show premium badge for free users', () => {
+      expect(component.isPremium).toBeFalse();
+      expect(
+        fixture.nativeElement.querySelector('.premium-badge')
+      ).toBeFalsy();
+      expect(fixture.nativeElement.querySelector('.header.premium')).toBeFalsy();
+    });
+
+    it('should show premium badge and premium class for premium users', () => {
+      jamServiceSpy.getUserInfo.and.returnValue(
+        of({ pk: 1, username: 'alice', is_premium: true } as any)
+      );
+      component.loadUserInfo();
+      fixture.detectChanges();
+
+      expect(component.isPremium).toBeTrue();
+      expect(
+        fixture.nativeElement.querySelector('.premium-badge')
+      ).toBeTruthy();
+      expect(
+        fixture.nativeElement.querySelector('.header.premium')
+      ).toBeTruthy();
     });
   });
 });
