@@ -1,0 +1,39 @@
+services:
+  mcp-server:
+    build: .
+    container_name: jam-mcp-server
+    command: >
+      sh -c "python3 server.py"
+    volumes:
+      - .:/jam-mcp
+    ports:
+      - "3001:3001"
+    environment:
+      - JAM_MCP_DEBUG=True
+    networks:
+      jam:
+        aliases:
+          - "mcp.jam.local"
+
+  mcp-inspector:
+    build: .
+    container_name: jam-mcp-inspector
+    command: >
+      sh -c "npx @modelcontextprotocol/inspector --web --server-url http://mcp.jam.local:3001/mcp"
+    volumes:
+      - .:/jam-mcp
+    ports:
+      - "6274:6274"
+      - "6275:6275"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=6274
+      - DANGEROUSLY_BIND_ALL_INTERFACES=true
+    networks:
+      jam:
+        aliases:
+          - "mcp-inspector.jam.local"
+
+networks:
+  jam:
+    external: true

@@ -3,6 +3,7 @@ declare -A dcfiles=(
     ["core"]="docker-compose-core.yml"
     ["api"]="jam-api/docker-compose-api.yml"
     ["client"]="jam-client/docker-compose-client.yml"
+    ["mcp"]="mcp/docker-compose-mcp.yml"
 )
 
 if [[ $1 == "test" ]]; then
