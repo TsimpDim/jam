@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 COPY requirements.txt /jam-mcp/
-COPY server.py /jam-mcp/
+COPY . /jam-mcp/
 
 WORKDIR /jam-mcp
 

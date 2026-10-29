@@ -1,6 +1,18 @@
 {
   "$schema": "https://app.kilo.ai/config.json",
   "skills": {
-    "paths": [".kilo/skills"]
+    "paths": [
+      ".kilo/skills"
+    ]
+  },
+  "mcp": {
+    "jam": {
+      "type": "remote",
+      "url": "http://localhost:3001/mcp",
+      "headers": {
+        "Authorization": "Token fe1d6df205651a7830bc010a907d998d9e30d02a65342cad79c5e33b23680d04"
+      },
+      "enabled": true
+    }
   }
 }
