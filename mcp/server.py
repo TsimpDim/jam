@@ -11,7 +11,7 @@ import tools.leads
 import tools.notifications
 import tools.steps
 from config import API_BASE
-from mcp.server import TransportSecuritySettings
+from mcp.server.transport_security import TransportSecuritySettings
 
 security = TransportSecuritySettings(
     allowed_hosts=["mcp.jam-app.com"],
