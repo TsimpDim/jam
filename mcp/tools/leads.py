@@ -1,13 +1,13 @@
 from mcp.server.mcpserver import Context
 from utils import api_request
-from app import mcp
+from app import mcp_server
 
-@mcp.tool()
+@mcp_server.tool()
 def read_leads(ctx: Context, archived: bool = False) -> list:
     """Read the authenticated user's leads."""
     return api_request("GET", f"/jam/leads/?archived={archived}", ctx)
 
-@mcp.tool()
+@mcp_server.tool()
 def create_lead(
     ctx: Context,
     company: str,

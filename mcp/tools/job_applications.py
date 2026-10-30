@@ -1,23 +1,23 @@
 from mcp.server.mcpserver import Context
 from utils import api_request
-from app import mcp
+from app import mcp_server
 
-@mcp.tool()
+@mcp_server.tool()
 def read_job_apps(ctx: Context) -> list:
     """Read the authenticated user's job applications."""
     return api_request("GET", "/jam/jobapps/", ctx)
 
-@mcp.tool()
+@mcp_server.tool()
 def read_job_app(ctx: Context, jobAppId: str) -> dict:
     """Read the authenticated user's specific job application details."""
     return api_request("GET", f"/jam/jobapps/{jobAppId}/", ctx)
 
-@mcp.tool()
+@mcp_server.tool()
 def read_job_app_timeline(ctx: Context, jobAppId: str) -> dict:
     """Read the authenticated user's specific job application timeline details."""
     return api_request("GET", f"/jam/timeline/jobapp/{jobAppId}/", ctx)
 
-@mcp.tool()
+@mcp_server.tool()
 def create_job_app(
     ctx: Context,
     company: str,

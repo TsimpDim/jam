@@ -1,7 +1,7 @@
 import os
 
 # Django WSGI application path in pattern MODULE_NAME:VARIABLE_NAME
-wsgi_app = "mcp.server:app"
+wsgi_app = "server:app"
 
 # The granularity of Error log outputs
 loglevel = "info"

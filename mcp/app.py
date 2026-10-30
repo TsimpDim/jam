@@ -1,3 +1,3 @@
 from mcp.server import MCPServer
 
-mcp = MCPServer("JAM!")
+mcp_server = MCPServer("JAM!")

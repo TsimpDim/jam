@@ -1,6 +1,6 @@
 import os
 
-from app import mcp
+from app import mcp_server
 
 import tools.analytics
 import tools.auth
@@ -17,8 +17,8 @@ security = TransportSecuritySettings(
     allowed_hosts=["mcp.jam-app.com"],
     allowed_origins=[],
 )
-app = mcp.streamable_http_app(transport_security=security)
+app = mcp_server.streamable_http_app(transport_security=security)
 
 if os.getenv("JAM_MCP_DEBUG") == "True":
     if __name__ == "__main__":
-        mcp.run(transport="streamable-http", host="0.0.0.0", port=3001)
+        mcp_server.run(transport="streamable-http", host="0.0.0.0", port=3001)
