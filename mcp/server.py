@@ -10,6 +10,14 @@ import tools.job_applications
 import tools.leads
 import tools.notifications
 import tools.steps
+from config import API_BASE
+from mcp.server import TransportSecuritySettings
+
+security = TransportSecuritySettings(
+    allowed_hosts=["mcp.jam-app.com"],
+    allowed_origins=[],
+)
+app = mcp.streamable_http_app(transport_security=security)
 
 if os.getenv("JAM_MCP_DEBUG") == "True":
     if __name__ == "__main__":
